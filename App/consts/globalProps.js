@@ -1,22 +1,11 @@
-import {
-  setCustomView,
-  setCustomTextInput,
-  setCustomText,
-  setCustomImage,
-  setCustomTouchableOpacity,
-} from 'react-native-global-props';
-
-const customTextInputProps = {
+export const customTextInputProps = {
   style: {
     fontFamily: 'sans-serif-light',
   },
 };
 
-const customTextProps = {
+export const customTextProps = {
   style: {
     fontFamily: 'sans-serif-light',
   },
 };
-
-setCustomTextInput(customTextInputProps);
-setCustomText(customTextProps);

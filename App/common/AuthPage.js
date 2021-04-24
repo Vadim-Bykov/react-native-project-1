@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,8 +9,9 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {w} from '../consts/consts';
 import {Input} from './Input';
+import {Dimensions} from 'react-native';
+import {getWidthWindow} from '../utils/utils';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -24,6 +25,15 @@ export const AuthPage = ({configuration}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [width, setWidth] = useState(getWidthWindow);
+
+  const changeWidth = () => setWidth(getWidthWindow());
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', changeWidth);
+
+    return () => Dimensions.removeEventListener('change', changeWidth);
+  }, []);
 
   const emailInput = {
     icon: {name: 'mail-outline', color: '#DDBA33'},
@@ -32,6 +42,7 @@ export const AuthPage = ({configuration}) => {
       textContentType: 'emailAddress',
       value: email,
       setValue: setEmail,
+      width,
     },
   };
 
@@ -43,6 +54,7 @@ export const AuthPage = ({configuration}) => {
       secureTextEntry: true,
       value: password,
       setValue: setPassword,
+      width,
     },
   };
 
@@ -53,11 +65,13 @@ export const AuthPage = ({configuration}) => {
       placeholder: 'Confirm password',
       value: confirmPassword,
       setValue: setConfirmPassword,
+      width,
     },
   };
+
   const onPressHandler = () => {
     if (!email.trim()) {
-      Alert.alert('Please enter e-mail');
+      Alert.alert('Please fill in the form');
       return setEmail('');
     }
     if (!password.trim()) {
@@ -68,6 +82,13 @@ export const AuthPage = ({configuration}) => {
       Alert.alert('Please confirm password');
       return setConfirmPassword('');
     }
+    if (
+      showPasswordConfirmation &&
+      password.trim() !== confirmPassword.trim()
+    ) {
+      return Alert.alert('Please enter correct password for the second time');
+    }
+
     onSummit({email, password, confirmPassword});
     setEmail('');
     setPassword('');
@@ -76,14 +97,14 @@ export const AuthPage = ({configuration}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/city.jpg')}
+      source={require('../assets/images/city.jpg')}
       style={styles.imageBackground}>
       <View style={styles.wrapper}>
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.imageContainer}>
             <Image
               style={styles.logo}
-              source={require('../../assets/images/logo1.png')}
+              source={require('../assets/images/logo1.png')}
             />
           </View>
           <View style={styles.form}>
@@ -93,7 +114,7 @@ export const AuthPage = ({configuration}) => {
               <Input inputConfig={confirmPasswordInput} />
             )}
             <TouchableOpacity
-              style={styles.btn}
+              style={{...styles.btn, width: width * 0.6}}
               activeOpacity={0.8}
               onPress={onPressHandler}>
               <Text style={styles.btnText}>{btnText}</Text>
@@ -130,7 +151,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 0.45,
     justifyContent: 'center',
-    // backgroundColor: 'blue',
   },
   logo: {
     width: 100,
@@ -138,12 +158,10 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 0.55,
-    // backgroundColor: 'green',
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
   btn: {
-    width: w * 0.6,
     backgroundColor: '#DDBA33',
     height: 50,
     justifyContent: 'center',
@@ -153,11 +171,8 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: '#fff',
-    // fontFamily: 'Nunito-Italic',
   },
   redirect: {
-    // backgroundColor: 'red',
-    // flex: 0.1,
     justifyContent: 'center',
     height: 80,
   },

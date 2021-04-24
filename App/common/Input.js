@@ -13,11 +13,12 @@ export const Input = ({inputConfig}) => {
       secureTextEntry = false,
       value = '',
       setValue,
+      width = w,
     },
   } = inputConfig;
 
   return (
-    <View style={styles.inputContainer}>
+    <View style={{...styles.inputContainer, width: width * 0.7}}>
       <Icon name={name} type={type} color={color} />
       <TextInput
         placeholder={placeholder}
@@ -34,7 +35,6 @@ export const Input = ({inputConfig}) => {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    width: w * 0.7,
     backgroundColor: 'rgba(0,0,0, 0.4)',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     width: '90%',
     marginLeft: 10,
-    //  fontFamily: 'sans-serif-light',
+    fontFamily: 'sans-serif-light',
   },
 });
