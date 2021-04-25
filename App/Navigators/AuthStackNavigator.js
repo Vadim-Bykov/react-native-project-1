@@ -1,8 +1,10 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from '@react-navigation/stack';
 import {SignInScreen} from '../Screens/SignIn/SignInScreen';
 import {SignUpScreen} from '../Screens/SignUp/SignUpScreen';
-import {Easing} from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -10,13 +12,21 @@ export const AuthStackNavigator = () => {
   const config = {
     animation: 'timing',
     config: {
-      duration: 300,
-      easing: Easing.quad,
+      duration: 200,
     },
   };
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        transitionSpec: {open: config, close: config},
+        cardStyle: {backgroundColor: 'transparent'},
+        cardOverlayEnabled: true,
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal-inverted',
+      }}
+      mode="modal">
       <Stack.Screen
         name="SignIn"
         component={SignInScreen}
@@ -31,7 +41,6 @@ export const AuthStackNavigator = () => {
           headerTitle: false,
           headerTransparent: 1,
           headerTintColor: '#fff',
-          transitionSpec: {open: config, close: config},
         }}
       />
     </Stack.Navigator>
