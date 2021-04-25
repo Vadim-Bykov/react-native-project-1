@@ -8,10 +8,11 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  TextInput,
 } from 'react-native';
-import {Input} from './Input';
 import {Dimensions} from 'react-native';
 import {getWidthWindow} from '../utils/utils';
+import {Icon} from 'react-native-elements/dist/icons/Icon';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -34,40 +35,6 @@ export const AuthPage = ({configuration}) => {
 
     return () => Dimensions.removeEventListener('change', changeWidth);
   }, []);
-
-  const emailInput = {
-    icon: {name: 'mail-outline', color: '#DDBA33'},
-    input: {
-      placeholder: 'E-mail address',
-      textContentType: 'emailAddress',
-      value: email,
-      setValue: setEmail,
-      width,
-    },
-  };
-
-  const passwordInput = {
-    icon: {...emailInput.icon, name: 'lock-outline'},
-    input: {
-      placeholder: 'Password',
-      textContentType: 'password',
-      secureTextEntry: true,
-      value: password,
-      setValue: setPassword,
-      width,
-    },
-  };
-
-  const confirmPasswordInput = {
-    icon: {...passwordInput.icon},
-    input: {
-      ...passwordInput.input,
-      placeholder: 'Confirm password',
-      value: confirmPassword,
-      setValue: setConfirmPassword,
-      width,
-    },
-  };
 
   const onPressHandler = () => {
     if (!email.trim()) {
@@ -109,10 +76,44 @@ export const AuthPage = ({configuration}) => {
           </View>
 
           <View style={styles.form}>
-            <Input inputConfig={emailInput} />
-            <Input inputConfig={passwordInput} />
+            <View style={{...styles.inputContainer, width: width * 0.7}}>
+              <Icon name="mail-outline" type="material" color="#DDBA33" />
+              <TextInput
+                placeholder="E-mail address"
+                placeholderTextColor="#fff"
+                textContentType="emailAddress"
+                secureTextEntry={false}
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+              />
+            </View>
+            <View style={{...styles.inputContainer, width: width * 0.7}}>
+              <Icon name="lock-outline" type="material" color="#DDBA33" />
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#fff"
+                textContentType="password"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}
+                style={styles.input}
+              />
+            </View>
+
             {showPasswordConfirmation && (
-              <Input inputConfig={confirmPasswordInput} />
+              <View style={{...styles.inputContainer, width: width * 0.7}}>
+                <Icon name="lock-outline" type="material" color="#DDBA33" />
+                <TextInput
+                  placeholder="Confirm password"
+                  placeholderTextColor="#fff"
+                  textContentType="password"
+                  secureTextEntry={true}
+                  value={password}
+                  onChangeText={setPassword}
+                  style={styles.input}
+                />
+              </View>
             )}
             <TouchableOpacity
               style={{...styles.btn, width: width * 0.6}}
@@ -180,5 +181,20 @@ const styles = StyleSheet.create({
   },
   redirectText: {
     color: '#C1C1C1',
+  },
+
+  inputContainer: {
+    backgroundColor: 'rgba(0,0,0, 0.4)',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    marginVertical: 10,
+  },
+  input: {
+    color: '#fff',
+    width: '90%',
+    marginLeft: 10,
+    // fontFamily: 'Nunito-Light',
   },
 });

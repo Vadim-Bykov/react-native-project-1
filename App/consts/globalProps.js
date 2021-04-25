@@ -1,11 +1,11 @@
 export const customTextInputProps = {
   style: {
-    fontFamily: 'sans-serif-light',
+    fontFamily: 'Nunito-Light',
   },
 };
 
 export const customTextProps = {
   style: {
-    fontFamily: 'sans-serif-light',
+    fontFamily: 'Nunito-Light',
   },
 };

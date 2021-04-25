@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {w} from '../consts/consts';
+import {getWidthWindow} from '../utils/utils';
 
 export const Input = ({inputConfig}) => {
   const {
@@ -13,7 +13,7 @@ export const Input = ({inputConfig}) => {
       secureTextEntry = false,
       value = '',
       setValue,
-      width = w,
+      width = getWidthWindow(),
     },
   } = inputConfig;
 
@@ -46,6 +46,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     width: '90%',
     marginLeft: 10,
-    fontFamily: 'sans-serif-light',
   },
 });

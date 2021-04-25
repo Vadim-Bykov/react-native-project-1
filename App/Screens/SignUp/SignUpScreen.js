@@ -1,6 +1,5 @@
 import React from 'react';
 import {AuthPage} from '../../common/AuthPage';
-import {SignInScreen} from '../SignIn/SignInScreen';
 
 export const SignUpScreen = ({navigation}) => {
   const goToSignIn = () => navigation.goBack();
@@ -16,5 +15,4 @@ export const SignUpScreen = ({navigation}) => {
   };
 
   return <AuthPage configuration={configuration} />;
-  // return <SignInScreen configurationUp={configuration} />;
 };
