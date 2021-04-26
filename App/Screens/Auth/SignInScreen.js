@@ -1,5 +1,5 @@
 import React from 'react';
-import {AuthPage} from '../../common/AuthPage';
+import {AuthPage} from '../components/AuthPage';
 
 export const SignInScreen = ({navigation}) => {
   const goToSignUp = () => navigation.navigate('SignUp');

@@ -1,11 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {getWidthWindow} from '../utils/utils';
 
 export const Input = ({inputConfig}) => {
   const {
-    icon: {name, type = 'material', color = '#fff'},
+    icon: {name, type = 'material', color = '#fff'} = {},
     input: {
       placeholder = '',
       placeholderTextColor = '#fff',
@@ -13,13 +12,13 @@ export const Input = ({inputConfig}) => {
       secureTextEntry = false,
       value = '',
       setValue,
-      width = getWidthWindow(),
+      width,
     },
   } = inputConfig;
 
   return (
     <View style={{...styles.inputContainer, width: width * 0.7}}>
-      <Icon name={name} type={type} color={color} />
+      {name && <Icon name={name} type={type} color={color} />}
       <TextInput
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}

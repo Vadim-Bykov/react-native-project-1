@@ -3,8 +3,8 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from '@react-navigation/stack';
-import {SignInScreen} from '../Screens/SignIn/SignInScreen';
-import {SignUpScreen} from '../Screens/SignUp/SignUpScreen';
+import {SignInScreen} from '../Screens/Auth/SignInScreen';
+import {SignUpScreen} from '../Screens/Auth/SignUpScreen';
 
 const Stack = createStackNavigator();
 
@@ -24,7 +24,7 @@ export const AuthStackNavigator = () => {
         cardOverlayEnabled: true,
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         gestureEnabled: true,
-        gestureDirection: 'horizontal-inverted',
+        gestureDirection: 'horizontal',
       }}
       mode="modal">
       <Stack.Screen

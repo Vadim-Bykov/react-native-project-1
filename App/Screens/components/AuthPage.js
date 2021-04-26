@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,10 +8,9 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  useWindowDimensions,
 } from 'react-native';
-import {Input} from './Input';
-import {Dimensions} from 'react-native';
-import {getWidthWindow} from '../utils/utils';
+import {Input} from '../../common/Input';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -25,15 +24,8 @@ export const AuthPage = ({configuration}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [width, setWidth] = useState(getWidthWindow);
 
-  const changeWidth = () => setWidth(getWidthWindow());
-
-  useEffect(() => {
-    Dimensions.addEventListener('change', changeWidth);
-
-    return () => Dimensions.removeEventListener('change', changeWidth);
-  }, []);
+  const width = useWindowDimensions().width;
 
   const emailInput = {
     icon: {name: 'mail-outline', color: '#DDBA33'},
@@ -47,7 +39,7 @@ export const AuthPage = ({configuration}) => {
   };
 
   const passwordInput = {
-    icon: {...emailInput.icon, name: 'lock-outline'},
+    icon: {name: 'lock-outline', color: '#DDBA33'},
     input: {
       placeholder: 'Password',
       textContentType: 'password',
@@ -59,10 +51,11 @@ export const AuthPage = ({configuration}) => {
   };
 
   const confirmPasswordInput = {
-    icon: {...passwordInput.icon},
+    icon: {name: 'lock-outline', color: '#DDBA33'},
     input: {
-      ...passwordInput.input,
       placeholder: 'Confirm password',
+      textContentType: 'password',
+      secureTextEntry: true,
       value: confirmPassword,
       setValue: setConfirmPassword,
       width,
@@ -97,14 +90,14 @@ export const AuthPage = ({configuration}) => {
 
   return (
     <ImageBackground
-      source={require('../assets/images/city.jpg')}
+      source={require('../../assets/images/city.jpg')}
       style={styles.imageBackground}>
       <View style={styles.wrapper}>
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.imageContainer}>
             <Image
               style={styles.logo}
-              source={require('../assets/images/logo1.png')}
+              source={require('../../assets/images/logo1.png')}
             />
           </View>
 

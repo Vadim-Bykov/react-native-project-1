@@ -1,9 +1,8 @@
 import React from 'react';
-import {AuthPage} from '../../common/AuthPage';
+import {AuthPage} from '../components/AuthPage';
 
 export const SignUpScreen = ({navigation}) => {
-  const goToSignIn = () => navigation.goBack();
-  // const goToSignIn = () => navigation.navigate('SignIn');
+  const goToSignIn = () => navigation.navigate('SignIn');
   const onSummit = data => console.log(data);
 
   const configuration = {
