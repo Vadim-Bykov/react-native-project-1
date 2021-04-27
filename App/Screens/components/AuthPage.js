@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useForm} from 'react-hook-form';
 import {
   StyleSheet,
   Text,
@@ -21,71 +22,89 @@ export const AuthPage = ({configuration}) => {
     onSummit,
   } = configuration;
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
   const width = useWindowDimensions().width;
 
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+    setError,
+  } = useForm();
+
   const emailInput = {
-    icon: {name: 'mail-outline', color: '#DDBA33'},
+    icon: {iconName: 'mail-outline', color: '#DDBA33'},
     input: {
       placeholder: 'E-mail address',
       textContentType: 'emailAddress',
-      value: email,
-      setValue: setEmail,
       width,
+      name: 'email',
+      control,
+      rules: {
+        required: true,
+        // pattern: /.+@.+\..+/i,
+      },
+      setError,
     },
   };
 
   const passwordInput = {
-    icon: {name: 'lock-outline', color: '#DDBA33'},
+    icon: {iconName: 'lock-outline', color: '#DDBA33'},
     input: {
       placeholder: 'Password',
       textContentType: 'password',
       secureTextEntry: true,
-      value: password,
-      setValue: setPassword,
       width,
+      name: 'password',
+      control,
+      rules: {
+        required: true,
+        maxLength: 15,
+        minLength: 4,
+      },
+      setError,
     },
   };
 
   const confirmPasswordInput = {
-    icon: {name: 'lock-outline', color: '#DDBA33'},
+    icon: {iconName: 'lock-outline', color: '#DDBA33'},
     input: {
       placeholder: 'Confirm password',
       textContentType: 'password',
       secureTextEntry: true,
-      value: confirmPassword,
-      setValue: setConfirmPassword,
       width,
+      name: 'confirmPassword',
+      control,
+      rules: {
+        required: true,
+        maxLength: 15,
+        minLength: 4,
+      },
+      setError,
     },
   };
 
-  const onPressHandler = () => {
-    if (!email.trim()) {
-      Alert.alert('Please fill in the form');
-      return setEmail('');
-    }
-    if (!password.trim()) {
-      Alert.alert('Please enter password');
-      return setPassword('');
-    }
-    if (showPasswordConfirmation && !confirmPassword.trim()) {
-      Alert.alert('Please confirm password');
-      return setConfirmPassword('');
-    }
+  const onPressHandler = data => {
+    console.log(errors);
+    // if (!data.email.trim()) {
+    //   Alert.alert('Please fill in the form');
+    //   return setEmail('');
+    // }
+    // if (!data.password.trim()) {
+    //   Alert.alert('Please enter password');
+    //   return setPassword('');
+    // }
+    // if (showPasswordConfirmation && !data.confirmPassword.trim()) {
+    //   Alert.alert('Please confirm password');
+    //   return setConfirmPassword('');
+    // }
     if (
       showPasswordConfirmation &&
-      password.trim() !== confirmPassword.trim()
+      data.password.trim() !== data.confirmPassword.trim()
     ) {
       return Alert.alert('Please enter correct password for the second time');
     }
 
-    onSummit({email, password, confirmPassword});
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
+    onSummit(data);
   };
 
   return (
@@ -110,7 +129,7 @@ export const AuthPage = ({configuration}) => {
             <TouchableOpacity
               style={{...styles.btn, width: width * 0.6}}
               activeOpacity={0.8}
-              onPress={onPressHandler}>
+              onPress={handleSubmit(onPressHandler)}>
               <Text style={styles.btnText}>{btnText}</Text>
             </TouchableOpacity>
           </View>
