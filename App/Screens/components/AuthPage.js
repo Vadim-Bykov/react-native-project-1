@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {
   StyleSheet,
@@ -10,8 +10,17 @@ import {
   TouchableOpacity,
   Alert,
   useWindowDimensions,
+  Button,
 } from 'react-native';
 import {Input} from '../../common/Input';
+import auth from '@react-native-firebase/auth';
+import {AuthFireBase} from './AuthFirebase';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId:
+    '846892742605-1lgkes0r5amg8rji2e1b4g11sbq2trev.apps.googleusercontent.com',
+});
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -27,8 +36,8 @@ export const AuthPage = ({configuration}) => {
   const {
     control,
     handleSubmit,
-    formState: {errors},
-    setError,
+    // formState: {errors},
+    // setError,
   } = useForm();
 
   const emailInput = {
@@ -85,18 +94,7 @@ export const AuthPage = ({configuration}) => {
 
   const onPressHandler = useCallback(data => {
     // console.log(errors);
-    // if (!data.email.trim()) {
-    //   Alert.alert('Please fill in the form');
-    //   return setEmail('');
-    // }
-    // if (!data.password.trim()) {
-    //   Alert.alert('Please enter password');
-    //   return setPassword('');
-    // }
-    // if (showPasswordConfirmation && !data.confirmPassword.trim()) {
-    //   Alert.alert('Please confirm password');
-    //   return setConfirmPassword('');
-    // }
+
     if (
       showPasswordConfirmation &&
       data.password.trim() !== data.confirmPassword.trim()
@@ -107,12 +105,111 @@ export const AuthPage = ({configuration}) => {
     onSummit(data);
   }, []);
 
+  const signUp = () => {
+    auth()
+      .createUserWithEmailAndPassword(
+        'jane_1.doe@example.com',
+        'SuperSecretPassword!',
+      )
+      .then(userCredentials => {
+        if (userCredentials.user) {
+          userCredentials.user
+            .updateProfile({
+              displayName: 'Jane_1',
+            })
+            .then(userCredentials => {
+              // this.props.navigation.navigate('Account');
+              console.log(userCredentials);
+            });
+        }
+      })
+      // .then(() => {
+      //   console.log('User account created & signed in!');
+      // })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+
+        console.error(error);
+      });
+  };
+
+  const signIn = () => {
+    auth()
+      .signInWithEmailAndPassword(
+        'jane.doe@example.com',
+        'SuperSecretPassword!',
+      )
+      .then(userCredentials => {
+        if (userCredentials.user) {
+          userCredentials.user
+            .updateProfile({
+              displayName: 'Jane_Ok',
+            })
+            .then(() => {
+              auth().currentUser.reload();
+              // this.props.navigation.navigate('Account');
+              console.log(auth().currentUser);
+            });
+        }
+      })
+      // .then(() => {
+      //   console.log('User account created & signed in!');
+      // })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+
+        console.error(error);
+      });
+  };
+
+  const logout = () => {
+    auth()
+      .signOut()
+      .then(() => console.log('User signed out!'));
+  };
+
+  const onGoogleButtonPress = async () => {
+    // Get the users ID token
+    const {idToken} = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+  };
+
   return (
     <ImageBackground
       source={require('../../assets/images/city.jpg')}
       style={styles.imageBackground}>
       <View style={styles.wrapper}>
         <ScrollView contentContainerStyle={styles.container}>
+          <AuthFireBase />
+          <Button title="Sign Up" onPress={signUp} />
+          <Button title="Sign In" onPress={signIn} />
+          <Button title="Logout" onPress={logout} />
+          <Button
+            title="Google sign in"
+            onPress={() =>
+              onGoogleButtonPress().then(() =>
+                console.log('Signed in with Google!'),
+              )
+            }
+          />
+
           <View style={styles.imageContainer}>
             <Image
               style={styles.logo}
