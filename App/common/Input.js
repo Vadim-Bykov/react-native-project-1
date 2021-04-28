@@ -15,7 +15,7 @@ export const Input = ({inputConfig}) => {
       name,
       control,
       rules,
-      setError,
+      // setError,
     },
   } = inputConfig;
 
@@ -27,7 +27,6 @@ export const Input = ({inputConfig}) => {
   });
 
   // console.log(fieldState.isTouched);
-  console.log(fieldState.error);
 
   return (
     <>
@@ -41,18 +40,11 @@ export const Input = ({inputConfig}) => {
           value={field.value}
           onChangeText={field.onChange}
           style={styles.input}
-          // onChange={() =>
-          //   fieldState.error &&
-          //   setError(name, {
-          //     type: 'required',
-          //     message: 'Dont Forget Your Username Should Be Cool!',
-          //   })
-          // }
         />
       </View>
       <View style={styles.errorContainer}>
         {fieldState.error && (
-          <Text style={styles.error}>{fieldState.error.type}</Text>
+          <Text style={styles.error}>{fieldState.error.message}</Text>
         )}
       </View>
     </>

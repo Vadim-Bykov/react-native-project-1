@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {
   StyleSheet,
@@ -40,10 +40,10 @@ export const AuthPage = ({configuration}) => {
       name: 'email',
       control,
       rules: {
-        required: true,
+        required: 'This email field is required',
         // pattern: /.+@.+\..+/i,
       },
-      setError,
+      // setError,
     },
   };
 
@@ -57,11 +57,11 @@ export const AuthPage = ({configuration}) => {
       name: 'password',
       control,
       rules: {
-        required: true,
-        maxLength: 15,
-        minLength: 4,
+        required: 'This password field is required',
+        maxLength: {value: 6, message: 'Exceeded max length 6'},
+        minLength: {value: 4, message: 'Not achieved min length 4'},
       },
-      setError,
+      // setError,
     },
   };
 
@@ -75,16 +75,16 @@ export const AuthPage = ({configuration}) => {
       name: 'confirmPassword',
       control,
       rules: {
-        required: true,
-        maxLength: 15,
-        minLength: 4,
+        required: 'This confirmation is required',
+        maxLength: {value: 6, message: 'Exceeded max length 6'},
+        minLength: {value: 4, message: 'Not achieved min length 4'},
       },
-      setError,
+      // setError,
     },
   };
 
-  const onPressHandler = data => {
-    console.log(errors);
+  const onPressHandler = useCallback(data => {
+    // console.log(errors);
     // if (!data.email.trim()) {
     //   Alert.alert('Please fill in the form');
     //   return setEmail('');
@@ -101,11 +101,11 @@ export const AuthPage = ({configuration}) => {
       showPasswordConfirmation &&
       data.password.trim() !== data.confirmPassword.trim()
     ) {
-      return Alert.alert('Please enter correct password for the second time');
+      return Alert.alert('Please enter correct password confirmation');
     }
 
     onSummit(data);
-  };
+  }, []);
 
   return (
     <ImageBackground
