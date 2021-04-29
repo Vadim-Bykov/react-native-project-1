@@ -26,8 +26,8 @@ export const AuthFireBase = () => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    // dispatch(actions.setUser(user));
-    // dispatch(actions.setIsAuth(initializing));
+    dispatch(actions.setUser(user));
+    dispatch(actions.setIsAuth(!initializing));
     return subscriber; // unsubscribe on unmount
   }, [user]);
 
