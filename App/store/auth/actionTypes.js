@@ -1,0 +1,3 @@
+export const AUTH_SET_USER = 'AUTH_SET_USER';
+export const AUTH_SET_IS_AUTH = 'AUTH_SET_IS_AUTH';
+export const AUTH_SET_IS_FETCHING = 'AUTH_SET_IS_FETCHING';
