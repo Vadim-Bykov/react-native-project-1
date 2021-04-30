@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {useForm} from 'react-hook-form';
+import {useForm, useWatch} from 'react-hook-form';
 import {
   StyleSheet,
   Text,
@@ -8,15 +8,16 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
-  Alert,
   useWindowDimensions,
-  Button,
+  Alert,
 } from 'react-native';
 import {Input} from '../../../common/Input';
 import {AuthFireBase} from './AuthFirebase';
 import * as thunks from '../../../store/auth/operations';
 import {useDispatch, useSelector} from 'react-redux';
-import {getIsAuth} from '../../../store/auth/selectors';
+import {getErrorMessage, getIsAuth} from '../../../store/auth/selectors';
+import {Icon} from 'react-native-elements/dist/icons/Icon';
+import {setError} from '../../../store/auth/actions';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -30,22 +31,34 @@ export const AuthPage = ({configuration}) => {
 
   const dispatch = useDispatch();
   const isAuth = useSelector(getIsAuth);
+  const error = useSelector(getErrorMessage);
   const width = useWindowDimensions().width;
+  const height = useWindowDimensions().height;
 
   // useEffect(() => dispatch(thunks.AuthFireBase()), []);
-
-  // useEffect(() => {
-  //   if (isAuth) {
-  //     navigation.navigate('Home');
-  //   }
-  // }, [isAuth]);
 
   const {
     control,
     handleSubmit,
-    // formState: {errors},
-    // setError,
+    reset,
+    formState: {isSubmitSuccessful},
   } = useForm();
+
+  const password = useWatch({control, name: 'password', defaultValue: ''});
+
+  const userNameInput = {
+    icon: {type: 'feather', iconName: 'user', color: '#DDBA33'},
+    input: {
+      placeholder: 'user name',
+      textContentType: 'name',
+      width,
+      name: 'userName',
+      control,
+      rules: {
+        required: 'This field is required',
+      },
+    },
+  };
 
   const emailInput = {
     icon: {iconName: 'mail-outline', color: '#DDBA33'},
@@ -57,9 +70,8 @@ export const AuthPage = ({configuration}) => {
       control,
       rules: {
         required: 'This email field is required',
-        // pattern: /.+@.+\..+/i,
+        pattern: {value: /.+@.+\..+/i, message: 'Incorrect e-mail'},
       },
-      // setError,
     },
   };
 
@@ -77,7 +89,6 @@ export const AuthPage = ({configuration}) => {
         maxLength: {value: 25, message: 'Exceeded max length 25'},
         minLength: {value: 6, message: 'Not achieved min length 6'},
       },
-      // setError,
     },
   };
 
@@ -94,24 +105,14 @@ export const AuthPage = ({configuration}) => {
         required: 'This confirmation is required',
         maxLength: {value: 25, message: 'Exceeded max length 25'},
         minLength: {value: 6, message: 'Not achieved min length 6'},
+        validate: value => value === password || 'The password do not match',
       },
-      // setError,
     },
   };
 
   const onPressHandler = useCallback(data => {
-    if (
-      showPasswordConfirmation &&
-      data.password.trim() !== data.confirmPassword.trim()
-    ) {
-      return Alert.alert('Please enter correct password confirmation');
-    }
-
     if (showPasswordConfirmation && data) {
-      if (data.password.trim() !== data.confirmPassword.trim())
-        return Alert.alert('Please enter correct password confirmation');
-
-      return dispatch(thunks.signUp(data, 'Vadya'));
+      return dispatch(thunks.signUp(data));
     }
 
     if (data) {
@@ -121,52 +122,70 @@ export const AuthPage = ({configuration}) => {
     onSummit(data);
   }, []);
 
+  useEffect(() => {
+    if (isSubmitSuccessful) reset();
+  }, [isSubmitSuccessful, reset]);
+
   if (isAuth) {
     navigation.navigate('Home');
     return null;
   }
 
+  if (error) {
+    Alert.alert(error);
+    dispatch(setError(''));
+  }
+
   return (
-    <>
-      <ImageBackground
-        source={require('../../../assets/images/city.jpg')}
-        style={styles.imageBackground}>
-        <View style={styles.wrapper}>
-          <ScrollView contentContainerStyle={styles.container}>
-            <AuthFireBase />
-            <Button title="Logout" onPress={() => dispatch(thunks.logout())} />
+    <ImageBackground
+      source={require('../../../assets/images/city.jpg')}
+      style={styles.imageBackground}>
+      <View style={styles.wrapper}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <AuthFireBase />
 
-            <View style={styles.imageContainer}>
-              <Image
-                style={styles.logo}
-                source={require('../../../assets/images/logo1.png')}
-              />
-            </View>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.logo}
+              source={require('../../../assets/images/logo1.png')}
+            />
+          </View>
 
-            <View style={styles.form}>
-              <Input inputConfig={emailInput} />
-              <Input inputConfig={passwordInput} />
-              {showPasswordConfirmation && (
-                <Input inputConfig={confirmPasswordInput} />
-              )}
-              <TouchableOpacity
-                style={{...styles.btn, width: width * 0.6}}
-                activeOpacity={0.8}
-                onPress={handleSubmit(onPressHandler)}>
-                <Text style={styles.btnText}>{btnText}</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.form}>
+            {showPasswordConfirmation && <Input inputConfig={userNameInput} />}
+
+            <Input inputConfig={emailInput} />
+            <Input inputConfig={passwordInput} />
+
+            {showPasswordConfirmation && (
+              <Input inputConfig={confirmPasswordInput} />
+            )}
 
             <TouchableOpacity
-              style={styles.redirect}
+              style={{...styles.btn, width: width * 0.6}}
               activeOpacity={0.8}
-              onPress={redirectTo}>
-              <Text style={styles.redirectText}>{redirectionText}</Text>
+              onPress={handleSubmit(onPressHandler)}>
+              <Text style={styles.btnText}>{btnText}</Text>
             </TouchableOpacity>
-          </ScrollView>
-        </View>
-      </ImageBackground>
-    </>
+
+            <TouchableOpacity
+              style={{...styles.btnGoogle, width: width * 0.6}}
+              activeOpacity={0.8}
+              onPress={() => dispatch(thunks.signInGoogle())}>
+              <Text style={styles.btnText}> {btnText} with </Text>
+              <Icon type="antdesign" name="google" color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+
+        <TouchableOpacity
+          style={{...styles.redirect, marginTop: height * 0.05}}
+          activeOpacity={0.8}
+          onPress={redirectTo}>
+          <Text style={styles.redirectText}>{redirectionText}</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -179,23 +198,26 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0, 0.4)',
+    justifyContent: 'space-between',
   },
   container: {
-    flex: 1,
-    justifyContent: 'space-around',
+    flexGrow: 1,
     alignItems: 'center',
-    minHeight: 568,
   },
   imageContainer: {
-    flex: 0.45,
-    justifyContent: 'center',
+    maxHeight: 200,
+    height: '100%',
+    flexShrink: 1,
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   logo: {
     width: 100,
     height: 100,
   },
   form: {
-    flex: 0.55,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
@@ -207,12 +229,23 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 20,
   },
+  btnGoogle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: 50,
+    alignItems: 'center',
+    borderRadius: 25,
+    marginTop: 20,
+    borderColor: '#DDBA33',
+    borderWidth: 3,
+  },
   btnText: {
     color: '#fff',
   },
   redirect: {
-    justifyContent: 'center',
-    height: 80,
+    justifyContent: 'flex-end',
+    alignSelf: 'center',
+    marginBottom: 20,
   },
   redirectText: {
     color: '#C1C1C1',

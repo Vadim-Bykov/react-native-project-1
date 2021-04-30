@@ -14,3 +14,8 @@ export const setIsFetching = isFetching => ({
   type: actionTypes.AUTH_SET_IS_FETCHING,
   isFetching,
 });
+
+export const setError = errorMessage => ({
+  type: actionTypes.AUTH_SET_ERROR_MESSAGE,
+  errorMessage,
+});

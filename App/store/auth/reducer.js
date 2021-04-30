@@ -21,6 +21,12 @@ const authReducer = (state = initialState, action) => {
         isFetching: action.isFetching,
       };
 
+    case actionTypes.AUTH_SET_ERROR_MESSAGE:
+      return {
+        ...state,
+        errorMessage: action.errorMessage,
+      };
+
     default:
       return state;
   }

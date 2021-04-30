@@ -15,7 +15,6 @@ export const Input = ({inputConfig}) => {
       name,
       control,
       rules,
-      // setError,
     },
   } = inputConfig;
 
@@ -25,8 +24,6 @@ export const Input = ({inputConfig}) => {
     defaultValue: '',
     rules,
   });
-
-  // console.log(fieldState.isTouched);
 
   return (
     <>
