@@ -87,3 +87,15 @@ export const signInGoogle = () => async dispatch => {
   dispatch(actions.setUser(auth().currentUser));
   dispatch(actions.setIsAuth(true));
 };
+
+export const AuthFireBase = () => async dispatch => {
+  // const user = useSelector(getUser);
+  await auth().onAuthStateChanged(onAuthStateChanged);
+
+  await function onAuthStateChanged(user) {
+    console.log(user);
+
+    dispatch(actions.setUser(user));
+    dispatch(actions.setIsAuth(false));
+  };
+};

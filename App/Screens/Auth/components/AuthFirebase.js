@@ -7,8 +7,8 @@ import * as actions from '../../../store/auth/actions';
 
 export const AuthFireBase = () => {
   // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUserFirebase] = useState();
+  // const [initializing, setInitializing] = useState(true);
+  // const [user, setUserFirebase] = useState();
   const dispatch = useDispatch();
 
   const userState = useSelector(getUser);
@@ -19,21 +19,21 @@ export const AuthFireBase = () => {
 
   // Handle user state changes
   function onAuthStateChanged(user) {
-    setUserFirebase(user);
+    // setUserFirebase(user);
+    // if (initializing) setInitializing(false);
 
-    if (initializing) setInitializing(false);
+    dispatch(actions.setUser(user));
+    dispatch(actions.setIsAuth(false));
   }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    dispatch(actions.setUser(user));
-    dispatch(actions.setIsAuth(!initializing));
     return subscriber; // unsubscribe on unmount
-  }, [user]);
+  }, []);
 
-  if (initializing) return null;
+  return null;
 
-  if (!user) {
+  if (!userState) {
     return (
       <View>
         <Text>Login</Text>
@@ -43,7 +43,7 @@ export const AuthFireBase = () => {
 
   return (
     <View>
-      <Text>Welcome {user.displayName}</Text>
+      <Text>Welcome {userState.displayName}</Text>
     </View>
   );
 };

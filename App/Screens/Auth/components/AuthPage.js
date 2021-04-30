@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {
   StyleSheet,
@@ -13,17 +13,10 @@ import {
   Button,
 } from 'react-native';
 import {Input} from '../../../common/Input';
-// import auth from '@react-native-firebase/auth';
 import {AuthFireBase} from './AuthFirebase';
-// import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import * as thunks from '../../../store/auth/operations';
 import {useDispatch, useSelector} from 'react-redux';
 import {getIsAuth} from '../../../store/auth/selectors';
-
-// GoogleSignin.configure({
-//   webClientId:
-//     '846892742605-1lgkes0r5amg8rji2e1b4g11sbq2trev.apps.googleusercontent.com',
-// });
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -38,6 +31,14 @@ export const AuthPage = ({configuration}) => {
   const dispatch = useDispatch();
   const isAuth = useSelector(getIsAuth);
   const width = useWindowDimensions().width;
+
+  // useEffect(() => dispatch(thunks.AuthFireBase()), []);
+
+  // useEffect(() => {
+  //   if (isAuth) {
+  //     navigation.navigate('Home');
+  //   }
+  // }, [isAuth]);
 
   const {
     control,
@@ -127,7 +128,6 @@ export const AuthPage = ({configuration}) => {
 
   return (
     <>
-      {/* {isAuth && navigation.navigate('Home')} */}
       <ImageBackground
         source={require('../../../assets/images/city.jpg')}
         style={styles.imageBackground}>
@@ -135,10 +135,6 @@ export const AuthPage = ({configuration}) => {
           <ScrollView contentContainerStyle={styles.container}>
             <AuthFireBase />
             <Button title="Logout" onPress={() => dispatch(thunks.logout())} />
-            {/* <Button
-            title="Google sign in"
-            onPress={() => dispatch(thunks.signInGoogle())}
-          /> */}
 
             <View style={styles.imageContainer}>
               <Image
