@@ -138,7 +138,6 @@ export const AuthPage = ({configuration}) => {
     dispatch(setError(''));
   }
 
-  console.log(isFetching);
   return (
     <>
       {isFetching && <Loader />}
@@ -182,14 +181,19 @@ export const AuthPage = ({configuration}) => {
                 <Icon type="antdesign" name="google" color="#fff" />
               </TouchableOpacity>
             </View>
-          </ScrollView>
 
-          <TouchableOpacity
-            style={{...styles.redirect, marginTop: height * 0.05}}
-            activeOpacity={0.8}
-            onPress={redirectTo}>
-            <Text style={styles.redirectText}>{redirectionText}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                {...styles.redirect, marginTop: height * 0.05},
+                !showPasswordConfirmation &&
+                  width < height &&
+                  styles.redirectSignInScreen,
+              ]}
+              activeOpacity={0.8}
+              onPress={redirectTo}>
+              <Text style={styles.redirectText}>{redirectionText}</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       </ImageBackground>
     </>
@@ -253,6 +257,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignSelf: 'center',
     marginBottom: 20,
+  },
+  redirectSignInScreen: {
+    flexGrow: 1,
   },
   redirectText: {
     color: '#C1C1C1',

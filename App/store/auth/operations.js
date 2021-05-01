@@ -52,7 +52,7 @@ export const signIn = userData => async dispatch => {
     dispatch(actions.setIsFetching(false));
   } catch (error) {
     if (error.code === 'auth/user-not-found') {
-      dispatch(actions.setError('That email address is invalid!'));
+      dispatch(actions.setError('That email address is not found!'));
     }
 
     if (error.code === 'auth/wrong-password') {

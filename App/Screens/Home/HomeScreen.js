@@ -5,7 +5,7 @@ import {Loader} from '../../common/Loader';
 import * as thunks from '../../store/auth/operations';
 import * as selectors from '../../store/auth/selectors';
 
-const HomeScreen = ({navigation}) => {
+export const HomeScreen = ({navigation}) => {
   const user = useSelector(selectors.getUser);
   const isAuth = useSelector(selectors.getIsAuth);
   const isFetching = useSelector(selectors.getIsFetching);
@@ -27,12 +27,11 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-export default HomeScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 0,
   },
 });
