@@ -15,9 +15,10 @@ import {Input} from '../../../common/Input';
 import {AuthFireBase} from './AuthFirebase';
 import * as thunks from '../../../store/auth/operations';
 import {useDispatch, useSelector} from 'react-redux';
-import {getErrorMessage, getIsAuth} from '../../../store/auth/selectors';
+import * as selectors from '../../../store/auth/selectors';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {setError} from '../../../store/auth/actions';
+import {Loader} from '../../../common/Loader';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -30,8 +31,9 @@ export const AuthPage = ({configuration}) => {
   } = configuration;
 
   const dispatch = useDispatch();
-  const isAuth = useSelector(getIsAuth);
-  const error = useSelector(getErrorMessage);
+  const isAuth = useSelector(selectors.getIsAuth);
+  const isFetching = useSelector(selectors.getIsFetching);
+  const error = useSelector(selectors.getErrorMessage);
   const width = useWindowDimensions().width;
   const height = useWindowDimensions().height;
 
@@ -136,56 +138,61 @@ export const AuthPage = ({configuration}) => {
     dispatch(setError(''));
   }
 
+  console.log(isFetching);
   return (
-    <ImageBackground
-      source={require('../../../assets/images/city.jpg')}
-      style={styles.imageBackground}>
-      <View style={styles.wrapper}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <AuthFireBase />
+    <>
+      {isFetching && <Loader />}
+      <AuthFireBase />
+      <ImageBackground
+        source={require('../../../assets/images/city.jpg')}
+        style={styles.imageBackground}>
+        <View style={styles.wrapper}>
+          <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.imageContainer}>
+              <Image
+                style={styles.logo}
+                source={require('../../../assets/images/logo1.png')}
+              />
+            </View>
 
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.logo}
-              source={require('../../../assets/images/logo1.png')}
-            />
-          </View>
+            <View style={styles.form}>
+              {showPasswordConfirmation && (
+                <Input inputConfig={userNameInput} />
+              )}
 
-          <View style={styles.form}>
-            {showPasswordConfirmation && <Input inputConfig={userNameInput} />}
+              <Input inputConfig={emailInput} />
+              <Input inputConfig={passwordInput} />
 
-            <Input inputConfig={emailInput} />
-            <Input inputConfig={passwordInput} />
+              {showPasswordConfirmation && (
+                <Input inputConfig={confirmPasswordInput} />
+              )}
 
-            {showPasswordConfirmation && (
-              <Input inputConfig={confirmPasswordInput} />
-            )}
+              <TouchableOpacity
+                style={{...styles.btn, width: width * 0.6}}
+                activeOpacity={0.8}
+                onPress={handleSubmit(onPressHandler)}>
+                <Text style={styles.btnText}>{btnText}</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{...styles.btn, width: width * 0.6}}
-              activeOpacity={0.8}
-              onPress={handleSubmit(onPressHandler)}>
-              <Text style={styles.btnText}>{btnText}</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{...styles.btnGoogle, width: width * 0.6}}
+                activeOpacity={0.8}
+                onPress={() => dispatch(thunks.signInGoogle())}>
+                <Text style={styles.btnText}> {btnText} with </Text>
+                <Icon type="antdesign" name="google" color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
 
-            <TouchableOpacity
-              style={{...styles.btnGoogle, width: width * 0.6}}
-              activeOpacity={0.8}
-              onPress={() => dispatch(thunks.signInGoogle())}>
-              <Text style={styles.btnText}> {btnText} with </Text>
-              <Icon type="antdesign" name="google" color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-
-        <TouchableOpacity
-          style={{...styles.redirect, marginTop: height * 0.05}}
-          activeOpacity={0.8}
-          onPress={redirectTo}>
-          <Text style={styles.redirectText}>{redirectionText}</Text>
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+          <TouchableOpacity
+            style={{...styles.redirect, marginTop: height * 0.05}}
+            activeOpacity={0.8}
+            onPress={redirectTo}>
+            <Text style={styles.redirectText}>{redirectionText}</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </>
   );
 };
 

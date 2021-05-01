@@ -1,12 +1,14 @@
 import React from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {Loader} from '../../common/Loader';
 import * as thunks from '../../store/auth/operations';
 import * as selectors from '../../store/auth/selectors';
 
 const HomeScreen = ({navigation}) => {
   const user = useSelector(selectors.getUser);
   const isAuth = useSelector(selectors.getIsAuth);
+  const isFetching = useSelector(selectors.getIsFetching);
   const dispatch = useDispatch();
 
   if (!isAuth) {
@@ -15,10 +17,13 @@ const HomeScreen = ({navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>{user.displayName}</Text>
-      <Button title="Logout" onPress={() => dispatch(thunks.logout())} />
-    </View>
+    <>
+      {isFetching && <Loader />}
+      <View style={styles.container}>
+        <Text>{user.displayName}</Text>
+        <Button title="Logout" onPress={() => dispatch(thunks.logout())} />
+      </View>
+    </>
   );
 };
 

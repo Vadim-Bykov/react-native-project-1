@@ -9,6 +9,8 @@ GoogleSignin.configure({
 
 export const signUp = userData => async dispatch => {
   try {
+    dispatch(actions.setIsFetching(true));
+
     const userCredentials = await auth().createUserWithEmailAndPassword(
       userData.email,
       userData.password,
@@ -21,60 +23,68 @@ export const signUp = userData => async dispatch => {
     }
 
     await dispatch(actions.setUser(auth().currentUser));
+
     dispatch(actions.setIsAuth(true));
-    console.log(auth().currentUser);
+    dispatch(actions.setIsFetching(false));
   } catch (error) {
     if (error.code === 'auth/email-already-in-use') {
-      console.log('That email address is already in use!');
       dispatch(actions.setError('That email address is already in use!'));
     }
 
     if (error.code === 'auth/invalid-email') {
-      console.log('That email address is invalid!');
       dispatch(actions.setError('That email address is invalid!'));
     }
 
     console.error(error);
+    dispatch(actions.setIsFetching(false));
   }
 };
 
 export const signIn = userData => async dispatch => {
   try {
+    dispatch(actions.setIsFetching(true));
+
     await auth().signInWithEmailAndPassword(userData.email, userData.password);
 
     await dispatch(actions.setUser(auth().currentUser));
 
     dispatch(actions.setIsAuth(true));
-
-    console.log(auth().currentUser);
+    dispatch(actions.setIsFetching(false));
   } catch (error) {
     if (error.code === 'auth/user-not-found') {
-      console.log('That email address is invalid!');
       dispatch(actions.setError('That email address is invalid!'));
     }
 
     if (error.code === 'auth/wrong-password') {
-      console.log('That password is invalid!');
       dispatch(actions.setError('That password is invalid!'));
     }
 
     console.error(error);
+    dispatch(actions.setIsFetching(false));
   }
 };
 
 export const logout = () => async dispatch => {
   try {
+    dispatch(actions.setIsFetching(true));
+
     await auth().signOut();
+
     dispatch(actions.setUser({}));
     dispatch(actions.setIsAuth(false));
-    console.log('User signed out!');
+    dispatch(actions.setIsFetching(false));
   } catch (error) {
+    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
+
+    dispatch(actions.setIsFetching(false));
   }
 };
 
 export const signInGoogle = () => async dispatch => {
   try {
+    dispatch(actions.setIsFetching(true));
+
     const {idToken} = await GoogleSignin.signIn();
 
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
@@ -83,8 +93,12 @@ export const signInGoogle = () => async dispatch => {
 
     dispatch(actions.setUser(auth().currentUser));
     dispatch(actions.setIsAuth(true));
+    dispatch(actions.setIsFetching(false));
   } catch (error) {
+    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
+
+    dispatch(actions.setIsFetching(false));
   }
 };
 
