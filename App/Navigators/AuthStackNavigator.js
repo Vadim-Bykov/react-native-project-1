@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/stack';
 import {SignInScreen} from '../Screens/Auth/SignInScreen';
 import {SignUpScreen} from '../Screens/Auth/SignUpScreen';
+import HomeScreen from '../Screens/Home/HomeScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,13 @@ export const AuthStackNavigator = () => {
           headerTitle: false,
           headerTransparent: 1,
           headerTintColor: '#fff',
+        }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

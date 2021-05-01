@@ -1,5 +1,5 @@
 import React from 'react';
-import {AuthPage} from '../components/AuthPage';
+import {AuthPage} from './components/AuthPage';
 
 export const SignUpScreen = ({navigation}) => {
   const goToSignIn = () => navigation.navigate('SignIn');
@@ -11,6 +11,7 @@ export const SignUpScreen = ({navigation}) => {
     redirectionText: 'Already have account? Sign In',
     redirectTo: goToSignIn,
     onSummit,
+    navigation,
   };
 
   return <AuthPage configuration={configuration} />;
