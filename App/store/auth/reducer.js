@@ -27,6 +27,12 @@ const authReducer = (state = initialState, action) => {
         errorMessage: action.errorMessage,
       };
 
+    case actionTypes.AUTH_SET_INITIALIZED:
+      return {
+        ...state,
+        initialized: true,
+      };
+
     default:
       return state;
   }

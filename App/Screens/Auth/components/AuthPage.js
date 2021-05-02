@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import {Input} from '../../../common/Input';
-import {AuthFireBase} from './AuthFirebase';
+// import {AuthFireBase} from './AuthFirebase';
 import * as thunks from '../../../store/auth/operations';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../../store/auth/selectors';
@@ -34,10 +34,11 @@ export const AuthPage = ({configuration}) => {
   const isAuth = useSelector(selectors.getIsAuth);
   const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
+  const initialized = useSelector(selectors.getInitialized);
   const width = useWindowDimensions().width;
   const height = useWindowDimensions().height;
 
-  // useEffect(() => dispatch(thunks.AuthFireBase()), []);
+  useEffect(() => dispatch(thunks.AuthFireBase()), []);
 
   const {
     control,
@@ -138,10 +139,12 @@ export const AuthPage = ({configuration}) => {
     dispatch(setError(''));
   }
 
+  if (!initialized) return <Loader />;
+
   return (
     <>
       {isFetching && <Loader />}
-      <AuthFireBase />
+      {/* <AuthFireBase /> */}
       <ImageBackground
         source={require('../../../assets/images/city.jpg')}
         style={styles.imageBackground}>

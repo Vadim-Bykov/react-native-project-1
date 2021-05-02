@@ -3,4 +3,5 @@ export const initialState = {
   isAuth: false,
   isFetching: false,
   errorMessage: '',
+  initialized: false,
 };

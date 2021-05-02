@@ -102,14 +102,14 @@ export const signInGoogle = () => async dispatch => {
   }
 };
 
-// export const AuthFireBase = () => async dispatch => {
-//   // const user = useSelector(getUser);
-//   await auth().onAuthStateChanged(onAuthStateChanged);
+export const AuthFireBase = () => dispatch => {
+  const setUserAuth = user => {
+    user
+      ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
+      : dispatch(actions.setIsAuth(false));
+  };
 
-//   await function onAuthStateChanged(user) {
-//     console.log(user);
+  auth().onAuthStateChanged(setUserAuth);
 
-//     dispatch(actions.setUser(user));
-//     dispatch(actions.setIsAuth(false));
-//   };
-// };
+  dispatch(actions.setInitialized());
+};

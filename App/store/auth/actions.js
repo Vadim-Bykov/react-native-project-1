@@ -19,3 +19,5 @@ export const setError = errorMessage => ({
   type: actionTypes.AUTH_SET_ERROR_MESSAGE,
   errorMessage,
 });
+
+export const setInitialized = () => ({type: actionTypes.AUTH_SET_INITIALIZED});
