@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useController} from 'react-hook-form';
 import {StyleSheet, View, TextInput, Text} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
@@ -18,6 +18,14 @@ export const Input = ({inputConfig}) => {
     },
   } = inputConfig;
 
+  const inputRef = useRef(null);
+
+  useEffect(
+    () =>
+      inputRef.current.setNativeProps({style: {fontFamily: 'Nunito-Light'}}),
+    [],
+  );
+
   const {field, fieldState} = useController({
     control,
     name,
@@ -36,6 +44,7 @@ export const Input = ({inputConfig}) => {
           secureTextEntry={secureTextEntry}
           value={field.value}
           onChangeText={field.onChange}
+          ref={inputRef}
           style={styles.input}
         />
       </View>

@@ -12,13 +12,14 @@ import {
   Alert,
 } from 'react-native';
 import {Input} from '../../../common/Input';
-// import {AuthFireBase} from './AuthFirebase';
 import * as thunks from '../../../store/auth/operations';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../../store/auth/selectors';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {setError} from '../../../store/auth/actions';
+import {setError, setInitialized, setIsAuth} from '../../../store/auth/actions';
 import {Loader} from '../../../common/Loader';
+import {useAuthentication} from './useAuthentication';
+import {Error} from '../../../common/Error';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -38,7 +39,10 @@ export const AuthPage = ({configuration}) => {
   const width = useWindowDimensions().width;
   const height = useWindowDimensions().height;
 
-  useEffect(() => dispatch(thunks.AuthFireBase()), []);
+  const isAuthFireBase = useAuthentication();
+  dispatch(setIsAuth(isAuthFireBase));
+  dispatch(setInitialized(true));
+  // useEffect(() => dispatch(thunks.AuthFireBase()), []);
 
   const {
     control,
@@ -134,17 +138,17 @@ export const AuthPage = ({configuration}) => {
     return null;
   }
 
-  if (error) {
-    Alert.alert(error);
-    dispatch(setError(''));
-  }
+  // if (error) {
+  //   Alert.alert(error);
+  //   dispatch(setError(''));
+  // }
 
   if (!initialized) return <Loader />;
 
   return (
     <>
       {isFetching && <Loader />}
-      {/* <AuthFireBase /> */}
+      {error && <Error />}
       <ImageBackground
         source={require('../../../assets/images/city.jpg')}
         style={styles.imageBackground}>
