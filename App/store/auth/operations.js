@@ -27,14 +27,19 @@ export const signUp = userData => async dispatch => {
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    if (error.code === 'auth/email-already-in-use') {
-      dispatch(actions.setError('That email address is already in use!'));
-    }
+    // if (error.code === 'auth/email-already-in-use') {
+    //   dispatch(actions.setError('That email address is already in use!'));
+    // }
 
-    if (error.code === 'auth/invalid-email') {
-      dispatch(actions.setError('That email address is invalid!'));
-    }
+    // if (error.code === 'auth/invalid-email') {
+    //   dispatch(actions.setError('That email address is invalid!'));
+    // }
 
+    const errorText = error
+      .toString()
+      .match(/([\]\s]\b)[a-z\s]+/i)[0]
+      .slice(1);
+    dispatch(actions.setError(errorText));
     console.error(error);
     dispatch(actions.setIsFetching(false));
   }
@@ -51,15 +56,15 @@ export const signIn = userData => async dispatch => {
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    if (error.code === 'auth/user-not-found') {
-      dispatch(actions.setError('That email address is not found!'));
-    }
-
-    if (error.code === 'auth/wrong-password') {
-      dispatch(actions.setError('That password is invalid!'));
-    }
-
     console.error(error);
+    dispatch(
+      actions.setError(
+        error
+          .toString()
+          .match(/([\]\s]\b)[a-z\s]+/i)[0]
+          .slice(1),
+      ),
+    );
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -102,18 +107,6 @@ export const signInGoogle = () => async dispatch => {
   }
 };
 
-export const AuthFireBase = () => dispatch => {
-  const setUserAuth = user => {
-    user
-      ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
-      : dispatch(actions.setIsAuth(false));
-  };
-
-  auth().onAuthStateChanged(setUserAuth);
-
-  dispatch(actions.setInitialized());
-};
-
 export const fetchUserData = () => async dispatch => {
   try {
     dispatch(actions.setIsFetching(true));
@@ -123,7 +116,22 @@ export const fetchUserData = () => async dispatch => {
     dispatch(actions.setUser(userData));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    dispatch(actions.setError(error));
+    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
   }
 };
+
+// export const AuthFireBase = () => dispatch => {
+//   const setUserAuth = user => {
+//     user
+//       ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
+//       : dispatch(actions.setIsAuth(false));
+//   };
+
+//   auth().onAuthStateChanged(setUserAuth);
+
+//   dispatch(actions.setInitialized());
+// };
+
+// /([\]\s]\b)[a-z\s]+/i)
+// /(\]\s)[a-z\s]+/gi

@@ -1,105 +1,69 @@
 import React, {useState} from 'react';
-import {Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import {View, Modal, StyleSheet, Text, useWindowDimensions} from 'react-native';
+import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {useDispatch, useSelector} from 'react-redux';
 import {setError} from '../store/auth/actions';
 import {getErrorMessage} from '../store/auth/selectors';
 
 export const Error = () => {
+  const dispatch = useDispatch();
   const errorMessage = useSelector(getErrorMessage);
   const [modalVisible, setModalVisible] = useState(!!errorMessage);
-  const dispatch = useDispatch();
+  const width = useWindowDimensions().width;
+
+  const onClose = () => {
+    setModalVisible(!modalVisible);
+    dispatch(setError(null));
+  };
 
   return (
-    <View style={styles.container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-          dispatch(setError(null));
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>{errorMessage}</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                dispatch(setError(null));
-              }}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={onClose}>
+      <View style={styles.centeredView}>
+        <View style={{...styles.modalView, width: 0.9 * width}}>
+          <Icon name="error" type="material" color="red" size={28} />
+          <Text style={styles.modalText}>{errorMessage}</Text>
+          <Icon
+            name="close"
+            type="simple-line-icon"
+            color="#888888"
+            onPress={onClose}
+            iconStyle={styles.iconClose}
+          />
         </View>
-      </Modal>
-      {/* <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable> */}
-    </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 22,
+    marginBottom: 15,
+    zIndex: 1,
   },
   modalView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
     margin: 20,
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  iconClose: {
+    backgroundColor: '#DDDDDD',
+    borderRadius: 13,
   },
 });
-
-// const styles = StyleSheet.create({
-//   container: {
-//     position: 'absolute',
-//     top: 0,
-//     right: 0,
-//     bottom: 0,
-//     left: 0,
-//   },
-// });
