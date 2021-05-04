@@ -16,9 +16,9 @@ import * as thunks from '../../../store/auth/operations';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../../store/auth/selectors';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {setError, setInitialized, setIsAuth} from '../../../store/auth/actions';
+// import {setError, setInitialized, setIsAuth} from '../../../store/auth/actions';
 import {Loader} from '../../../common/Loader';
-import {useAuthentication} from './useAuthentication';
+import {useAuthentication} from '../../StartScreen/components/useAuthentication';
 import {Error} from '../../../common/Error';
 
 export const AuthPage = ({configuration}) => {
@@ -35,13 +35,15 @@ export const AuthPage = ({configuration}) => {
   const isAuth = useSelector(selectors.getIsAuth);
   const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
-  const initialized = useSelector(selectors.getInitialized);
-  const width = useWindowDimensions().width;
-  const height = useWindowDimensions().height;
+  // const initialized = useSelector(selectors.getInitialized);
+  const {width, height} = useWindowDimensions();
 
-  const isAuthFireBase = useAuthentication();
-  dispatch(setIsAuth(isAuthFireBase));
-  dispatch(setInitialized(true));
+  // const {authorized} = useAuthentication();
+  // useEffect(() => {
+  //   dispatch(setIsAuth(authorized));
+  //   dispatch(setInitialized(true));
+  // }, [authorized]);
+
   // useEffect(() => dispatch(thunks.AuthFireBase()), []);
 
   const {
@@ -138,12 +140,7 @@ export const AuthPage = ({configuration}) => {
     return null;
   }
 
-  // if (error) {
-  //   Alert.alert(error);
-  //   dispatch(setError(''));
-  // }
-
-  if (!initialized) return <Loader />;
+  // if (!initialized) return <Loader />;
 
   return (
     <>

@@ -1,13 +1,13 @@
 import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
-import {MainNavigator} from './App/Navigators/MainNavigator';
+import {AppNavigator} from './App/Navigators/AppNavigator';
 import store from './App/store/store';
 
 export const App = () => (
   <Provider store={store}>
     <SafeAreaProvider>
-      <MainNavigator />
+      <AppNavigator />
     </SafeAreaProvider>
   </Provider>
 );

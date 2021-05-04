@@ -20,4 +20,4 @@ export const setError = errorMessage => ({
   errorMessage,
 });
 
-export const setInitialized = () => ({type: actionTypes.AUTH_SET_INITIALIZED});
+// export const setInitialized = () => ({type: actionTypes.AUTH_SET_INITIALIZED});

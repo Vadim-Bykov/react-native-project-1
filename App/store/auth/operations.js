@@ -1,6 +1,7 @@
 import * as actions from './actions';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {extractErrorMessage} from '../../utils/utils';
 
 GoogleSignin.configure({
   webClientId:
@@ -27,20 +28,9 @@ export const signUp = userData => async dispatch => {
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    // if (error.code === 'auth/email-already-in-use') {
-    //   dispatch(actions.setError('That email address is already in use!'));
-    // }
-
-    // if (error.code === 'auth/invalid-email') {
-    //   dispatch(actions.setError('That email address is invalid!'));
-    // }
-
-    const errorText = error
-      .toString()
-      .match(/([\]\s]\b)[a-z\s]+/i)[0]
-      .slice(1);
-    dispatch(actions.setError(errorText));
     console.error(error);
+
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -57,14 +47,8 @@ export const signIn = userData => async dispatch => {
     dispatch(actions.setIsFetching(false));
   } catch (error) {
     console.error(error);
-    dispatch(
-      actions.setError(
-        error
-          .toString()
-          .match(/([\]\s]\b)[a-z\s]+/i)[0]
-          .slice(1),
-      ),
-    );
+
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -79,9 +63,9 @@ export const logout = () => async dispatch => {
     dispatch(actions.setIsAuth(false));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
 
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -100,9 +84,9 @@ export const signInGoogle = () => async dispatch => {
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
 
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -116,8 +100,10 @@ export const fetchUserData = () => async dispatch => {
     dispatch(actions.setUser(userData));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
+
+    dispatch(actions.setError(extractErrorMessage(error)));
+    dispatch(actions.setIsFetching(false));
   }
 };
 

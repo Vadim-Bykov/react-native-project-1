@@ -3,9 +3,11 @@ import auth from '@react-native-firebase/auth';
 
 export const useAuthentication = () => {
   const [authorized, setAuthorized] = useState(false);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const setUserAuth = user => {
     user ? setAuthorized(true) : setAuthorized(false);
+    // setIsLoading(false);
   };
 
   useEffect(() => {
