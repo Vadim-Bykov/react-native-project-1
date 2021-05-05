@@ -9,16 +9,13 @@ import {
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
-  Alert,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {Input} from '../../../common/Input';
 import * as thunks from '../../../store/auth/operations';
-import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../../store/auth/selectors';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-// import {setError, setInitialized, setIsAuth} from '../../../store/auth/actions';
 import {Loader} from '../../../common/Loader';
-import {useAuthentication} from '../../StartScreen/components/useAuthentication';
 import {Error} from '../../../common/Error';
 
 export const AuthPage = ({configuration}) => {
@@ -28,23 +25,12 @@ export const AuthPage = ({configuration}) => {
     redirectionText,
     redirectTo,
     onSummit,
-    navigation,
   } = configuration;
 
   const dispatch = useDispatch();
-  const isAuth = useSelector(selectors.getIsAuth);
   const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
-  // const initialized = useSelector(selectors.getInitialized);
   const {width, height} = useWindowDimensions();
-
-  // const {authorized} = useAuthentication();
-  // useEffect(() => {
-  //   dispatch(setIsAuth(authorized));
-  //   dispatch(setInitialized(true));
-  // }, [authorized]);
-
-  // useEffect(() => dispatch(thunks.AuthFireBase()), []);
 
   const {
     control,
@@ -134,13 +120,6 @@ export const AuthPage = ({configuration}) => {
   useEffect(() => {
     if (isSubmitSuccessful) reset();
   }, [isSubmitSuccessful, reset]);
-
-  if (isAuth) {
-    navigation.navigate('Home');
-    return null;
-  }
-
-  // if (!initialized) return <Loader />;
 
   return (
     <>

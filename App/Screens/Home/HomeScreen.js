@@ -5,30 +5,30 @@ import {Loader} from '../../common/Loader';
 import * as thunks from '../../store/auth/operations';
 import * as selectors from '../../store/auth/selectors';
 
-export const HomeScreen = ({navigation}) => {
+export const HomeScreen = () => {
   const user = useSelector(selectors.getUser);
-  const isAuth = useSelector(selectors.getIsAuth);
   const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(thunks.fetchUserData());
-  }, []);
+  // const isAuth = useSelector(selectors.getIsAuth);
+  // console.log(isAuth);
 
-  if (!isAuth) {
-    navigation.navigate('SignIn');
-    return null;
-  }
+  // useEffect(() => {
+  //   dispatch(thunks.fetchUserData());
+  // }, []);
 
   return (
     <>
       {isFetching && <Loader />}
       {error && <Error />}
-      <View style={styles.container}>
-        <Text>{user.displayName}</Text>
-        <Button title="Logout" onPress={() => dispatch(thunks.logout())} />
-      </View>
+
+      {user ? (
+        <View style={styles.container}>
+          <Text>{user.displayName}</Text>
+          <Button title="Logout" onPress={() => dispatch(thunks.logout())} />
+        </View>
+      ) : null}
     </>
   );
 };

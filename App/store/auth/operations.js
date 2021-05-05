@@ -59,8 +59,8 @@ export const logout = () => async dispatch => {
 
     await auth().signOut();
 
-    dispatch(actions.setUser({}));
     dispatch(actions.setIsAuth(false));
+    dispatch(actions.setUser(null));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
     console.error(error);
@@ -91,13 +91,18 @@ export const signInGoogle = () => async dispatch => {
   }
 };
 
-export const fetchUserData = () => async dispatch => {
+export const authFireBase = () => dispatch => {
   try {
     dispatch(actions.setIsFetching(true));
+    const setUserAuth = user => {
+      user
+        ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
+        : dispatch(actions.setIsAuth(false));
+    };
 
-    const userData = await auth().currentUser;
+    auth().onAuthStateChanged(setUserAuth);
 
-    dispatch(actions.setUser(userData));
+    dispatch(actions.setInitialized());
     dispatch(actions.setIsFetching(false));
   } catch (error) {
     console.error(error);
@@ -107,17 +112,18 @@ export const fetchUserData = () => async dispatch => {
   }
 };
 
-// export const AuthFireBase = () => dispatch => {
-//   const setUserAuth = user => {
-//     user
-//       ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
-//       : dispatch(actions.setIsAuth(false));
-//   };
+// export const fetchUserData = () => async dispatch => {
+//   try {
+//     dispatch(actions.setIsFetching(true));
 
-//   auth().onAuthStateChanged(setUserAuth);
+//     const userData = await auth().currentUser;
 
-//   dispatch(actions.setInitialized());
+//     dispatch(actions.setUser(userData));
+//     dispatch(actions.setIsFetching(false));
+//   } catch (error) {
+//     console.error(error);
+
+//     dispatch(actions.setError(extractErrorMessage(error)));
+//     dispatch(actions.setIsFetching(false));
+//   }
 // };
-
-// /([\]\s]\b)[a-z\s]+/i)
-// /(\]\s)[a-z\s]+/gi

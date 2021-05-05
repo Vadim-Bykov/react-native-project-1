@@ -3,26 +3,30 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from '@react-navigation/stack';
-// import {SignInScreen} from '../Screens/Auth/SignInScreen';
-// import {SignUpScreen} from '../Screens/Auth/SignUpScreen';
 import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {AuthStackNavigator} from './AuthStackNavigator';
 import {SplashScreen} from '../Screens/StartScreen/SplashScreen';
 import {useAuthentication} from '../Screens/StartScreen/components/useAuthentication';
-import {useDispatch} from 'react-redux';
-import {setIsAuth} from '../store/auth/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import * as actions from '../store/auth/actions';
+import * as selectors from '../store/auth/selectors';
+import * as thunks from '../store/auth/operations';
 
 const Stack = createStackNavigator();
 
 export const MainStackNavigator = () => {
-  const [initialized, setInitialized] = useState(false);
+  const isAuth = useSelector(selectors.getIsAuth);
   const dispatch = useDispatch();
 
-  const authorized = useAuthentication();
+  const {authorized, userData, initializing} = useAuthentication();
+
   useEffect(() => {
-    dispatch(setIsAuth(authorized));
-    setInitialized(true);
+    dispatch(actions.setIsAuth(authorized));
+    dispatch(actions.setUser(userData));
   }, [authorized]);
+
+  // const initialized = useSelector(selectors.getInitialized);
+  // useEffect(() => dispatch(thunks.authFireBase()), []);
 
   const config = {
     animation: 'timing',
@@ -30,8 +34,6 @@ export const MainStackNavigator = () => {
       duration: 200,
     },
   };
-
-  if (!initialized) return <SplashScreen />;
 
   return (
     <Stack.Navigator
@@ -44,29 +46,29 @@ export const MainStackNavigator = () => {
         gestureDirection: 'horizontal',
       }}
       mode="modal">
-      <Stack.Screen
-        name="Auth"
-        component={AuthStackNavigator}
-        options={{
-          headerShown: false,
-        }}
-      />
-      {/* <Stack.Screen
-        name="SignUp"
-        component={SignUpScreen}
-        options={{
-          headerTitle: false,
-          headerTransparent: 1,
-          headerTintColor: '#fff',
-        }}
-      /> */}
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+      {initializing ? (
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{headerShown: false}}
+        />
+      ) : isAuth ? (
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+      ) : (
+        <Stack.Screen
+          name="Auth"
+          component={AuthStackNavigator}
+          options={{
+            headerShown: false,
+          }}
+        />
+      )}
     </Stack.Navigator>
   );
 };

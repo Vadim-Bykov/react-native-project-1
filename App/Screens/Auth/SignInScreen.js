@@ -11,7 +11,6 @@ export const SignInScreen = ({navigation}) => {
     redirectionText: 'New here? Sign Up',
     redirectTo: goToSignUp,
     onSummit,
-    navigation,
   };
 
   return <AuthPage configuration={configuration} />;
