@@ -6,9 +6,7 @@ import {
 import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {AuthStackNavigator} from './AuthStackNavigator';
 import {SplashScreen} from '../Screens/StartScreen/SplashScreen';
-import {useAuthentication} from '../Screens/StartScreen/components/useAuthentication';
 import {useDispatch, useSelector} from 'react-redux';
-import * as actions from '../store/auth/actions';
 import * as selectors from '../store/auth/selectors';
 import * as thunks from '../store/auth/operations';
 
@@ -16,17 +14,10 @@ const Stack = createStackNavigator();
 
 export const MainStackNavigator = () => {
   const isAuth = useSelector(selectors.getIsAuth);
+  const initialized = useSelector(selectors.getInitialized);
   const dispatch = useDispatch();
 
-  const {authorized, userData, initializing} = useAuthentication();
-
-  useEffect(() => {
-    dispatch(actions.setIsAuth(authorized));
-    dispatch(actions.setUser(userData));
-  }, [authorized]);
-
-  // const initialized = useSelector(selectors.getInitialized);
-  // useEffect(() => dispatch(thunks.authFireBase()), []);
+  useEffect(() => dispatch(thunks.authFireBase()), []);
 
   const config = {
     animation: 'timing',
@@ -46,7 +37,7 @@ export const MainStackNavigator = () => {
         gestureDirection: 'horizontal',
       }}
       mode="modal">
-      {initializing ? (
+      {!initialized ? (
         <Stack.Screen
           name="Splash"
           component={SplashScreen}

@@ -111,19 +111,3 @@ export const authFireBase = () => async dispatch => {
     dispatch(actions.setIsFetching(false));
   }
 };
-
-// export const fetchUserData = () => async dispatch => {
-//   try {
-//     dispatch(actions.setIsFetching(true));
-
-//     const userData = await auth().currentUser;
-
-//     dispatch(actions.setUser(userData));
-//     dispatch(actions.setIsFetching(false));
-//   } catch (error) {
-//     console.error(error);
-
-//     dispatch(actions.setError(extractErrorMessage(error)));
-//     dispatch(actions.setIsFetching(false));
-//   }
-// };

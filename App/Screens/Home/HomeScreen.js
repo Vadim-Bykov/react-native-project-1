@@ -11,13 +11,6 @@ export const HomeScreen = () => {
   const error = useSelector(selectors.getErrorMessage);
   const dispatch = useDispatch();
 
-  // const isAuth = useSelector(selectors.getIsAuth);
-  // console.log(isAuth);
-
-  // useEffect(() => {
-  //   dispatch(thunks.fetchUserData());
-  // }, []);
-
   return (
     <>
       {isFetching && <Loader />}
