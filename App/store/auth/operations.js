@@ -91,7 +91,7 @@ export const signInGoogle = () => async dispatch => {
   }
 };
 
-export const authFireBase = () => dispatch => {
+export const authFireBase = () => async dispatch => {
   try {
     dispatch(actions.setIsFetching(true));
     const setUserAuth = user => {
@@ -100,7 +100,7 @@ export const authFireBase = () => dispatch => {
         : dispatch(actions.setIsAuth(false));
     };
 
-    auth().onAuthStateChanged(setUserAuth);
+    await auth().onAuthStateChanged(setUserAuth);
 
     dispatch(actions.setInitialized());
     dispatch(actions.setIsFetching(false));
