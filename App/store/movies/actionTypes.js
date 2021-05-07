@@ -1,0 +1,1 @@
+export const MOVIES_SET_GENRES = 'MOVIES_SET_GENRES';

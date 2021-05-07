@@ -9,6 +9,7 @@ import {SplashScreen} from '../Screens/StartScreen/SplashScreen';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../store/auth/selectors';
 import * as thunks from '../store/auth/operations';
+import {MoviesStackNavigator} from './MoviesStackNavigator';
 
 const Stack = createStackNavigator();
 
@@ -46,7 +47,7 @@ export const MainStackNavigator = () => {
       ) : isAuth ? (
         <Stack.Screen
           name="Home"
-          component={HomeScreen}
+          component={MoviesStackNavigator}
           options={{
             headerShown: false,
           }}

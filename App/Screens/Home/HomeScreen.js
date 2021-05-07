@@ -6,20 +6,18 @@ import * as api from '../../api/moviesApi';
 import {Loader} from '../../common/Loader';
 import * as thunks from '../../store/auth/operations';
 import * as selectors from '../../store/auth/selectors';
+import {Genres} from './components/Genres';
 
 export const HomeScreen = () => {
-  const genres = useQuery('genres', api.getGenres);
-  // const movies = useQuery('movies', api.getMovies);
+  const movies = useQuery('movies', () => api.getMovies('popular'));
 
-  console.log(genres);
-  // console.log(movies);
-
-  // const fullData = useQueries([
+  // const [genres, movies] = useQueries([
   //   {queryKey: ['genres', 1], queryFn: api.getGenres},
-  //   {queryKey: ['movies', 1], queryFn: api.getMovies},
+  //   {queryKey: ['movies', 2], queryFn: () => api.getMovies('popular')},
   // ]);
-
   // console.log(fullData);
+
+  console.log(movies.data);
 
   return (
     <>
@@ -27,6 +25,10 @@ export const HomeScreen = () => {
       {/* {error && <Error />} */}
 
       <View style={styles.container}>
+        <Genres />
+        <Genres />
+        <Genres />
+        <Genres />
         <Text>Hello</Text>
       </View>
     </>
@@ -35,11 +37,11 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    // flex: 1,
+    // justifyContent: 'center',
     alignItems: 'center',
     zIndex: 0,
-    backgroundColor: '#9ED9F7',
+    backgroundColor: 'yellow',
   },
 });
 
