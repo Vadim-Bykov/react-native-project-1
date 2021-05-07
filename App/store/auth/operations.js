@@ -1,6 +1,7 @@
 import * as actions from './actions';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {extractErrorMessage} from '../../utils/utils';
 
 GoogleSignin.configure({
   webClientId:
@@ -27,15 +28,9 @@ export const signUp = userData => async dispatch => {
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    if (error.code === 'auth/email-already-in-use') {
-      dispatch(actions.setError('That email address is already in use!'));
-    }
-
-    if (error.code === 'auth/invalid-email') {
-      dispatch(actions.setError('That email address is invalid!'));
-    }
-
     console.error(error);
+
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -51,15 +46,9 @@ export const signIn = userData => async dispatch => {
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    if (error.code === 'auth/user-not-found') {
-      dispatch(actions.setError('That email address is not found!'));
-    }
-
-    if (error.code === 'auth/wrong-password') {
-      dispatch(actions.setError('That password is invalid!'));
-    }
-
     console.error(error);
+
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -70,13 +59,13 @@ export const logout = () => async dispatch => {
 
     await auth().signOut();
 
-    dispatch(actions.setUser({}));
     dispatch(actions.setIsAuth(false));
+    dispatch(actions.setUser(null));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
 
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
@@ -95,21 +84,30 @@ export const signInGoogle = () => async dispatch => {
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
-    dispatch(actions.setError('An Error Occurred, Please Try Again Later!'));
     console.error(error);
 
+    dispatch(actions.setError(extractErrorMessage(error)));
     dispatch(actions.setIsFetching(false));
   }
 };
 
-export const AuthFireBase = () => dispatch => {
-  const setUserAuth = user => {
-    user
-      ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
-      : dispatch(actions.setIsAuth(false));
-  };
+export const authFireBase = () => async dispatch => {
+  try {
+    dispatch(actions.setIsFetching(true));
+    const setUserAuth = user => {
+      user
+        ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
+        : dispatch(actions.setIsAuth(false));
+    };
 
-  auth().onAuthStateChanged(setUserAuth);
+    await auth().onAuthStateChanged(setUserAuth);
 
-  dispatch(actions.setInitialized());
+    dispatch(actions.setInitialized());
+    dispatch(actions.setIsFetching(false));
+  } catch (error) {
+    console.error(error);
+
+    dispatch(actions.setError(extractErrorMessage(error)));
+    dispatch(actions.setIsFetching(false));
+  }
 };

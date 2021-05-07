@@ -1,9 +1,9 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {AuthStackNavigator} from './AuthStackNavigator';
+import {MainStackNavigator} from './MainStackNavigator';
 
-export const MainNavigator = () => (
+export const AppNavigator = () => (
   <NavigationContainer>
-    <AuthStackNavigator />
+    <MainStackNavigator />
   </NavigationContainer>
 );

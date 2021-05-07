@@ -9,16 +9,14 @@ import {
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
-  Alert,
 } from 'react-native';
-import {Input} from '../../../common/Input';
-// import {AuthFireBase} from './AuthFirebase';
-import * as thunks from '../../../store/auth/operations';
 import {useDispatch, useSelector} from 'react-redux';
+import {Input} from '../../../common/Input';
+import * as thunks from '../../../store/auth/operations';
 import * as selectors from '../../../store/auth/selectors';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {setError} from '../../../store/auth/actions';
 import {Loader} from '../../../common/Loader';
+import {Error} from '../../../common/Error';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -27,18 +25,12 @@ export const AuthPage = ({configuration}) => {
     redirectionText,
     redirectTo,
     onSummit,
-    navigation,
   } = configuration;
 
   const dispatch = useDispatch();
-  const isAuth = useSelector(selectors.getIsAuth);
   const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
-  const initialized = useSelector(selectors.getInitialized);
-  const width = useWindowDimensions().width;
-  const height = useWindowDimensions().height;
-
-  useEffect(() => dispatch(thunks.AuthFireBase()), []);
+  const {width, height} = useWindowDimensions();
 
   const {
     control,
@@ -129,22 +121,10 @@ export const AuthPage = ({configuration}) => {
     if (isSubmitSuccessful) reset();
   }, [isSubmitSuccessful, reset]);
 
-  if (isAuth) {
-    navigation.navigate('Home');
-    return null;
-  }
-
-  if (error) {
-    Alert.alert(error);
-    dispatch(setError(''));
-  }
-
-  if (!initialized) return <Loader />;
-
   return (
     <>
       {isFetching && <Loader />}
-      {/* <AuthFireBase /> */}
+      {error && <Error />}
       <ImageBackground
         source={require('../../../assets/images/city.jpg')}
         style={styles.imageBackground}>
