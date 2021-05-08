@@ -9,6 +9,12 @@ export const moviesReducer = (state = initialState, action) => {
         genres: action.genres,
       };
 
+    case actionTypes.MOVIES_SET_ACTIVE_GENRE:
+      return {
+        ...state,
+        activeGenre: action.id,
+      };
+
     default:
       return state;
   }

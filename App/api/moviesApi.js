@@ -13,14 +13,10 @@ const instance = axios.create({
 });
 
 export const getMovies = movieType => {
-  return instance
-    .get(`movie/${movieType}`)
-    .then(res => res.data)
-    .catch(err => console.error(err));
+  return instance.get(`movie/${movieType}`).then(res => res.data);
+  // .catch(err => console.error(err));
 };
 
 export const getGenres = () =>
-  instance
-    .get(`genre/movie/list`)
-    .then(res => res.data)
-    .catch(err => console.error(err));
+  instance.get(`genre/movie/list`).then(res => res.data);
+// .catch(err => console.error(err));

@@ -20,3 +20,9 @@ export const STACK_SCREEN_OPTIONS = {
   gestureEnabled: true,
   gestureDirection: 'horizontal',
 };
+
+export const movieSections = [
+  {title: 'Popular', request: 'popular'},
+  {title: 'Now Playing', request: 'now_playing'},
+  {title: 'Coming soon', request: 'upcoming'},
+];

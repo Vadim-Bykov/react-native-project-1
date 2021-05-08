@@ -6,22 +6,12 @@ import * as actionsMovie from '../../../store/movies/actions';
 import {Genre} from './Genre';
 import {Loader} from '../../../common/Loader';
 import {getGenres} from '../../../store/movies/selectors';
+import {movieSections} from '../../../consts/consts';
 
-export const Genres = ({apiGenres}) => {
-  const {data} = apiGenres;
+export const Sections = () => {
   const dispatch = useDispatch();
-  useEffect(
-    () =>
-      data &&
-      dispatch(actionsMovie.setGenres([{id: 0, name: 'All'}, ...data.genres])),
-    [data],
-  );
 
-  const genres = useSelector(getGenres);
-
-  const onChangeGenre = id => {
-    dispatch(actionsMovie.setActiveGenre(id));
-  };
+  const onChangeSection = requestName => {};
 
   return (
     <>
@@ -29,10 +19,13 @@ export const Genres = ({apiGenres}) => {
         style={styles.containerStyle}
         contentContainerStyle={styles.container}
         horizontal={true}>
-        {genres &&
-          genres.map((genre, i) => (
-            <Genre key={genre.id} genre={genre} onChangeGenre={onChangeGenre} />
-          ))}
+        {movieSections.map((section, i) => (
+          <Section
+            key={section.title}
+            section={section}
+            onChangeSection={onChangeSection}
+          />
+        ))}
       </ScrollView>
     </>
   );
