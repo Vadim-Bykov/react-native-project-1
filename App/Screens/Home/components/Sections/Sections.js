@@ -1,17 +1,11 @@
-import React, {useEffect} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import * as api from '../../../api/moviesApi';
-import * as actionsMovie from '../../../store/movies/actions';
-import {Genre} from './Genre';
-import {Loader} from '../../../common/Loader';
-import {getGenres} from '../../../store/movies/selectors';
-import {movieSections} from '../../../consts/consts';
+import React, {useContext} from 'react';
+import {ScrollView, StyleSheet} from 'react-native';
+import {Section} from './Section';
+import {movieSections} from '../../../../consts/consts';
+import {MoviesContext} from '../../HomeScreen';
 
 export const Sections = () => {
-  const dispatch = useDispatch();
-
-  const onChangeSection = requestName => {};
+  const {currentSection, onChangeSection} = useContext(MoviesContext);
 
   return (
     <>
@@ -23,6 +17,7 @@ export const Sections = () => {
           <Section
             key={section.title}
             section={section}
+            currentSection={currentSection}
             onChangeSection={onChangeSection}
           />
         ))}
