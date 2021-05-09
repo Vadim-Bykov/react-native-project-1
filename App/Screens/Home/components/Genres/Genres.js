@@ -6,7 +6,7 @@ import * as actionsMovie from '../../../../store/movies/actions';
 import {Genre} from './Genre';
 import {Loader} from '../../../../common/Loader';
 import {getGenres} from '../../../../store/movies/selectors';
-import {MoviesContext} from '../../HomeScreen';
+import {useMovieContext} from '../../HomeScreenProvider';
 
 export const Genres = ({apiGenres}) => {
   // const {data} = apiGenres;
@@ -20,13 +20,13 @@ export const Genres = ({apiGenres}) => {
 
   // const genres = useSelector(getGenres);
 
-  const {onChangeGenre, currentGenreID, genresApi} = useContext(MoviesContext);
-
   // const onChangeGenre = id => {
   //   dispatch(actionsMovie.setActiveGenre(id));
   //   onChangeGenreShownMovies(id);
   // };
   // console.log(genresApi);
+
+  const {onChangeGenre, currentGenreID, genresApi} = useMovieContext();
 
   return (
     <>

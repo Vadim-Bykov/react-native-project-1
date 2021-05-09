@@ -6,6 +6,7 @@ import {
 import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {Icon} from 'react-native-elements';
+import {HomeScreenProvider} from '../Screens/Home/HomeScreenProvider';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +15,7 @@ export const MoviesStackNavigator = () => {
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
       <Stack.Screen
         name="Movies"
-        component={HomeScreen}
+        component={HomeScreenProvider}
         options={{
           headerTransparent: 1,
           headerTitle: false,

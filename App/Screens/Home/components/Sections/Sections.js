@@ -1,11 +1,11 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Section} from './Section';
-import {movieSections} from '../../../../consts/consts';
-import {MoviesContext} from '../../HomeScreen';
+import {MOVIE_SECTIONS} from '../../../../consts/consts';
+import {useMovieContext} from '../../HomeScreenProvider';
 
 export const Sections = () => {
-  const {currentSection, onChangeSection} = useContext(MoviesContext);
+  const {currentSection, onChangeSection} = useMovieContext();
 
   return (
     <>
@@ -13,7 +13,7 @@ export const Sections = () => {
         style={styles.containerStyle}
         contentContainerStyle={styles.container}
         horizontal={true}>
-        {movieSections.map((section, i) => (
+        {MOVIE_SECTIONS.map((section, i) => (
           <Section
             key={section.title}
             section={section}
