@@ -31,10 +31,10 @@ export const Pager = ({shownMovies, goToMovieDetails}) => {
           contentContainerStyle={styles.container}>
           {shownMovies.map(movie => (
             <TouchableOpacity
+              key={movie.id}
               activeOpacity={0.6}
               onPress={() => goToMovieDetails(movie.id)}>
               <Image
-                key={movie.id}
                 source={{uri: `${BASE_IMAGE_URL}w185/${movie.poster_path}`}}
                 style={styles.image}
               />
@@ -46,7 +46,6 @@ export const Pager = ({shownMovies, goToMovieDetails}) => {
           <Text>No movies for this genre</Text>
         </View>
       )}
-      <Text>Hello</Text>
     </>
   );
 };

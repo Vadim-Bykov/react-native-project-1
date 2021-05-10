@@ -17,3 +17,6 @@ export const getGenres = () =>
 
 export const getDetails = movieId =>
   instance.get(`/movie/${movieId}`).then(res => res.data);
+
+export const getCastInfo = movieId =>
+  instance.get(`/movie/${movieId}/credits`).then(res => res.data);

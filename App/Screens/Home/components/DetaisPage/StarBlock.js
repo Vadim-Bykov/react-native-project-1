@@ -9,10 +9,12 @@ export const StarBlock = ({data, width}) => {
         <Icon type="antdesign" name="star" color="#FFDD00" />
         <Text>{data.vote_average}/10</Text>
       </View>
+
       <View style={styles.block}>
         <Icon type="antdesign" name="staro" color="#000" />
         <Text>Save to favorites</Text>
       </View>
+
       <View style={styles.block}>
         <Badge
           status="success"
@@ -20,9 +22,6 @@ export const StarBlock = ({data, width}) => {
           textStyle={styles.voteCount}
           containerStyle={{height: 24, marginTop: 5}}
         />
-        {/* <View style={styles.voteCount}>
-          <Text>{data.vote_count}</Text>
-        </View> */}
         <Text>Vote count</Text>
       </View>
     </View>
@@ -38,7 +37,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderBottomLeftRadius: 50,
     alignSelf: 'flex-end',
-    //  borderWidth: StyleSheet.hairlineWidth,
     marginTop: -50,
     backgroundColor: '#fff',
     elevation: 10,

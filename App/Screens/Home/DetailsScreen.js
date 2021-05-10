@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
-import {getDetails} from '../../api/moviesApi';
+import * as api from '../../api/moviesApi';
 import {Loader} from '../../common/Loader';
 import {setError} from '../../store/auth/actions';
 import {Error} from '../../common/Error';
@@ -11,21 +11,31 @@ import {DetailsPage} from './components/DetaisPage/DetailsPage';
 export const DetailsScreen = ({route}) => {
   const movieId = route.params.movieId;
 
-  const {data, error, isError, isLoading} = useQuery('Details', () =>
-    getDetails(movieId),
-  );
-  console.log(data);
+  const details = useQuery('Details', () => api.getDetails(movieId));
+  const castInfo = useQuery('CastInfo', () => api.getCastInfo(movieId));
+
+  // console.log(details.data);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isError) dispatch(setError(error.response.data.status_message));
+    if (details.isError)
+      dispatch(setError(details.error.response.data.status_message));
+    if (castInfo.isError)
+      dispatch(setError(castInfo.error.response.data.status_message));
   }, []);
 
   return (
     <>
-      {isLoading && <Loader />}
-      {isError ? <Error /> : data && <DetailsPage data={data} />}
+      {(details.isFetching || castInfo.isFetching) && <Loader />}
+      {details.isError || castInfo.isError ? (
+        <Error />
+      ) : (
+        details.data &&
+        castInfo.data && (
+          <DetailsPage data={details.data} castInfo={castInfo.data} />
+        )
+      )}
     </>
   );
 };
