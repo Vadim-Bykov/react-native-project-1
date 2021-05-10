@@ -9,7 +9,7 @@ export const MoviesContext = createContext();
 
 export const useMovieContext = () => useContext(MoviesContext);
 
-export const HomeScreenProvider = ({children}) => {
+export const HomeScreenProvider = ({navigation}) => {
   const [currentSection, setCurrentSection] = useState('popular');
   const [shownMovies, setShownMovies] = useState(null);
   const [currentGenreID, setCurrentGenreID] = useState(0);
@@ -56,6 +56,8 @@ export const HomeScreenProvider = ({children}) => {
     // setCurrentGenreID(0);
   };
 
+  const goToMovieDetails = movieId => navigation.navigate('Details', {movieId});
+
   return (
     <MoviesContext.Provider
       value={{
@@ -67,6 +69,7 @@ export const HomeScreenProvider = ({children}) => {
         genresApi,
         currentGenreID,
         onChangeGenre,
+        goToMovieDetails,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>

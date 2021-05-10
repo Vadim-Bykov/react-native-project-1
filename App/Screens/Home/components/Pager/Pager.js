@@ -1,16 +1,23 @@
 import React from 'react';
-import {StyleSheet, Image, Text, View, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Image,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {BASE_IMAGE_URL} from '../../../../consts/consts';
 
-export const Pager = ({movies}) => {
-  console.log(movies);
+export const Pager = ({shownMovies, goToMovieDetails}) => {
+  console.log(shownMovies);
 
   return (
     <>
-      {movies.length ? (
+      {shownMovies.length ? (
         // <PagerView style={styles.pagerView}>
-        //   {movies.map(movie => (
+        //   {shownMovies.map(movie => (
         //     <Image
         //       key={movie.id}
         //       source={{uri: `${BASE_IMAGE_URL}w185/${movie.poster_path}`}}
@@ -22,12 +29,16 @@ export const Pager = ({movies}) => {
           horizontal={true}
           style={styles.containerStyle}
           contentContainerStyle={styles.container}>
-          {movies.map(movie => (
-            <Image
-              key={movie.id}
-              source={{uri: `${BASE_IMAGE_URL}w185/${movie.poster_path}`}}
-              style={styles.image}
-            />
+          {shownMovies.map(movie => (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => goToMovieDetails(movie.id)}>
+              <Image
+                key={movie.id}
+                source={{uri: `${BASE_IMAGE_URL}w185/${movie.poster_path}`}}
+                style={styles.image}
+              />
+            </TouchableOpacity>
           ))}
         </ScrollView>
       ) : (

@@ -11,7 +11,7 @@ export const STACK_CONFIG = {
 
 export const STACK_SCREEN_OPTIONS = {
   transitionSpec: {open: STACK_CONFIG, close: STACK_CONFIG},
-  cardStyle: {backgroundColor: 'transparent'},
+  // cardStyle: {backgroundColor: 'transparent'},
   cardOverlayEnabled: true,
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
   gestureEnabled: true,

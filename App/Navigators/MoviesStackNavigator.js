@@ -7,6 +7,8 @@ import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {Icon} from 'react-native-elements';
 import {HomeScreenProvider} from '../Screens/Home/HomeScreenProvider';
+import {DetailsScreen} from '../Screens/Home/DetailsScreen';
+import {goBack} from '@react-navigation/compat/lib/typescript/src/helpers';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +27,20 @@ export const MoviesStackNavigator = () => {
           headerRight: () => (
             <Icon type="antdesign" name="search1" color="#000" />
           ),
+        }}
+      />
+      <Stack.Screen
+        name="Details"
+        component={DetailsScreen}
+        options={{
+          headerTitle: false,
+          headerTransparent: 1,
+          headerBackImage: () => (
+            <Icon type="ionicon" name="chevron-back" color="#fff" />
+          ),
+          headerLeftContainerStyle: {paddingLeft: 10},
+          headerStatusBarHeight: 0,
+          headerStyle: {height: 100},
         }}
       />
     </Stack.Navigator>

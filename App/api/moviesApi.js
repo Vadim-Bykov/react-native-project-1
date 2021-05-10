@@ -1,7 +1,4 @@
 import axios from 'axios';
-import * as actions from '../store/auth/actions';
-
-const apiKey = 'a72c9cd11375413053bccd6b3e6aaefe';
 
 const instance = axios.create({
   baseURL: 'https://api.themoviedb.org/3/',
@@ -12,11 +9,11 @@ const instance = axios.create({
   },
 });
 
-export const getMovies = movieType => {
-  return instance.get(`movie/${movieType}`).then(res => res.data);
-  // .catch(err => console.error(err));
-};
+export const getMovies = movieType =>
+  instance.get(`movie/${movieType}`).then(res => res.data);
 
 export const getGenres = () =>
   instance.get(`genre/movie/list`).then(res => res.data);
-// .catch(err => console.error(err));
+
+export const getDetails = movieId =>
+  instance.get(`/movie/${movieId}`).then(res => res.data);
