@@ -1,9 +1,7 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Avatar} from 'react-native-elements/dist/avatar/Avatar';
-import {BASE_IMAGE_URL} from '../../../../consts/consts';
+import {StyleSheet, Text, View} from 'react-native';
 
-export const GeneralInfo = ({data, castInfo}) => (
+export const GeneralInfo = ({data}) => (
   <>
     <View style={styles.infoBlock}>
       <Text style={styles.title}>{data.title}</Text>
@@ -29,28 +27,6 @@ export const GeneralInfo = ({data, castInfo}) => (
     <View style={styles.summaryBlock}>
       <Text style={styles.summaryTitle}>Plot Summary</Text>
       <Text style={styles.summaryText}>{data.overview}</Text>
-    </View>
-
-    <View style={styles.castBlock}>
-      <Text style={styles.castTitle}>Cast & Crew</Text>
-      <ScrollView horizontal={true} style={{paddingBottom: 6}}>
-        {castInfo.cast.map(actor => (
-          <View key={actor.id} style={styles.profile}>
-            <Avatar
-              rounded
-              source={{
-                uri: actor.profile_path
-                  ? `${BASE_IMAGE_URL}w45/${actor.profile_path}`
-                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROZzxwSXuX4cnu0J_5Rry0_Al5RqAafnKT3A&usqp=CAU',
-              }}
-              size={60}
-              containerStyle={{marginBottom: 12}}
-            />
-            <Text>{actor.name}</Text>
-            <Text style={styles.character}>{actor.character}</Text>
-          </View>
-        ))}
-      </ScrollView>
     </View>
   </>
 );
@@ -100,20 +76,5 @@ const styles = StyleSheet.create({
   },
   summaryText: {
     color: '#737599',
-  },
-  castBlock: {
-    paddingHorizontal: 32,
-    marginBottom: 24,
-  },
-  castTitle: {
-    fontSize: 24,
-    marginBottom: 14,
-  },
-  profile: {
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  character: {
-    color: '#9A9BB3',
   },
 });

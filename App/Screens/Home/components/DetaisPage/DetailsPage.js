@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {BASE_IMAGE_URL} from '../../../../consts/consts';
+import {CastInfo} from './CastInfo';
 import {GeneralInfo} from './GeneralInfo';
 import {StarBlock} from './StarBlock';
 
@@ -22,7 +23,8 @@ export const DetailsPage = ({data, castInfo}) => {
       />
       <View style={styles.container}>
         <StarBlock data={data} width={width} />
-        <GeneralInfo data={data} castInfo={castInfo} />
+        <GeneralInfo data={data} />
+        <CastInfo castInfo={castInfo} />
       </View>
     </ScrollView>
   );
@@ -33,7 +35,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
     justifyContent: 'space-between',
-    // backgroundColor: 'blue',
   },
   image: {
     borderBottomLeftRadius: 50,

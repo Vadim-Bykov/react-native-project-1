@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import {Loader} from '../../common/Loader';
 import * as selectors from '../../store/auth/selectors';
 import {Genres} from './components/Genres/Genres';
-import {Pager} from './components/Pager/Pager';
+import {MoviePager} from './components/Pager/Pager';
 import {Sections} from './components/Sections/Sections';
 import {useMovieContext} from './HomeScreenProvider';
 import {Error} from '../../common/Error';
@@ -23,7 +23,7 @@ export const HomeScreen = () => {
         <Sections />
         <Genres />
         {shownMovies && (
-          <Pager
+          <MoviePager
             shownMovies={shownMovies}
             goToMovieDetails={goToMovieDetails}
           />
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     zIndex: 0,
-    // backgroundColor: '#fff',
     paddingTop: 50,
   },
 });
