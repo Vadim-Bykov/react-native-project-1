@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {ScrollView, StyleSheet, Text, View, Button} from 'react-native';
 import {useSelector} from 'react-redux';
 import {Loader} from '../../common/Loader';
 import * as selectors from '../../store/auth/selectors';
@@ -16,10 +16,10 @@ export const HomeScreen = () => {
 
   return (
     <>
-      {error && <Error />}
-      {(genres.isFetching || movies.isFetching) && <Loader />}
+      <ScrollView contentContainerStyle={styles.container}>
+        {error && <Error />}
+        {(genres.isFetching || movies.isFetching) && <Loader />}
 
-      <View style={styles.container}>
         <Sections />
         <Genres />
         {shownMovies && (
@@ -28,17 +28,18 @@ export const HomeScreen = () => {
             goToMovieDetails={goToMovieDetails}
           />
         )}
-      </View>
+      </ScrollView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // justifyContent: 'center',
+    // flex: 1,
     alignItems: 'center',
     zIndex: 0,
     paddingTop: 50,
+    // flexGrow: 1,
+    // backgroundColor: 'blue',
   },
 });

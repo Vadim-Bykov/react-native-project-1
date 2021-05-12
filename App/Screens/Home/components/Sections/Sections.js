@@ -28,9 +28,7 @@ export const Sections = () => {
 
 const styles = StyleSheet.create({
   container: {
-    //  height: 45,
     padding: 10,
-    //  backgroundColor: 'blue',
   },
   containerStyle: {
     flexGrow: 0,

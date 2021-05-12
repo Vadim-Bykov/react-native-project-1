@@ -29,22 +29,20 @@ export const Genres = ({apiGenres}) => {
   const {onChangeGenre, currentGenreID, genresApi} = useMovieContext();
 
   return (
-    <>
-      <ScrollView
-        style={styles.containerStyle}
-        contentContainerStyle={styles.container}
-        horizontal={true}>
-        {genresApi &&
-          genresApi.map((genre, i) => (
-            <Genre
-              key={genre.id}
-              genre={genre}
-              currentGenreID={currentGenreID}
-              onChangeGenre={onChangeGenre}
-            />
-          ))}
-      </ScrollView>
-    </>
+    <ScrollView
+      style={styles.containerStyle}
+      contentContainerStyle={styles.container}
+      horizontal={true}>
+      {genresApi &&
+        genresApi.map((genre, i) => (
+          <Genre
+            key={genre.id}
+            genre={genre}
+            currentGenreID={currentGenreID}
+            onChangeGenre={onChangeGenre}
+          />
+        ))}
+    </ScrollView>
   );
 };
 

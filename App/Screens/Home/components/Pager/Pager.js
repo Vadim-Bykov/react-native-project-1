@@ -2,14 +2,11 @@ import {Pager, PagerProvider, useFocus} from '@crowdlinker/react-native-pager';
 import React from 'react';
 import {
   StyleSheet,
-  Image,
   Text,
   View,
-  TouchableOpacity,
   useWindowDimensions,
+  Animated,
 } from 'react-native';
-// import PagerView from 'react-native-pager-view';
-import {BASE_IMAGE_URL} from '../../../../consts/consts';
 import {Slide} from './Slide';
 
 const inlineCardsConfig = {
@@ -24,20 +21,17 @@ const inlineCardsConfig = {
 };
 
 export const MoviePager = ({shownMovies, goToMovieDetails}) => {
-  console.log(shownMovies);
-  const {width} = useWindowDimensions();
-
-  const focused = useFocus();
-  // console.log(focus);
+  // console.log(shownMovies);
+  const {width, height} = useWindowDimensions();
 
   return (
     <>
       {shownMovies.length ? (
         <PagerProvider>
           <Pager
-            initialIndex={2}
+            initialIndex={1}
             style={{
-              height: width * 1.05,
+              height: height * 0.8,
               width: width * 0.75,
               alignSelf: 'center',
             }}
@@ -50,28 +44,6 @@ export const MoviePager = ({shownMovies, goToMovieDetails}) => {
                 goToMovieDetails={goToMovieDetails}
                 inlineCardsConfig={inlineCardsConfig}
               />
-              // <TouchableOpacity
-              //   key={movie.id}
-              //   activeOpacity={0.8}
-              //   onPress={() => goToMovieDetails(movie.id)}
-              //   style={{
-              //     borderColor: 'blue',
-              //     borderWidth: StyleSheet.hairlineWidth,
-              //     height: width * 1.05,
-              //     width: width * 0.75,
-              //     alignSelf: 'center',
-              //     marginHorizontal: 10,
-              //   }}>
-              //   <Image
-              //     source={{uri: `${BASE_IMAGE_URL}w300/${movie.poster_path}`}}
-              //     style={{
-              //       ...styles.image,
-              //       height: width * 1,
-              //       width: width * 0.68,
-              //     }}
-              //   />
-              //   <Text>{`Focused: ${focused}`}</Text>
-              // </TouchableOpacity>
             ))}
           </Pager>
         </PagerProvider>
