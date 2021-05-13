@@ -22,7 +22,7 @@ export const MoviesStackNavigator = () => {
         options={{
           headerTransparent: true,
           headerBackground: () => (
-            <View style={{flex: 1, backgroundColor: 'white'}} />
+            <View style={{flex: 1, backgroundColor: '#F1F1F1'}} />
           ),
           headerTitle: false,
           headerLeftContainerStyle: {paddingLeft: 20},

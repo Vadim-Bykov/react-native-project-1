@@ -9,7 +9,7 @@ const BottomPart = ({movie, focused}) => {
     console.log('fadeIn');
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000,
+      duration: 500,
     }).start();
   };
 
@@ -22,10 +22,6 @@ const BottomPart = ({movie, focused}) => {
   };
 
   focused ? fadeIn() : fadeOut();
-  // if (focused) {
-  //   fadeOut();
-  //   setTimeout(fadeIn, 1000);
-  // }
 
   return (
     <Animated.View style={[styles.container, {opacity: fadeAnim}]}>

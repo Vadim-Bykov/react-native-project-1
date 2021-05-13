@@ -35,11 +35,8 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     alignItems: 'center',
     zIndex: 0,
     paddingTop: 50,
-    // flexGrow: 1,
-    // backgroundColor: 'white',
   },
 });

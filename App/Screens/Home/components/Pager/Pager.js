@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
   Animated,
 } from 'react-native';
+import PagerView from 'react-native-pager-view';
 import {useMovieContext} from '../../HomeScreenProvider';
 import BottomPart from './BottomPart';
 import {Slide} from './Slide';
@@ -23,16 +24,43 @@ const inlineCardsConfig = {
 };
 
 export const MoviePager = ({shownMovies, goToMovieDetails}) => {
-  const {width, height} = useWindowDimensions();
-  const {focus, movieData, activeIndex, setActiveIndex} = useMovieContext();
+  const {width} = useWindowDimensions();
+  const {
+    focus,
+    currentMovieData,
+    activeIndex,
+    setActiveIndex,
+  } = useMovieContext();
 
   return (
     <>
       {shownMovies.length ? (
         <>
+          {/* <PagerView
+            initialPage={1}
+            pageMargin={-90}
+            offscreenPageLimit={1}
+            style={{
+              height: width * 1.2,
+              width: width * 1,
+              marginBottom: 20,
+              elevation: 15,
+            }}>
+            {shownMovies.map(movie => (
+              <View style={{width: 0.68}} key={movie.id}>
+                <Slide
+                  key={movie.id}
+                  movie={movie}
+                  width={width}
+                  goToMovieDetails={goToMovieDetails}
+                />
+                <BottomPart movie={movie} focused={true} />
+              </View>
+            ))}
+          </PagerView> */}
+
           <PagerProvider activeIndex={activeIndex} onChange={setActiveIndex}>
             <Pager
-              // initialIndex={2}
               style={{
                 height: width * 0.95,
                 width: width * 0.75,
@@ -45,12 +73,11 @@ export const MoviePager = ({shownMovies, goToMovieDetails}) => {
                   movie={movie}
                   width={width}
                   goToMovieDetails={goToMovieDetails}
-                  // inlineCardsConfig={inlineCardsConfig}
                 />
               ))}
             </Pager>
           </PagerProvider>
-          {focus && <BottomPart movie={movieData} focused={focus} />}
+          {focus && <BottomPart movie={currentMovieData} focused={focus} />}
         </>
       ) : (
         <View>
