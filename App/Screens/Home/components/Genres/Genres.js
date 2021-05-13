@@ -30,8 +30,8 @@ export const Genres = ({apiGenres}) => {
 
   return (
     <ScrollView
-      style={styles.containerStyle}
-      contentContainerStyle={styles.container}
+      style={styles.container}
+      contentContainerStyle={styles.containerStyle}
       horizontal={true}>
       {genresApi &&
         genresApi.map((genre, i) => (
@@ -48,12 +48,10 @@ export const Genres = ({apiGenres}) => {
 
 const styles = StyleSheet.create({
   container: {
-    //  height: 45,
-    padding: 10,
-    //  backgroundColor: 'blue',
-    // marginBottom: 20,
+    flexGrow: 0,
   },
   containerStyle: {
-    flexGrow: 0,
+    padding: 10,
+    marginBottom: 20,
   },
 });

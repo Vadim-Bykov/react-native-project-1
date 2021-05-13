@@ -9,24 +9,26 @@ const BottomPart = ({movie, focused}) => {
     console.log('fadeIn');
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 2000,
+      duration: 1000,
     }).start();
   };
 
-  //   const fadeOut = () => {
-  //     console.log('fadeOut');
-  //     Animated.timing(fadeAnim, {
-  //       toValue: 0,
-  //       duration: 1000,
-  //     }).reset();
-  //   };
+  const fadeOut = () => {
+    console.log('fadeOut');
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+    }).start();
+  };
 
-  focused && fadeIn();
+  focused ? fadeIn() : fadeOut();
+  // if (focused) {
+  //   fadeOut();
+  //   setTimeout(fadeIn, 1000);
+  // }
 
   return (
-    <Animated.View
-      style={[styles.container, {opacity: fadeAnim}]}
-      onTouchMove={e => console.log('Ok')}>
+    <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
       <Text style={styles.title}>{movie.title}</Text>
       <View style={styles.voteBlock}>
         <Icon type="antdesign" name="star" color="#FFDD00" />
@@ -41,12 +43,12 @@ export default BottomPart;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginTop: 20,
-    // flexGrow: 1,
+    marginVertical: 15,
   },
   title: {
     fontSize: 30,
     textAlign: 'center',
+    marginHorizontal: 20,
   },
   voteBlock: {
     flexDirection: 'row',

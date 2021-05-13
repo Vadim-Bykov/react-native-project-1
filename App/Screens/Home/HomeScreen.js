@@ -16,10 +16,10 @@ export const HomeScreen = () => {
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.container}>
-        {error && <Error />}
-        {(genres.isFetching || movies.isFetching) && <Loader />}
+      {error && <Error />}
+      {(genres.isFetching || movies.isFetching) && <Loader />}
 
+      <ScrollView contentContainerStyle={styles.container}>
         <Sections />
         <Genres />
         {shownMovies && (
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
     zIndex: 0,
     paddingTop: 50,
     // flexGrow: 1,
-    // backgroundColor: 'blue',
+    // backgroundColor: 'white',
   },
 });

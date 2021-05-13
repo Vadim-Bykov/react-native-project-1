@@ -1,11 +1,33 @@
-import {useFocus} from '@crowdlinker/react-native-pager';
-import React from 'react';
-import {StyleSheet, TouchableOpacity, Image, Animated} from 'react-native';
+import {
+  useAnimatedIndex,
+  useFocus,
+  useIndex,
+} from '@crowdlinker/react-native-pager';
+import React, {useEffect} from 'react';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  View,
+  Animated,
+} from 'react-native';
 import {BASE_IMAGE_URL} from '../../../../consts/consts';
+import {useMovieContext} from '../../HomeScreenProvider';
 import BottomPart from './BottomPart';
 
-export const Slide = ({movie, width, goToMovieDetails, inlineCardsConfig}) => {
+export const Slide = ({movie, width, goToMovieDetails}) => {
   const focused = useFocus();
+  const {setFocus, setMovieData} = useMovieContext();
+  // const animatedIndex = useAnimatedIndex();
+
+  // console.log(animatedIndex);
+
+  useEffect(() => {
+    if (focused) {
+      setFocus(focused);
+      setMovieData(movie);
+    }
+  }, [movie, focused]);
 
   return (
     <Animated.View>
@@ -22,7 +44,7 @@ export const Slide = ({movie, width, goToMovieDetails, inlineCardsConfig}) => {
           }}
         />
       </TouchableOpacity>
-      {focused && <BottomPart movie={movie} focused={focused} />}
+      {/* {focused && <BottomPart movie={movie} focused={focused} />} */}
     </Animated.View>
   );
 };

@@ -14,6 +14,9 @@ export const HomeScreenProvider = ({navigation}) => {
   const [shownMovies, setShownMovies] = useState(null);
   const [currentGenreID, setCurrentGenreID] = useState(0);
   const [genresApi, setGenresApi] = useState(null);
+  const [focus, setFocus] = useState(false);
+  const [movieData, setMovieData] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(1);
 
   const dispatch = useDispatch();
 
@@ -49,11 +52,13 @@ export const HomeScreenProvider = ({navigation}) => {
     );
     setShownMovies(shownMovies);
     setCurrentGenreID(genreId);
+    setActiveIndex(1);
   };
 
   const onChangeSection = name => {
     setCurrentSection(name);
     // setCurrentGenreID(0);
+    setActiveIndex(1);
   };
 
   const goToMovieDetails = movieId => navigation.navigate('Details', {movieId});
@@ -70,6 +75,12 @@ export const HomeScreenProvider = ({navigation}) => {
         currentGenreID,
         onChangeGenre,
         goToMovieDetails,
+        focus,
+        setFocus,
+        movieData,
+        setMovieData,
+        activeIndex,
+        setActiveIndex,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>
