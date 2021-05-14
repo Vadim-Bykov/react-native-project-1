@@ -12,7 +12,8 @@ export const Sections = () => {
       <ScrollView
         style={styles.containerStyle}
         contentContainerStyle={styles.container}
-        horizontal={true}>
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}>
         {MOVIE_SECTIONS.map((section, i) => (
           <Section
             key={section.title}

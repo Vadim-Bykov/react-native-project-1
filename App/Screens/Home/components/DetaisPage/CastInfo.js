@@ -33,6 +33,7 @@ export const CastInfo = ({castInfo}) => {
         keyExtractor={item => item.id}
         horizontal={true}
         initialNumToRender={6}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );

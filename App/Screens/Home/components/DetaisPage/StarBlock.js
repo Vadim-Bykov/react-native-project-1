@@ -5,17 +5,17 @@ import {Badge, Icon} from 'react-native-elements';
 export const StarBlock = ({data, width}) => {
   return (
     <View style={{...styles.container, width: width * 0.9}}>
-      <View style={styles.block}>
+      <View>
         <Icon type="antdesign" name="star" color="#FFDD00" />
         <Text>{data.vote_average}/10</Text>
       </View>
 
-      <View style={styles.block}>
+      <View>
         <Icon type="antdesign" name="staro" color="#000" />
         <Text>Save to favorites</Text>
       </View>
 
-      <View style={styles.block}>
+      <View>
         <Badge
           status="success"
           value={data.vote_count}
@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 10,
   },
-  //   block: {},
   voteCount: {
     borderRadius: 3,
     backgroundColor: '#51C51B',

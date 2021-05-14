@@ -14,7 +14,7 @@ export const HomeScreenProvider = ({navigation}) => {
   const [shownMovies, setShownMovies] = useState(null);
   const [currentGenreID, setCurrentGenreID] = useState(0);
   const [genresApi, setGenresApi] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [pagerRef, setPagerRef] = useState(null);
 
   const dispatch = useDispatch();
@@ -51,15 +51,19 @@ export const HomeScreenProvider = ({navigation}) => {
     );
     setShownMovies(shownMovies);
     setCurrentGenreID(genreId);
-    setActiveIndex(1);
-    if (pagerRef) pagerRef.current.setPageWithoutAnimation(1);
+    setActiveIndex(0);
+
+    if (pagerRef && pagerRef.current)
+      pagerRef.current.setPageWithoutAnimation(0);
   };
 
   const onChangeSection = name => {
     setCurrentSection(name);
     // setCurrentGenreID(0);
-    setActiveIndex(1);
-    if (pagerRef) pagerRef.current.setPageWithoutAnimation(1);
+    setActiveIndex(0);
+
+    if (pagerRef && pagerRef.current)
+      pagerRef.current.setPageWithoutAnimation(0);
   };
 
   const goToMovieDetails = movieId => navigation.navigate('Details', {movieId});

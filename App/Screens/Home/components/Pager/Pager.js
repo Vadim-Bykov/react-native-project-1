@@ -1,12 +1,5 @@
-import {Pager, PagerProvider} from '@crowdlinker/react-native-pager';
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-  Animated,
-} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {Text, View, useWindowDimensions} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {useMovieContext} from '../../HomeScreenProvider';
 import BottomPart from './BottomPart';
@@ -25,7 +18,7 @@ export const MoviePager = () => {
   const pagerView = useRef(null);
 
   useEffect(() => {
-    if (pagerView) setPagerRef(pagerView);
+    if (pagerView && pagerView.current) setPagerRef(pagerView);
   }, [pagerView]);
 
   return (
@@ -34,7 +27,7 @@ export const MoviePager = () => {
         <>
           <PagerView
             ref={pagerView}
-            initialPage={1}
+            initialPage={0}
             pageMargin={-90}
             offscreenPageLimit={1}
             onPageSelected={e => setActiveIndex(e.nativeEvent.position)}

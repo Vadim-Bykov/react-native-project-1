@@ -1,31 +1,9 @@
-import React, {useContext, useEffect} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import * as api from '../../../../api/moviesApi';
-import * as actionsMovie from '../../../../store/movies/actions';
+import React from 'react';
+import {ScrollView, StyleSheet} from 'react-native';
 import {Genre} from './Genre';
-import {Loader} from '../../../../common/Loader';
-import {getGenres} from '../../../../store/movies/selectors';
 import {useMovieContext} from '../../HomeScreenProvider';
 
-export const Genres = ({apiGenres}) => {
-  // const {data} = apiGenres;
-  // const dispatch = useDispatch();
-  // useEffect(
-  //   () =>
-  //     data &&
-  //     dispatch(actionsMovie.setGenres([{id: 0, name: 'All'}, ...data.genres])),
-  //   [data],
-  // );
-
-  // const genres = useSelector(getGenres);
-
-  // const onChangeGenre = id => {
-  //   dispatch(actionsMovie.setActiveGenre(id));
-  //   onChangeGenreShownMovies(id);
-  // };
-  // console.log(genresApi);
-
+export const Genres = () => {
   const {onChangeGenre, currentGenreID, genresApi} = useMovieContext();
 
   return (

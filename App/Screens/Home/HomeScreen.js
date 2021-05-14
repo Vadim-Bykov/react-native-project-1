@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Text, View, Button} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {Loader} from '../../common/Loader';
 import * as selectors from '../../store/auth/selectors';

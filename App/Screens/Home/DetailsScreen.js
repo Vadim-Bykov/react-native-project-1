@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
 import * as api from '../../api/moviesApi';
@@ -13,8 +12,6 @@ export const DetailsScreen = ({route}) => {
 
   const details = useQuery('Details', () => api.getDetails(movieId));
   const castInfo = useQuery('CastInfo', () => api.getCastInfo(movieId));
-
-  // console.log(details.data);
 
   const dispatch = useDispatch();
 
@@ -39,11 +36,3 @@ export const DetailsScreen = ({route}) => {
     </>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     // paddingTop: 50,
-//     // zIndex: 0,
-//   },
-// });

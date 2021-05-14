@@ -24,12 +24,12 @@ const BottomPart = ({movie}) => {
   };
 
   // focused ? fadeIn() : fadeOut();
-  true ? fadeIn() : fadeOut();
+  // true ? fadeIn() : fadeOut();
 
   if (!movie) return null;
 
   return (
-    <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
+    <Animated.View style={[styles.container]}>
       <Text style={styles.title}>{movie.title}</Text>
       <View style={styles.voteBlock}>
         <Icon type="antdesign" name="star" color="#FFDD00" />

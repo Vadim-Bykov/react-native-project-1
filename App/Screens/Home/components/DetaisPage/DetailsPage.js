@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Image,
   StyleSheet,
-  Text,
   useWindowDimensions,
   ScrollView,
   View,

@@ -1,12 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {setGenres} from '../../../store/movies/actions';
-import * as selectors from '../../../../store/movies/selectors';
 
 export const Genre = ({genre, onChangeGenre, currentGenreID}) => {
-  // const activeGenreId = useSelector(selectors.getActiveGenre);
-  // console.log(genre);
   return (
     <View style={styles.container}>
       <TouchableOpacity
