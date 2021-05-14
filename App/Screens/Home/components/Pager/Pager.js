@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Text, View, useWindowDimensions} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {useMovieContext} from '../../HomeScreenProvider';
@@ -7,12 +7,15 @@ import {Slide} from './Slide';
 
 export const MoviePager = () => {
   const {width} = useWindowDimensions();
+  const [isScrollRight, setIsScrollRight] = useState(false);
   const {
     shownMovies,
     goToMovieDetails,
     activeIndex,
     setActiveIndex,
     setPagerRef,
+    isBottomPart,
+    setIsBottomPart,
   } = useMovieContext();
 
   const pagerView = useRef(null);
@@ -20,6 +23,18 @@ export const MoviePager = () => {
   useEffect(() => {
     if (pagerView && pagerView.current) setPagerRef(pagerView);
   }, [pagerView]);
+
+  const onPageScroll = e => {
+    e.nativeEvent.offset === 0 ? setIsBottomPart(true) : setIsBottomPart(false);
+
+    // if (e.nativeEvent.offset > 0.95) {
+    //   setIsScrollRight(true);
+    // } else if (e.nativeEvent.offset === 0) {
+    //   setIsScrollRight(false);
+    //   setIsBottomPart(0);
+    // }
+    // setIsBottomPart(e.nativeEvent.offset);
+  };
 
   return (
     <>
@@ -30,6 +45,7 @@ export const MoviePager = () => {
             initialPage={0}
             pageMargin={-90}
             offscreenPageLimit={1}
+            onPageScroll={onPageScroll}
             onPageSelected={e => setActiveIndex(e.nativeEvent.position)}
             style={{height: width, width: width * 1}}>
             {shownMovies.map(movie => (
@@ -43,7 +59,11 @@ export const MoviePager = () => {
               </View>
             ))}
           </PagerView>
-          <BottomPart movie={shownMovies[activeIndex]} />
+          <BottomPart
+            movie={shownMovies[activeIndex]}
+            isBottomPart={isBottomPart}
+            isScrollRight={isScrollRight}
+          />
         </>
       ) : (
         <View>

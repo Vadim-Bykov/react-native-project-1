@@ -16,6 +16,7 @@ export const HomeScreenProvider = ({navigation}) => {
   const [genresApi, setGenresApi] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [pagerRef, setPagerRef] = useState(null);
+  const [isBottomPart, setIsBottomPart] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -83,6 +84,8 @@ export const HomeScreenProvider = ({navigation}) => {
         activeIndex,
         setActiveIndex,
         setPagerRef,
+        isBottomPart,
+        setIsBottomPart,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>
