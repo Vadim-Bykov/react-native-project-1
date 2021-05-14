@@ -1,5 +1,5 @@
 import {Pager, PagerProvider} from '@crowdlinker/react-native-pager';
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,40 +12,33 @@ import {useMovieContext} from '../../HomeScreenProvider';
 import BottomPart from './BottomPart';
 import {Slide} from './Slide';
 
-const inlineCardsConfig = {
-  transform: [
-    {
-      scale: {
-        inputRange: [-1, 0, 1],
-        outputRange: [1, 1, 1],
-      },
-    },
-  ],
-};
-
-export const MoviePager = ({shownMovies, goToMovieDetails}) => {
+export const MoviePager = () => {
   const {width} = useWindowDimensions();
   const {
-    focus,
-    currentMovieData,
+    shownMovies,
+    goToMovieDetails,
     activeIndex,
     setActiveIndex,
+    setPagerRef,
   } = useMovieContext();
+
+  const pagerView = useRef(null);
+
+  useEffect(() => {
+    if (pagerView) setPagerRef(pagerView);
+  }, [pagerView]);
 
   return (
     <>
       {shownMovies.length ? (
         <>
-          {/* <PagerView
+          <PagerView
+            ref={pagerView}
             initialPage={1}
             pageMargin={-90}
             offscreenPageLimit={1}
-            style={{
-              height: width * 1.2,
-              width: width * 1,
-              marginBottom: 20,
-              elevation: 15,
-            }}>
+            onPageSelected={e => setActiveIndex(e.nativeEvent.position)}
+            style={{height: width, width: width * 1}}>
             {shownMovies.map(movie => (
               <View style={{width: 0.68}} key={movie.id}>
                 <Slide
@@ -54,30 +47,10 @@ export const MoviePager = ({shownMovies, goToMovieDetails}) => {
                   width={width}
                   goToMovieDetails={goToMovieDetails}
                 />
-                <BottomPart movie={movie} focused={true} />
               </View>
             ))}
-          </PagerView> */}
-
-          <PagerProvider activeIndex={activeIndex} onChange={setActiveIndex}>
-            <Pager
-              style={{
-                height: width * 0.95,
-                width: width * 0.75,
-                alignSelf: 'center',
-              }}
-              pageInterpolation={inlineCardsConfig}>
-              {shownMovies.map(movie => (
-                <Slide
-                  key={movie.id}
-                  movie={movie}
-                  width={width}
-                  goToMovieDetails={goToMovieDetails}
-                />
-              ))}
-            </Pager>
-          </PagerProvider>
-          {focus && <BottomPart movie={currentMovieData} focused={focus} />}
+          </PagerView>
+          <BottomPart movie={shownMovies[activeIndex]} />
         </>
       ) : (
         <View>

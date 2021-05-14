@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 
-const BottomPart = ({movie, focused}) => {
+const BottomPart = ({movie}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const fadeIn = () => {
@@ -10,6 +10,7 @@ const BottomPart = ({movie, focused}) => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 500,
+      useNativeDriver: true,
     }).start();
   };
 
@@ -18,10 +19,14 @@ const BottomPart = ({movie, focused}) => {
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 500,
+      useNativeDriver: true,
     }).start();
   };
 
-  focused ? fadeIn() : fadeOut();
+  // focused ? fadeIn() : fadeOut();
+  true ? fadeIn() : fadeOut();
+
+  if (!movie) return null;
 
   return (
     <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
@@ -39,7 +44,7 @@ export default BottomPart;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginVertical: 15,
+    marginBottom: 10,
   },
   title: {
     fontSize: 30,

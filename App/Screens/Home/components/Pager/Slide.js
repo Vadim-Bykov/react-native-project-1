@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
     borderRadius: 20,
+    elevation: 20,
   },
   image: {
     borderRadius: 20,

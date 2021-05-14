@@ -12,7 +12,7 @@ import {Error} from '../../common/Error';
 export const HomeScreen = () => {
   const error = useSelector(selectors.getErrorMessage);
 
-  const {genres, movies, shownMovies, goToMovieDetails} = useMovieContext();
+  const {genres, movies, shownMovies} = useMovieContext();
 
   return (
     <>
@@ -22,12 +22,7 @@ export const HomeScreen = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <Sections />
         <Genres />
-        {shownMovies && (
-          <MoviePager
-            shownMovies={shownMovies}
-            goToMovieDetails={goToMovieDetails}
-          />
-        )}
+        {shownMovies && <MoviePager />}
       </ScrollView>
     </>
   );

@@ -14,8 +14,8 @@ export const HomeScreenProvider = ({navigation}) => {
   const [shownMovies, setShownMovies] = useState(null);
   const [currentGenreID, setCurrentGenreID] = useState(0);
   const [genresApi, setGenresApi] = useState(null);
-  const [focus, setFocus] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
+  const [pagerRef, setPagerRef] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -52,17 +52,17 @@ export const HomeScreenProvider = ({navigation}) => {
     setShownMovies(shownMovies);
     setCurrentGenreID(genreId);
     setActiveIndex(1);
+    if (pagerRef) pagerRef.current.setPageWithoutAnimation(1);
   };
 
   const onChangeSection = name => {
     setCurrentSection(name);
     // setCurrentGenreID(0);
     setActiveIndex(1);
+    if (pagerRef) pagerRef.current.setPageWithoutAnimation(1);
   };
 
   const goToMovieDetails = movieId => navigation.navigate('Details', {movieId});
-
-  const currentMovieData = shownMovies && shownMovies[activeIndex];
 
   return (
     <MoviesContext.Provider
@@ -76,11 +76,9 @@ export const HomeScreenProvider = ({navigation}) => {
         currentGenreID,
         onChangeGenre,
         goToMovieDetails,
-        focus,
-        setFocus,
-        currentMovieData,
         activeIndex,
         setActiveIndex,
+        setPagerRef,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>

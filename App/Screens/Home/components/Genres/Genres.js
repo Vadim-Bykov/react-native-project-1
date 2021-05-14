@@ -32,7 +32,8 @@ export const Genres = ({apiGenres}) => {
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.containerStyle}
-      horizontal={true}>
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}>
       {genresApi &&
         genresApi.map((genre, i) => (
           <Genre
