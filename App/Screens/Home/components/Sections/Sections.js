@@ -5,7 +5,7 @@ import {MOVIE_SECTIONS} from '../../../../consts/consts';
 import {useMovieContext} from '../../HomeScreenProvider';
 
 export const Sections = () => {
-  const {currentSection, onChangeSection} = useMovieContext();
+  const {currentSection, onChangeSection, mode} = useMovieContext();
 
   return (
     <>
@@ -20,6 +20,7 @@ export const Sections = () => {
             section={section}
             currentSection={currentSection}
             onChangeSection={onChangeSection}
+            mode={mode}
           />
         ))}
       </ScrollView>

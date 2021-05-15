@@ -20,3 +20,12 @@ export const getDetails = movieId =>
 
 export const getCastInfo = movieId =>
   instance.get(`/movie/${movieId}/credits`).then(res => res.data);
+
+export const getMoviesByGenre = (genreId, page = 1) => {
+  instance.defaults.params.page = page;
+  return instance
+    .get(
+      `discover/movie?&include_adult=false&include_video=false&with_genres=${genreId}`,
+    )
+    .then(res => res.data);
+};

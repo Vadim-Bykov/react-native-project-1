@@ -4,7 +4,7 @@ import {Genre} from './Genre';
 import {useMovieContext} from '../../HomeScreenProvider';
 
 export const Genres = () => {
-  const {onChangeGenre, currentGenreID, genresApi} = useMovieContext();
+  const {onChangeGenre, currentGenreID, genresApi, mode} = useMovieContext();
 
   return (
     <ScrollView
@@ -19,6 +19,7 @@ export const Genres = () => {
             genre={genre}
             currentGenreID={currentGenreID}
             onChangeGenre={onChangeGenre}
+            mode={mode}
           />
         ))}
     </ScrollView>

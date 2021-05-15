@@ -11,13 +11,16 @@ import {Error} from '../../common/Error';
 
 export const HomeScreen = () => {
   const error = useSelector(selectors.getErrorMessage);
+  const isFetchingCommon = useSelector(selectors.getIsFetching);
 
   const {genres, movies, shownMovies} = useMovieContext();
 
   return (
     <>
       {error && <Error />}
-      {(genres.isFetching || movies.isFetching) && <Loader />}
+      {(genres.isFetching || movies.isFetching || isFetchingCommon) && (
+        <Loader />
+      )}
 
       <ScrollView contentContainerStyle={styles.container}>
         <Sections />

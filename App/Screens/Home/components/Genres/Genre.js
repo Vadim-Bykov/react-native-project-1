@@ -1,20 +1,15 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-export const Genre = ({genre, onChangeGenre, currentGenreID}) => {
+export const Genre = ({genre, onChangeGenre, currentGenreID, mode}) => {
+  const isMarker = genre.id === currentGenreID && mode === 'genre';
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => onChangeGenre(genre.id)}
-        style={[
-          styles.touchArea,
-          genre.id === currentGenreID && styles.active,
-        ]}>
-        <Text
-          style={[
-            styles.title,
-            genre.id === currentGenreID && styles.activeTitle,
-          ]}>
+        style={[styles.touchArea, isMarker && styles.active]}>
+        <Text style={[styles.title, isMarker && styles.activeTitle]}>
           {genre.name}
         </Text>
       </TouchableOpacity>

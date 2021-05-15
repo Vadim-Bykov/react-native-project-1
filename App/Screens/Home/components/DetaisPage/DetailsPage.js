@@ -17,7 +17,11 @@ export const DetailsPage = ({data, castInfo}) => {
   return (
     <ScrollView>
       <Image
-        source={{uri: `${BASE_IMAGE_URL}w500/${data.poster_path}`}}
+        source={{
+          uri: data.poster_path
+            ? `${BASE_IMAGE_URL}w500/${data.poster_path}`
+            : 'https://target.scene7.com/is/image/Target/GUEST_e684225b-5a68-49b2-8fc3-493e515ef4ca?wid=488&hei=488&fmt=pjpeg',
+        }}
         style={{...styles.image, width, height: width * 0.9}}
       />
       <View style={styles.container}>

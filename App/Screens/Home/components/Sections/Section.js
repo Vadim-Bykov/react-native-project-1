@@ -1,21 +1,18 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-export const Section = ({section, currentSection, onChangeSection}) => {
+export const Section = ({section, currentSection, onChangeSection, mode}) => {
+  const isMarker = section.request === currentSection && mode === 'section';
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => onChangeSection(section.request)}
         style={styles.touchArea}>
-        <Text
-          style={[
-            styles.title,
-            section.request === currentSection && styles.active,
-          ]}>
+        <Text style={[styles.title, isMarker && styles.active]}>
           {section.title}
         </Text>
       </TouchableOpacity>
-      {section.request === currentSection && <View style={styles.dash} />}
+      {isMarker && <View style={styles.dash} />}
     </View>
   );
 };
