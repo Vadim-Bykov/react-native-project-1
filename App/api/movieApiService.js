@@ -9,8 +9,10 @@ const instance = axios.create({
   },
 });
 
-export const getMovies = movieType =>
-  instance.get(`movie/${movieType}`).then(res => res.data);
+export const getMovies = (movieType, page = 1) => {
+  instance.defaults.params.page = page;
+  return instance.get(`movie/${movieType}`).then(res => res.data);
+};
 
 export const getGenres = () =>
   instance.get(`genre/movie/list`).then(res => res.data);

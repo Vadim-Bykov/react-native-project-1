@@ -1,4 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
+import {Text} from 'react-native';
+import {Button} from 'react-native';
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
 import * as api from '../../api/movieApiService';
@@ -19,10 +21,18 @@ export const HomeScreenProvider = ({navigation}) => {
   const [isBottomPart, setIsBottomPart] = useState(true);
   const [mode, setMode] = useState('section');
 
+  //preparation for pagination
+  const [sectionPage, setSectionPage] = useState(1);
+  const [genrePage, setGenrePage] = useState(1);
+
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
-  const movies = useQuery('movies', () => api.getMovies(currentSection));
+  const movies = useQuery(
+    ['movies', sectionPage],
+    () => api.getMovies(currentSection, sectionPage),
+    {keepPreviousData: true},
+  );
 
   useEffect(() => {
     if (movies.data) {
@@ -46,7 +56,7 @@ export const HomeScreenProvider = ({navigation}) => {
           pagerRef.current &&
           pagerRef.current.setPageWithoutAnimation(0);
       });
-  }, [currentSection, mode]);
+  }, [currentSection, mode, sectionPage]);
 
   useEffect(() => {
     if (movies.isError)
@@ -58,15 +68,16 @@ export const HomeScreenProvider = ({navigation}) => {
       );
   }, [genres.isError, movies.isError]);
 
-  const onChangeGenre = async (genreId = 14, page = 1) => {
+  const onChangeGenre = async (genreId = currentGenreID) => {
+    console.log(genrePage);
     setMode('genre');
     try {
       dispatch(actions.setIsFetching(true));
 
       const shownMovies =
         genreId === 0
-          ? await api.getMovies(currentSection)
-          : await api.getMoviesByGenre(genreId, page);
+          ? await api.getMovies(currentSection, genrePage)
+          : await api.getMoviesByGenre(genreId, genrePage);
 
       if (shownMovies) {
         setShownMovies(shownMovies.results);
