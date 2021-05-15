@@ -6,12 +6,13 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+import {Error} from '../../../../common/Error';
 import {BASE_IMAGE_URL} from '../../../../consts/consts';
 import {CastInfo} from './CastInfo';
 import {GeneralInfo} from './GeneralInfo';
 import {StarBlock} from './StarBlock';
 
-export const DetailsPage = ({data, castInfo}) => {
+export const DetailsPage = ({data, castInfo, castInfoIsError}) => {
   const {width} = useWindowDimensions();
 
   return (
@@ -27,7 +28,7 @@ export const DetailsPage = ({data, castInfo}) => {
       <View style={styles.container}>
         <StarBlock data={data} width={width} />
         <GeneralInfo data={data} />
-        <CastInfo castInfo={castInfo} />
+        {castInfoIsError ? <Error /> : <CastInfo castInfo={castInfo} />}
       </View>
     </ScrollView>
   );

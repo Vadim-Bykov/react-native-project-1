@@ -6,13 +6,18 @@ const BottomPart = ({movie, isBottomPart, isScrollRight}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // const fadeOut = value => {
-  //   console.log('fadeOut', value / 2);
+  //   console.log('fadeOut', Math.pow(value * 10, 2) / 150);
   //   Animated.timing(fadeAnim, {
-  //     toValue: value / 2,
+  //     toValue: Math.pow(value * 10, 2) / 150,
   //     duration: 0,
   //     useNativeDriver: true,
   //   }).start();
   // };
+
+  // useEffect(() => {
+  //   if (isBottomPart === 0) return fadeIn();
+  //   isScrollRight ? fadeOut(isBottomPart) : fadeOut(1 - isBottomPart);
+  // }, [isBottomPart]);
 
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
@@ -31,11 +36,6 @@ const BottomPart = ({movie, isBottomPart, isScrollRight}) => {
   };
 
   isBottomPart ? fadeIn() : fadeOut();
-
-  // useEffect(() => {
-  //   if (isBottomPart === 0) return fadeIn();
-  //   isScrollRight ? fadeOut(isBottomPart) : fadeOut(1 - isBottomPart);
-  // }, [isBottomPart]);
 
   if (!movie) return null;
 
