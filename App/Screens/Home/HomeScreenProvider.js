@@ -69,8 +69,8 @@ export const HomeScreenProvider = ({navigation}) => {
   }, [genres.isError, movies.isError]);
 
   const onChangeGenre = async (genreId = currentGenreID) => {
-    console.log(genrePage);
     setMode('genre');
+
     try {
       dispatch(actions.setIsFetching(true));
 
