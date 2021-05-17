@@ -1,37 +1,40 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import React from 'react';
+import {ScrollView, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
 import {Loader} from '../../common/Loader';
-import * as thunks from '../../store/auth/operations';
 import * as selectors from '../../store/auth/selectors';
+import {Genres} from './components/Genres/Genres';
+import {MoviePager} from './components/Pager/Pager';
+import {Sections} from './components/Sections/Sections';
+import {useMovieContext} from './HomeScreenProvider';
+import {Error} from '../../common/Error';
 
 export const HomeScreen = () => {
-  const user = useSelector(selectors.getUser);
-  const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
-  const dispatch = useDispatch();
+  const isFetchingCommon = useSelector(selectors.getIsFetching);
+
+  const {genres, movies, shownMovies} = useMovieContext();
 
   return (
     <>
-      {isFetching && <Loader />}
       {error && <Error />}
+      {(genres.isFetching || movies.isFetching || isFetchingCommon) && (
+        <Loader />
+      )}
 
-      {user ? (
-        <View style={styles.container}>
-          <Text>{user.displayName}</Text>
-          <Button title="Logout" onPress={() => dispatch(thunks.logout())} />
-        </View>
-      ) : null}
+      <ScrollView contentContainerStyle={styles.container}>
+        <Sections />
+        <Genres />
+        {shownMovies && <MoviePager />}
+      </ScrollView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     zIndex: 0,
-    backgroundColor: '#9ED9F7',
+    paddingTop: 50,
   },
 });

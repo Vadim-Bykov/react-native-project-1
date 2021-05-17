@@ -20,7 +20,7 @@ export const AuthStackNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         transitionSpec: {open: config, close: config},
-        cardStyle: {backgroundColor: 'transparent'},
+        // cardStyle: {backgroundColor: 'transparent'},
         cardOverlayEnabled: true,
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         gestureEnabled: true,

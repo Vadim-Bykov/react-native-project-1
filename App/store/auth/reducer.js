@@ -1,7 +1,7 @@
 import * as actionTypes from './actionTypes';
 import {initialState} from './state';
 
-const authReducer = (state = initialState, action) => {
+export const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.AUTH_SET_USER:
       return {
@@ -37,5 +37,3 @@ const authReducer = (state = initialState, action) => {
       return state;
   }
 };
-
-export default authReducer;

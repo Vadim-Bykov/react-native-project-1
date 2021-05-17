@@ -117,10 +117,6 @@ export const AuthPage = ({configuration}) => {
     onSummit(data);
   }, []);
 
-  useEffect(() => {
-    if (isSubmitSuccessful) reset();
-  }, [isSubmitSuccessful, reset]);
-
   return (
     <>
       {isFetching && <Loader />}
