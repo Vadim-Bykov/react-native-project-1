@@ -17,9 +17,6 @@ export const DetailsScreen = ({route}) => {
 
   useEffect(() => {
     if (details.isError) {
-      console.log(details);
-      console.log(details.isError);
-      console.log(details.error.response.data.status_message);
       dispatch(setError(details.error.response.data.status_message));
     }
     if (castInfo.isError)
