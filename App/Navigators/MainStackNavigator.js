@@ -3,13 +3,13 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from '@react-navigation/stack';
-import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {AuthStackNavigator} from './AuthStackNavigator';
 import {SplashScreen} from '../Screens/StartScreen/SplashScreen';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../store/auth/selectors';
 import * as thunks from '../store/auth/operations';
 import {MoviesStackNavigator} from './MoviesStackNavigator';
+import {DrawerNavigator} from './DrawerNavigator/DrawerNavigator';
 
 const Stack = createStackNavigator();
 
@@ -47,7 +47,7 @@ export const MainStackNavigator = () => {
       ) : isAuth ? (
         <Stack.Screen
           name="Home"
-          component={MoviesStackNavigator}
+          component={DrawerNavigator}
           options={{
             headerShown: false,
           }}

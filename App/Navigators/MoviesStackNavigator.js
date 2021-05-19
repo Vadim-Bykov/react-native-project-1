@@ -1,19 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-} from '@react-navigation/stack';
-import {HomeScreen} from '../Screens/Home/HomeScreen';
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {Icon} from 'react-native-elements';
 import {HomeScreenProvider} from '../Screens/Home/HomeScreenProvider';
 import {DetailsScreen} from '../Screens/Home/DetailsScreen';
-import {goBack} from '@react-navigation/compat/lib/typescript/src/helpers';
 import {View} from 'react-native';
+import {DrawerActions} from '@react-navigation/native';
+import {DrawerNavigator} from './DrawerNavigator/DrawerNavigator';
 
 const Stack = createStackNavigator();
 
-export const MoviesStackNavigator = () => {
+export const MoviesStackNavigator = ({navigation}) => {
+  const openDrawer = () => navigation.dispatch(DrawerActions.openDrawer());
+
   return (
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
       <Stack.Screen
@@ -27,7 +26,9 @@ export const MoviesStackNavigator = () => {
           headerTitle: false,
           headerLeftContainerStyle: {paddingLeft: 20},
           headerRightContainerStyle: {paddingRight: 20},
-          headerLeft: () => <Icon name="menu" color="#000" />,
+          headerLeft: () => (
+            <Icon name="menu" color="#000" onPress={openDrawer} />
+          ),
           headerRight: () => (
             <Icon type="antdesign" name="search1" color="#000" />
           ),
@@ -47,6 +48,7 @@ export const MoviesStackNavigator = () => {
           headerStyle: {height: 100},
         }}
       />
+      <Stack.Screen name="Drawer" component={DrawerNavigator} />
     </Stack.Navigator>
   );
 };
