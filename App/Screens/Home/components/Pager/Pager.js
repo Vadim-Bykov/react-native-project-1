@@ -44,7 +44,7 @@ export const MoviePager = () => {
             ref={pagerView}
             initialPage={0}
             pageMargin={-90}
-            offscreenPageLimit={1}
+            offscreenPageLimit={2}
             onPageScroll={onPageScroll}
             onPageSelected={e => setActiveIndex(e.nativeEvent.position)}
             style={{height: width, width}}>
