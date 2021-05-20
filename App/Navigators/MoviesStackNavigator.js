@@ -7,6 +7,7 @@ import {DetailsScreen} from '../Screens/Home/DetailsScreen';
 import {View} from 'react-native';
 import {DrawerActions} from '@react-navigation/native';
 import {DrawerNavigator} from './DrawerNavigator/DrawerNavigator';
+import {TouchableOpacity} from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -19,15 +20,17 @@ export const MoviesStackNavigator = ({navigation}) => {
         name="Movies"
         component={HomeScreenProvider}
         options={{
-          headerTransparent: true,
           headerBackground: () => (
             <View style={{flex: 1, backgroundColor: '#F1F1F1'}} />
           ),
           headerTitle: false,
+          headerTransparent: true,
           headerLeftContainerStyle: {paddingLeft: 20},
           headerRightContainerStyle: {paddingRight: 20},
           headerLeft: () => (
-            <Icon name="menu" color="#000" onPress={openDrawer} />
+            <TouchableOpacity onPress={openDrawer}>
+              <Icon name="menu" color="#000" />
+            </TouchableOpacity>
           ),
           headerRight: () => (
             <Icon type="antdesign" name="search1" color="#000" />

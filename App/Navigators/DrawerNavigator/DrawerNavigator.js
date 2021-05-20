@@ -9,21 +9,29 @@ const Drawer = createDrawerNavigator();
 export const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
-      drawerContentOptions={{
-        activeTintColor: '#5535E5',
-        activeBackgroundColor: '#E9DCFB',
-      }}
+      // drawerContentOptions={{
+      //   activeTintColor: '#5535E5',
+      //   activeBackgroundColor: '#E9DCFB',
+      // }}
       drawerContent={props => <DrawerContent {...props} />}>
       <Drawer.Screen
         name="Home"
         component={MoviesStackNavigator}
-        options={
-          {
-            // headerShown: false,
-          }
-        }
+        // options={{
+        //   headerShown: true,
+        // }}
       />
-      <Drawer.Screen name="Favorite" component={FavoriteScreen} />
+      <Drawer.Screen
+        name="Favorite"
+        component={FavoriteScreen}
+        options={{
+          headerShown: true,
+          headerLeft: () => null,
+          headerTitle: 'Saved',
+          headerStyle: {backgroundColor: '#F1F1F1', elevation: 0},
+          unmountOnBlur: true,
+        }}
+      />
     </Drawer.Navigator>
   );
 };

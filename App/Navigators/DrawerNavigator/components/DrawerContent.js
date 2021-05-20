@@ -43,7 +43,7 @@ export const DrawerContent = props => {
           </View>
 
           <DrawerContentScrollView {...props}>
-            {/* <DrawerItemList {...props} /> */}
+            <DrawerItemList {...props} />
             <DrawerItem
               label="Favorites"
               // focused={index === 1 ? true : false}

@@ -2,27 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {AsyncStorage, StyleSheet, Text, View} from 'react-native';
 import {Badge, Icon} from 'react-native-elements';
 
-const getSoundList = () => {
-  let soundList = [];
-
-  const localSoundList = JSON.parse(localStorage.getItem('soundList'));
-
-  if (localSoundList) {
-    soundList = localSoundList;
-  } else {
-    soundList = sounds;
-    localStorage.setItem('soundList', JSON.stringify(sounds));
-  }
-  return soundList;
-};
-
 export const StarBlock = ({data, width}) => {
   const [favoriteMovies, setFavoriteMovies] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  // AsyncStorage.removeItem('favoriteMovies', (err, res) => console.log(res));
+
   useEffect(() => {
     AsyncStorage.getItem('favoriteMovies', (err, res) => {
-      // console.log(res);
       if (res) {
         res = JSON.parse(res);
         setFavoriteMovies(res);
@@ -33,39 +20,53 @@ export const StarBlock = ({data, width}) => {
     });
   }, []);
 
+  const removeItem = res => {
+    res = res.filter(movie => movie.id !== data.id);
+    AsyncStorage.setItem('favoriteMovies', JSON.stringify(res), () =>
+      AsyncStorage.getItem('favoriteMovies', (err, res) => {
+        if (res) {
+          res = JSON.parse(res);
+          setFavoriteMovies(res);
+          setIsFavorite(false);
+        }
+      }),
+    );
+  };
+
+  const setItem = res => {
+    AsyncStorage.setItem('favoriteMovies', JSON.stringify([...res, data]), () =>
+      AsyncStorage.getItem('favoriteMovies', (err, res) => {
+        setFavoriteMovies(JSON.parse(res));
+        setIsFavorite(true);
+      }),
+    );
+  };
+
   const setMovieIntoStorage = async data => {
     try {
       favoriteMovies
         ? AsyncStorage.getItem('favoriteMovies', (err, res) => {
             if (res) {
               res = JSON.parse(res);
-              console.log(res);
-              AsyncStorage.setItem(
-                'favoriteMovies',
-                JSON.stringify([...res, data]),
-                () =>
-                  AsyncStorage.getItem('favoriteMovies', (err, res) => {
-                    setFavoriteMovies(JSON.parse(res));
-                    setIsFavorite(true);
-                  }),
-              );
+
+              if (isFavorite) removeItem(res);
+
+              if (!isFavorite) setItem(res);
             }
           })
         : await AsyncStorage.setItem(
             'favoriteMovies',
             JSON.stringify([data]),
             () =>
-              AsyncStorage.getItem('favoriteMovies', (err, res) =>
-                setFavoriteMovies(JSON.parse(res)),
-              ),
+              AsyncStorage.getItem('favoriteMovies', (err, res) => {
+                setFavoriteMovies(JSON.parse(res));
+                setIsFavorite(true);
+              }),
           );
     } catch (error) {
       console.error(error);
     }
   };
-
-  console.log(favoriteMovies);
-  // console.log(data);
 
   return (
     <View style={{...styles.container, width: width * 0.9}}>
@@ -77,11 +78,11 @@ export const StarBlock = ({data, width}) => {
       <View>
         <Icon
           type="antdesign"
-          name="staro"
-          color={isFavorite ? 'red' : '#000'}
+          name={isFavorite ? 'star' : 'staro'}
+          color={isFavorite ? '#FF005F' : '#000'}
           onPress={() => setMovieIntoStorage(data)}
         />
-        <Text>Save to favorites</Text>
+        <Text>{isFavorite ? 'Saved' : 'Save to favorites'}</Text>
       </View>
 
       <View>
@@ -101,11 +102,12 @@ const styles = StyleSheet.create({
   container: {
     height: 100,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
     borderTopLeftRadius: 50,
     borderBottomLeftRadius: 50,
     alignSelf: 'flex-end',
+    paddingHorizontal: 30,
     marginTop: -50,
     backgroundColor: '#fff',
     elevation: 10,

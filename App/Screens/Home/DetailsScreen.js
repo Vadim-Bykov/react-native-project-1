@@ -23,9 +23,10 @@ export const DetailsScreen = ({route}) => {
       dispatch(setError(castInfo.error.response.data.status_message));
   }, [details.isError, castInfo.isError]);
 
+  if (details.isFetching || castInfo.isFetching) return <Loader />;
+
   return (
     <>
-      {(details.isFetching || castInfo.isFetching) && <Loader />}
       {details.isError ? (
         <Error />
       ) : castInfo.isError && details.data ? (
