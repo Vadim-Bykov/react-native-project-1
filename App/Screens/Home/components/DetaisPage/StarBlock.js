@@ -33,8 +33,8 @@ export const StarBlock = ({data, width}) => {
     );
   };
 
-  const setItem = res => {
-    AsyncStorage.setItem('favoriteMovies', JSON.stringify([...res, data]), () =>
+  const setFirstItem = res => {
+    AsyncStorage.setItem('favoriteMovies', JSON.stringify([data, ...res]), () =>
       AsyncStorage.getItem('favoriteMovies', (err, res) => {
         setFavoriteMovies(JSON.parse(res));
         setIsFavorite(true);
@@ -51,7 +51,7 @@ export const StarBlock = ({data, width}) => {
 
               if (isFavorite) removeItem(res);
 
-              if (!isFavorite) setItem(res);
+              if (!isFavorite) setFirstItem(res);
             }
           })
         : await AsyncStorage.setItem(

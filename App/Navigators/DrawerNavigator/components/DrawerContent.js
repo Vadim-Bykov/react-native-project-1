@@ -20,6 +20,7 @@ export const DrawerContent = props => {
   const dispatch = useDispatch();
 
   const goToFavoritePage = () => navigation.navigate('Favorite');
+  const goToHomePage = () => navigation.navigate('Home');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -43,7 +44,23 @@ export const DrawerContent = props => {
           </View>
 
           <DrawerContentScrollView {...props}>
-            <DrawerItemList {...props} />
+            {/* <DrawerItemList {...props} /> */}
+            <DrawerItem
+              label="Home"
+              focused={routeNames[index] === 'Home' ? true : false}
+              activeTintColor="#5535E5"
+              activeBackgroundColor="#E9DCFB"
+              icon={({focused}) => (
+                <Icon
+                  type="font-awesome-5"
+                  name="home"
+                  color={focused ? '#5535E5' : '#6A6A6A'}
+                />
+              )}
+              labelStyle={styles.labelStyle}
+              onPress={goToHomePage}
+            />
+
             <DrawerItem
               label="Favorites"
               // focused={index === 1 ? true : false}
