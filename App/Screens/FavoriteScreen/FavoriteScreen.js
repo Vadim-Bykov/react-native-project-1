@@ -11,8 +11,8 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {Error} from '../../common/Error';
 import {Loader} from '../../common/Loader';
-import {setIsFetching} from '../../store/auth/actions';
-import * as thunks from '../../store/auth/operations';
+import {COMMON_ERROR_MESSAGE} from '../../consts/consts';
+import {setError, setIsFetching} from '../../store/auth/actions';
 import * as selectors from '../../store/auth/selectors';
 import {FavoriteMovieItem} from './components/FavoriteMovieItem';
 
@@ -29,34 +29,51 @@ export const FavoriteScreen = ({navigation}) => {
   useEffect(() => {
     dispatch(setIsFetching(true));
     AsyncStorage.getItem('favoriteMovies', (err, res) => {
-      setFavoriteMovies(JSON.parse(res));
+      if (res) {
+        setFavoriteMovies(JSON.parse(res));
+        dispatch(setIsFetching(false));
+      } else if (err) {
+        dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
+        console.error(`AsyncStorage Error: ${err}`);
+      }
+    });
+  }, []);
+
+  const getItem = useCallback((err, res) => {
+    if (err) {
+      dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
+      console.error(`AsyncStorage Error: ${err}`);
+      return;
+    }
+
+    AsyncStorage.getItem('favoriteMovies', (err, res) => {
+      if (res) {
+        res = JSON.parse(res);
+        setFavoriteMovies(res);
+      } else {
+        dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
+        console.error(`AsyncStorage Error: ${err}`);
+      }
       dispatch(setIsFetching(false));
     });
   }, []);
 
-  const removeStorageItem = useCallback(id => {
+  const removeStorageItem = id => {
     dispatch(setIsFetching(true));
-    AsyncStorage.getItem('favoriteMovies', (err, res) => {
-      res = JSON.parse(res).filter(movie => movie.id !== id);
-      AsyncStorage.setItem('favoriteMovies', JSON.stringify(res), () =>
-        AsyncStorage.getItem('favoriteMovies', (err, res) => {
-          if (res) {
-            res = JSON.parse(res);
-            setFavoriteMovies(res);
-          }
-          dispatch(setIsFetching(false));
-        }),
-      );
-    });
-  }, []);
+    const restMovies = favoriteMovies.filter(movie => movie.id !== id);
+    AsyncStorage.setItem('favoriteMovies', JSON.stringify(restMovies), getItem);
+  };
 
-  const removeItem = useCallback(id => {
-    Alert.alert(
-      'Remove movie',
-      'Are sure? Do you want to remove a movie from your favorites?',
-      [{text: 'Cancel'}, {text: 'Yes', onPress: () => removeStorageItem(id)}],
-    );
-  }, []);
+  const removeItem = useCallback(
+    id => {
+      Alert.alert(
+        'Remove movie',
+        'Are sure? Do you want to remove a movie from your favorites?',
+        [{text: 'Cancel'}, {text: 'Yes', onPress: () => removeStorageItem(id)}],
+      );
+    },
+    [favoriteMovies],
+  );
 
   const goToDetailsPage = useCallback(
     movieId => navigation.navigate('Details', {movieId}),

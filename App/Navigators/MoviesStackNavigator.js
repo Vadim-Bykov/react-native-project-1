@@ -5,15 +5,11 @@ import {Icon} from 'react-native-elements';
 import {HomeScreenProvider} from '../Screens/Home/HomeScreenProvider';
 import {DetailsScreen} from '../Screens/Home/DetailsScreen';
 import {View} from 'react-native';
-import {DrawerActions} from '@react-navigation/native';
-import {DrawerNavigator} from './DrawerNavigator/DrawerNavigator';
 import {TouchableOpacity} from 'react-native';
 
 const Stack = createStackNavigator();
 
 export const MoviesStackNavigator = ({navigation}) => {
-  const openDrawer = () => navigation.dispatch(DrawerActions.openDrawer());
-
   return (
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
       <Stack.Screen
@@ -28,7 +24,7 @@ export const MoviesStackNavigator = ({navigation}) => {
           headerLeftContainerStyle: {paddingLeft: 20},
           headerRightContainerStyle: {paddingRight: 20},
           headerLeft: () => (
-            <TouchableOpacity onPress={openDrawer}>
+            <TouchableOpacity onPress={navigation.openDrawer}>
               <Icon name="menu" color="#000" />
             </TouchableOpacity>
           ),
@@ -37,6 +33,7 @@ export const MoviesStackNavigator = ({navigation}) => {
           ),
         }}
       />
+
       <Stack.Screen
         name="Details"
         component={DetailsScreen}
@@ -51,7 +48,6 @@ export const MoviesStackNavigator = ({navigation}) => {
           headerStyle: {height: 100},
         }}
       />
-      <Stack.Screen name="Drawer" component={DrawerNavigator} />
     </Stack.Navigator>
   );
 };

@@ -33,7 +33,7 @@ export const DrawerContent = props => {
         <>
           <View style={styles.header}>
             <View>
-              <Text style={styles.headerTitle}>User name</Text>
+              <Text style={styles.headerTitle}>Username</Text>
               <Text>{user.displayName}</Text>
             </View>
             <Icon

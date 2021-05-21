@@ -11,7 +11,7 @@ import {
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {BASE_IMAGE_URL} from '../../../consts/consts';
 
-const MONTHS = {
+const MONTHS_MAP = {
   '01': 'January',
   '02': 'February',
   '03': 'March',
@@ -39,7 +39,7 @@ export const FavoriteMovieItem = React.memo(
     // console.log(width);
 
     const dateArray = movie.release_date.split('-');
-    const month = MONTHS[dateArray[1]];
+    const month = MONTHS_MAP[dateArray[1]];
     const day = dateArray[2];
 
     const goToDetails = useCallback(() => goToDetailsPage(movie.id), [
