@@ -39,10 +39,11 @@ export const FavoriteScreen = ({navigation}) => {
     });
   }, []);
 
-  const getItem = useCallback((err, res) => {
+  const getItem = useCallback(err => {
     if (err) {
       dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
       console.error(`AsyncStorage Error: ${err}`);
+      dispatch(setIsFetching(false));
       return;
     }
 
@@ -58,10 +59,19 @@ export const FavoriteScreen = ({navigation}) => {
     });
   }, []);
 
-  const removeStorageItem = id => {
-    dispatch(setIsFetching(true));
-    const restMovies = favoriteMovies.filter(movie => movie.id !== id);
-    AsyncStorage.setItem('favoriteMovies', JSON.stringify(restMovies), getItem);
+  const removeStorageItem = async id => {
+    try {
+      dispatch(setIsFetching(true));
+      const restMovies = favoriteMovies.filter(movie => movie.id !== id);
+      await AsyncStorage.setItem(
+        'favoriteMovies',
+        JSON.stringify(restMovies),
+        getItem,
+      );
+    } catch (err) {
+      dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
+      console.error(`AsyncStorage Error: ${err}`);
+    }
   };
 
   const removeItem = useCallback(

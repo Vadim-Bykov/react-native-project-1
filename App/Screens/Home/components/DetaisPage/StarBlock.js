@@ -10,7 +10,7 @@ export const StarBlock = ({data, width}) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const dispatch = useDispatch();
-  // AsyncStorage.removeItem('favoriteMovies', (err, res) => console.log(err, res));
+  // AsyncStorage.removeItem('favoriteMovies', (err) => console.log(err));
 
   useEffect(() => {
     AsyncStorage.getItem('favoriteMovies', (err, res) => {
@@ -26,7 +26,7 @@ export const StarBlock = ({data, width}) => {
     });
   }, []);
 
-  const getItem = useCallback(async (err, res) => {
+  const getItem = useCallback(async err => {
     if (err) {
       dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
       console.error(`AsyncStorage Error: ${err}`);
@@ -73,24 +73,17 @@ export const StarBlock = ({data, width}) => {
 
   const changeMovieStorage = useCallback(async () => {
     try {
-      favoriteMovies && favoriteMovies.length
-        ? await AsyncStorage.getItem('favoriteMovies', (err, res) => {
-            if (res) {
-              res = JSON.parse(res);
+      if (favoriteMovies && favoriteMovies.length) {
+        isFavorite && removeItem(favoriteMovies);
 
-              if (isFavorite) removeItem(res);
-
-              if (!isFavorite) setItem(res);
-            } else {
-              dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
-              console.error(`AsyncStorage Error: ${err}`);
-            }
-          })
-        : await AsyncStorage.setItem(
-            'favoriteMovies',
-            JSON.stringify([data]),
-            getItem,
-          );
+        !isFavorite && setItem(favoriteMovies);
+      } else {
+        await AsyncStorage.setItem(
+          'favoriteMovies',
+          JSON.stringify([data]),
+          getItem,
+        );
+      }
     } catch (err) {
       dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
       console.error(`AsyncStorage Error: ${err}`);

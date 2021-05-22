@@ -5,7 +5,6 @@ import {
   useWindowDimensions,
   View,
   ImageBackground,
-  PixelRatio,
   TouchableOpacity,
 } from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
@@ -29,14 +28,6 @@ const MONTHS_MAP = {
 export const FavoriteMovieItem = React.memo(
   ({movie, goToDetailsPage, removeItem}) => {
     const {width} = useWindowDimensions();
-    // const poster = {
-    //   uri: `${BASE_IMAGE_URL}w300${movie.poster_path}`,
-    //   width: width * 0.8,
-    //   height: width * 1.05,
-    // };
-
-    // console.log(PixelRatio.getPixelSizeForLayoutSize(width));
-    // console.log(width);
 
     const dateArray = movie.release_date.split('-');
     const month = MONTHS_MAP[dateArray[1]];
@@ -60,13 +51,7 @@ export const FavoriteMovieItem = React.memo(
             width: width * 0.8,
             height: width * 1.05,
           }}
-          source={{uri: `${BASE_IMAGE_URL}w300${movie.poster_path}`}}
-          // source={poster}
-          // style={{
-          //   ...styles.container,
-          //   width: PixelRatio.getPixelSizeForLayoutSize(width * 0.8), height: width * 1.05
-          // }}
-        >
+          source={{uri: `${BASE_IMAGE_URL}w300${movie.poster_path}`}}>
           <View style={styles.topBlock}>
             <View style={styles.outline}>
               <View style={styles.infoCircle}>
