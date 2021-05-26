@@ -1,38 +1,39 @@
-import React, {useEffect, useState} from 'react';
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-} from '@react-navigation/stack';
-import {HomeScreen} from '../Screens/Home/HomeScreen';
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {Icon} from 'react-native-elements';
 import {HomeScreenProvider} from '../Screens/Home/HomeScreenProvider';
 import {DetailsScreen} from '../Screens/Home/DetailsScreen';
-import {goBack} from '@react-navigation/compat/lib/typescript/src/helpers';
 import {View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 
 const Stack = createStackNavigator();
 
-export const MoviesStackNavigator = () => {
+export const MoviesStackNavigator = ({navigation}) => {
   return (
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
       <Stack.Screen
         name="Movies"
         component={HomeScreenProvider}
         options={{
-          headerTransparent: true,
           headerBackground: () => (
             <View style={{flex: 1, backgroundColor: '#F1F1F1'}} />
           ),
           headerTitle: false,
+          headerTransparent: true,
           headerLeftContainerStyle: {paddingLeft: 20},
           headerRightContainerStyle: {paddingRight: 20},
-          headerLeft: () => <Icon name="menu" color="#000" />,
+          headerLeft: () => (
+            <TouchableOpacity onPress={navigation.openDrawer}>
+              <Icon name="menu" color="#000" />
+            </TouchableOpacity>
+          ),
           headerRight: () => (
             <Icon type="antdesign" name="search1" color="#000" />
           ),
         }}
       />
+
       <Stack.Screen
         name="Details"
         component={DetailsScreen}

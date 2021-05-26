@@ -11,7 +11,6 @@ export const STACK_CONFIG = {
 
 export const STACK_SCREEN_OPTIONS = {
   transitionSpec: {open: STACK_CONFIG, close: STACK_CONFIG},
-  // cardStyle: {backgroundColor: 'transparent'},
   cardOverlayEnabled: true,
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
   gestureEnabled: true,
@@ -23,3 +22,6 @@ export const MOVIE_SECTIONS = [
   {title: 'Now Playing', request: 'now_playing'},
   {title: 'Coming soon', request: 'upcoming'},
 ];
+
+export const COMMON_ERROR_MESSAGE =
+  'An error occurred, please try again later!';

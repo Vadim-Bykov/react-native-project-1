@@ -17,18 +17,16 @@ export const DetailsScreen = ({route}) => {
 
   useEffect(() => {
     if (details.isError) {
-      console.log(details);
-      console.log(details.isError);
-      console.log(details.error.response.data.status_message);
       dispatch(setError(details.error.response.data.status_message));
     }
     if (castInfo.isError)
       dispatch(setError(castInfo.error.response.data.status_message));
   }, [details.isError, castInfo.isError]);
 
+  if (details.isFetching || castInfo.isFetching) return <Loader />;
+
   return (
     <>
-      {(details.isFetching || castInfo.isFetching) && <Loader />}
       {details.isError ? (
         <Error />
       ) : castInfo.isError && details.data ? (

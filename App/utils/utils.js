@@ -1,3 +1,5 @@
+import {COMMON_ERROR_MESSAGE} from '../consts/consts';
+
 export const extractErrorMessage = error => {
   let errorMessage = '';
   if (error.userInfo) {
@@ -5,7 +7,7 @@ export const extractErrorMessage = error => {
   } else if (error.message) {
     errorMessage = error.message;
   } else {
-    errorMessage = 'An Error Occurred, Please Try Again Later!';
+    errorMessage = COMMON_ERROR_MESSAGE;
   }
   return errorMessage;
 };
