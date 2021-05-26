@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Text, View, useWindowDimensions} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {useMovieContext} from '../../HomeScreenProvider';
 import BottomPart from './BottomPart';
@@ -38,38 +38,30 @@ export const MoviePager = () => {
 
   return (
     <>
-      {shownMovies.length ? (
-        <>
-          <PagerView
-            ref={pagerView}
-            initialPage={0}
-            pageMargin={-90}
-            offscreenPageLimit={2}
-            onPageScroll={onPageScroll}
-            onPageSelected={e => setActiveIndex(e.nativeEvent.position)}
-            style={{height: width, width}}>
-            {shownMovies.map(movie => (
-              <View style={{width: 0.68}} key={movie.id}>
-                <Slide
-                  key={movie.id}
-                  movie={movie}
-                  width={width}
-                  goToMovieDetails={goToMovieDetails}
-                />
-              </View>
-            ))}
-          </PagerView>
-          <BottomPart
-            movie={shownMovies[activeIndex]}
-            isBottomPart={isBottomPart}
-            isScrollRight={isScrollRight}
-          />
-        </>
-      ) : (
-        <View>
-          <Text>No movies for this genre</Text>
-        </View>
-      )}
+      <PagerView
+        ref={pagerView}
+        initialPage={0}
+        pageMargin={-90}
+        offscreenPageLimit={2}
+        onPageScroll={onPageScroll}
+        onPageSelected={e => setActiveIndex(e.nativeEvent.position)}
+        style={{height: width, width}}>
+        {shownMovies.map(movie => (
+          <View style={{width: 0.68}} key={movie.id}>
+            <Slide
+              key={movie.id}
+              movie={movie}
+              width={width}
+              goToMovieDetails={goToMovieDetails}
+            />
+          </View>
+        ))}
+      </PagerView>
+      <BottomPart
+        movie={shownMovies[activeIndex]}
+        isBottomPart={isBottomPart}
+        isScrollRight={isScrollRight}
+      />
     </>
   );
 };

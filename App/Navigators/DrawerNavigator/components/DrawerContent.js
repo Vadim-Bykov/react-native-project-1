@@ -9,17 +9,22 @@ import {View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as thunks from '../../../store/auth/operations';
 import * as selectors from '../../../store/auth/selectors';
+import * as actions from '../../../store/auth/actions';
 
 export const DrawerContent = props => {
   const {
     state: {routeNames, index},
     navigation,
   } = props;
+
   const user = useSelector(selectors.getUser);
 
   const dispatch = useDispatch();
 
-  const goToFavoritePage = () => navigation.navigate('Favorite');
+  const goToFavoritePage = () => {
+    dispatch(actions.setIsFetching(true));
+    navigation.navigate('Favorite');
+  };
   const goToHomePage = () => navigation.navigate('Home');
 
   const logout = () => {

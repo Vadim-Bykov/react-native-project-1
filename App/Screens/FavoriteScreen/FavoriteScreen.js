@@ -27,11 +27,10 @@ export const FavoriteScreen = ({navigation}) => {
   const [favoriteMovies, setFavoriteMovies] = useState(null);
 
   useEffect(() => {
-    dispatch(setIsFetching(true));
     AsyncStorage.getItem('favoriteMovies', (err, res) => {
       if (res) {
         setFavoriteMovies(JSON.parse(res));
-        dispatch(setIsFetching(false));
+        dispatch(setIsFetching(false)); // in DrawerContent has been dispatched true
       } else if (err) {
         dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
         console.error(`AsyncStorage Error: ${err}`);
@@ -43,7 +42,6 @@ export const FavoriteScreen = ({navigation}) => {
     if (err) {
       dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
       console.error(`AsyncStorage Error: ${err}`);
-      dispatch(setIsFetching(false));
       return;
     }
 
@@ -55,13 +53,11 @@ export const FavoriteScreen = ({navigation}) => {
         dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
         console.error(`AsyncStorage Error: ${err}`);
       }
-      dispatch(setIsFetching(false));
     });
   }, []);
 
   const removeStorageItem = async id => {
     try {
-      dispatch(setIsFetching(true));
       const restMovies = favoriteMovies.filter(movie => movie.id !== id);
       await AsyncStorage.setItem(
         'favoriteMovies',

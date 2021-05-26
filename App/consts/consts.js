@@ -1,6 +1,6 @@
-export const BASE_IMAGE_URL = 'http://image.tmdb.org/t/p/';
-
 import {CardStyleInterpolators} from '@react-navigation/stack';
+
+export const BASE_IMAGE_URL = 'http://image.tmdb.org/t/p/';
 
 export const STACK_CONFIG = {
   animation: 'timing',
