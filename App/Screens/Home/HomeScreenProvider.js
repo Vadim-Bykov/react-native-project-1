@@ -34,6 +34,19 @@ export const HomeScreenProvider = ({navigation}) => {
     {keepPreviousData: true},
   );
 
+  // const movies =
+  // mode === 'section'
+  //   ? useQuery(
+  //       ['movies', sectionPage],
+  //       () => api.getMovies(currentSection, sectionPage),
+  //       {keepPreviousData: true},
+  //     )
+  //   : useQuery(
+  //       ['currentGenre', genrePage],
+  //       () => api.getMoviesByGenre(currentGenreID, genrePage),
+  //       {keepPreviousData: true},
+  //     );
+
   useEffect(() => {
     if (movies.data) {
       setShownMovies(movies.data.results);
@@ -123,6 +136,10 @@ export const HomeScreenProvider = ({navigation}) => {
         setIsBottomPart,
         mode,
         setMode,
+        sectionPage,
+        setSectionPage,
+        genrePage,
+        setGenrePage,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>
