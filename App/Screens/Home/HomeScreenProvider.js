@@ -1,6 +1,4 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {Text} from 'react-native';
-import {Button} from 'react-native';
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
 import * as api from '../../api/movieApiService';
@@ -20,32 +18,16 @@ export const HomeScreenProvider = ({navigation}) => {
   const [pagerRef, setPagerRef] = useState(null);
   const [isBottomPart, setIsBottomPart] = useState(true);
   const [mode, setMode] = useState('section');
-
-  //preparation for pagination
-  const [sectionPage, setSectionPage] = useState(1);
-  const [genrePage, setGenrePage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
   const movies = useQuery(
-    ['movies', sectionPage],
-    () => api.getMovies(currentSection, sectionPage),
+    'movies',
+    () => api.getMovies(currentSection, currentPage),
     {keepPreviousData: true},
   );
-
-  // const movies =
-  // mode === 'section'
-  //   ? useQuery(
-  //       ['movies', sectionPage],
-  //       () => api.getMovies(currentSection, sectionPage),
-  //       {keepPreviousData: true},
-  //     )
-  //   : useQuery(
-  //       ['currentGenre', genrePage],
-  //       () => api.getMoviesByGenre(currentGenreID, genrePage),
-  //       {keepPreviousData: true},
-  //     );
 
   useEffect(() => {
     if (movies.data) {
@@ -69,7 +51,7 @@ export const HomeScreenProvider = ({navigation}) => {
           pagerRef.current &&
           pagerRef.current.setPageWithoutAnimation(0);
       });
-  }, [currentSection, mode, sectionPage]);
+  }, [currentSection, mode, currentPage]);
 
   useEffect(() => {
     if (movies.isError)
@@ -81,20 +63,30 @@ export const HomeScreenProvider = ({navigation}) => {
       );
   }, [genres.isError, movies.isError]);
 
-  const onChangeGenre = async (genreId = currentGenreID) => {
-    setMode('genre');
+  const onChangeGenre = (genreId = currentGenreID) => {
+    if (mode === 'genre' && genreId === currentGenreID) return;
 
+    setCurrentGenreID(genreId);
+    setCurrentPage(1);
+    setMode('genre');
+  };
+
+  useEffect(() => {
+    mode === 'genre' && genreRequest(currentGenreID, currentPage);
+  }, [mode, currentGenreID, currentPage]);
+
+  const genreRequest = async (genreId = currentGenreID, page = 1) => {
     try {
       dispatch(actions.setIsFetching(true));
 
       const shownMovies =
         genreId === 0
-          ? await api.getMovies(currentSection, genrePage)
-          : await api.getMoviesByGenre(genreId, genrePage);
+          ? await api.getMovies(currentSection, page)
+          : await api.getMoviesByGenre(genreId, page);
 
       if (shownMovies) {
         setShownMovies(shownMovies.results);
-        setCurrentGenreID(genreId);
+        // setCurrentGenreID(genreId);
         setActiveIndex(0);
       }
 
@@ -112,6 +104,7 @@ export const HomeScreenProvider = ({navigation}) => {
 
   const onChangeSection = name => {
     setCurrentSection(name);
+    setCurrentPage(1);
     setMode('section');
   };
 
@@ -136,12 +129,43 @@ export const HomeScreenProvider = ({navigation}) => {
         setIsBottomPart,
         mode,
         setMode,
-        sectionPage,
-        setSectionPage,
-        genrePage,
-        setGenrePage,
+        currentPage,
+        setCurrentPage,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>
   );
 };
+
+// const onChangeGenre = async (genreId = currentGenreID, page = 1) => {
+//   if (mode === 'genre' && page === currentPage && genreId === currentGenreID)
+//     return;
+
+//   setMode('genre');
+//   setCurrentPage(page);
+
+//   try {
+//     dispatch(actions.setIsFetching(true));
+
+//     const shownMovies =
+//       genreId === 0
+//         ? await api.getMovies(currentSection, page)
+//         : await api.getMoviesByGenre(genreId, page);
+
+//     if (shownMovies) {
+//       setShownMovies(shownMovies.results);
+//       setCurrentGenreID(genreId);
+//       setActiveIndex(0);
+//     }
+
+//     if (pagerRef && pagerRef.current)
+//       pagerRef.current.setPageWithoutAnimation(0);
+
+//     dispatch(actions.setIsFetching(false));
+//   } catch (error) {
+//     dispatch(actions.setError(error.response.data.status_message));
+//     console.error(error);
+
+//     dispatch(actions.setIsFetching(false));
+//   }
+// };

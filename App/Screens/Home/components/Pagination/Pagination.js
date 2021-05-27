@@ -5,64 +5,33 @@ import {useMovieContext} from '../../HomeScreenProvider';
 
 export const Pagination = React.memo(() => {
   const {width, height} = useWindowDimensions();
-  const {
-    mode,
-    setMode,
-    sectionPage,
-    setSectionPage,
-    genrePage,
-    setGenrePage,
-  } = useMovieContext();
+  const {currentPage, setCurrentPage} = useMovieContext();
 
   const arrowLeftName = useCallback(() => {
-    let name = '';
-    if (mode === 'section') {
-      name = sectionPage === 1 ? 'ios-arrow-undo-outline' : 'ios-arrow-undo';
-    }
-    if (mode === 'genre') {
-      name = genrePage === 1 ? 'ios-arrow-undo-outline' : 'ios-arrow-undo';
-    }
+    const name =
+      currentPage === 1 ? 'ios-arrow-undo-outline' : 'ios-arrow-undo';
+
     return name;
-  }, [sectionPage, genrePage]);
+  }, [currentPage]);
 
   const arrowRightName = useCallback(() => {
-    let name = '';
-    if (mode === 'section') {
-      name = sectionPage === 20 ? 'ios-arrow-redo-outline' : 'ios-arrow-redo';
-    }
-    if (mode === 'genre') {
-      name = genrePage === 20 ? 'ios-arrow-redo-outline' : 'ios-arrow-redo';
-    }
+    const name =
+      currentPage === 20 ? 'ios-arrow-redo-outline' : 'ios-arrow-redo';
+
     return name;
-  }, [sectionPage, genrePage]);
+  }, [currentPage]);
 
   const onNextPage = useCallback(() => {
-    if (mode === 'section') {
-      sectionPage === 20
-        ? setSectionPage(prev => prev)
-        : setSectionPage(prev => prev + 1);
-    }
-    if (mode === 'genre') {
-      genrePage === 20
-        ? setGenrePage(prev => prev)
-        : setGenrePage(prev => prev + 1);
-    }
-  }, [mode, sectionPage, genrePage]);
-
-  //   console.log(genrePage);
+    currentPage === 20
+      ? setCurrentPage(prev => prev)
+      : setCurrentPage(prev => prev + 1);
+  }, [currentPage]);
 
   const onPrevPage = useCallback(() => {
-    if (mode === 'section') {
-      sectionPage === 1
-        ? setSectionPage(prev => prev)
-        : setSectionPage(prev => prev - 1);
-    }
-    if (mode === 'genre') {
-      genrePage === 1
-        ? setGenrePage(prev => prev)
-        : setGenrePage(prev => prev - 1);
-    }
-  }, [mode, sectionPage, genrePage]);
+    currentPage === 1
+      ? setCurrentPage(prev => prev)
+      : setCurrentPage(prev => prev - 1);
+  }, [currentPage]);
 
   return (
     <View style={styles(height, width).container}>
@@ -92,6 +61,5 @@ const styles = (height, width) =>
       top: height * 0.5,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      // paddingHorizontal: 10,
     },
   });
