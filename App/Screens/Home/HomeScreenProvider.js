@@ -19,7 +19,7 @@ export const HomeScreenProvider = ({navigation}) => {
   const [isBottomPart, setIsBottomPart] = useState(true);
   const [mode, setMode] = useState('section');
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [totalPages, setTotalPages] = useState(1);
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
@@ -32,6 +32,7 @@ export const HomeScreenProvider = ({navigation}) => {
   useEffect(() => {
     if (movies.data) {
       setShownMovies(movies.data.results);
+      setTotalPages(movies.data.total_pages);
     }
   }, [movies.data]);
 
@@ -63,6 +64,10 @@ export const HomeScreenProvider = ({navigation}) => {
       );
   }, [genres.isError, movies.isError]);
 
+  useEffect(() => {
+    mode === 'genre' && genreRequest(currentGenreID, currentPage);
+  }, [mode, currentGenreID, currentPage]);
+
   const onChangeGenre = (genreId = currentGenreID) => {
     if (mode === 'genre' && genreId === currentGenreID) return;
 
@@ -70,10 +75,6 @@ export const HomeScreenProvider = ({navigation}) => {
     setCurrentPage(1);
     setMode('genre');
   };
-
-  useEffect(() => {
-    mode === 'genre' && genreRequest(currentGenreID, currentPage);
-  }, [mode, currentGenreID, currentPage]);
 
   const genreRequest = async (genreId = currentGenreID, page = 1) => {
     try {
@@ -86,7 +87,7 @@ export const HomeScreenProvider = ({navigation}) => {
 
       if (shownMovies) {
         setShownMovies(shownMovies.results);
-        // setCurrentGenreID(genreId);
+        setTotalPages(shownMovies.total_pages);
         setActiveIndex(0);
       }
 
@@ -131,41 +132,9 @@ export const HomeScreenProvider = ({navigation}) => {
         setMode,
         currentPage,
         setCurrentPage,
+        totalPages,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>
   );
 };
-
-// const onChangeGenre = async (genreId = currentGenreID, page = 1) => {
-//   if (mode === 'genre' && page === currentPage && genreId === currentGenreID)
-//     return;
-
-//   setMode('genre');
-//   setCurrentPage(page);
-
-//   try {
-//     dispatch(actions.setIsFetching(true));
-
-//     const shownMovies =
-//       genreId === 0
-//         ? await api.getMovies(currentSection, page)
-//         : await api.getMoviesByGenre(genreId, page);
-
-//     if (shownMovies) {
-//       setShownMovies(shownMovies.results);
-//       setCurrentGenreID(genreId);
-//       setActiveIndex(0);
-//     }
-
-//     if (pagerRef && pagerRef.current)
-//       pagerRef.current.setPageWithoutAnimation(0);
-
-//     dispatch(actions.setIsFetching(false));
-//   } catch (error) {
-//     dispatch(actions.setError(error.response.data.status_message));
-//     console.error(error);
-
-//     dispatch(actions.setIsFetching(false));
-//   }
-// };

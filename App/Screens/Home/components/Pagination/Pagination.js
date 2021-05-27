@@ -5,7 +5,7 @@ import {useMovieContext} from '../../HomeScreenProvider';
 
 export const Pagination = React.memo(() => {
   const {width, height} = useWindowDimensions();
-  const {currentPage, setCurrentPage} = useMovieContext();
+  const {currentPage, setCurrentPage, totalPages} = useMovieContext();
 
   const arrowLeftName = useCallback(() => {
     const name =
@@ -16,16 +16,16 @@ export const Pagination = React.memo(() => {
 
   const arrowRightName = useCallback(() => {
     const name =
-      currentPage === 20 ? 'ios-arrow-redo-outline' : 'ios-arrow-redo';
+      currentPage === totalPages ? 'ios-arrow-redo-outline' : 'ios-arrow-redo';
 
     return name;
-  }, [currentPage]);
+  }, [currentPage, totalPages]);
 
   const onNextPage = useCallback(() => {
-    currentPage === 20
+    currentPage === totalPages
       ? setCurrentPage(prev => prev)
       : setCurrentPage(prev => prev + 1);
-  }, [currentPage]);
+  }, [currentPage, totalPages]);
 
   const onPrevPage = useCallback(() => {
     currentPage === 1
