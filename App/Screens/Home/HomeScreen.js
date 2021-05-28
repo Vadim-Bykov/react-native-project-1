@@ -8,7 +8,6 @@ import {MoviePager} from './components/Pager/Pager';
 import {Sections} from './components/Sections/Sections';
 import {useMovieContext} from './HomeScreenProvider';
 import {Error} from '../../common/Error';
-import {Pagination} from './components/Pagination/Pagination';
 
 export const HomeScreen = () => {
   const error = useSelector(selectors.getErrorMessage);
@@ -28,8 +27,6 @@ export const HomeScreen = () => {
         <Genres />
         {shownMovies && <MoviePager />}
       </ScrollView>
-
-      <Pagination />
     </>
   );
 };

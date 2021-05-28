@@ -46,9 +46,11 @@ export const MoviePager = () => {
         onPageScroll={onPageScroll}
         onPageSelected={e => setActiveIndex(e.nativeEvent.position)}
         style={{height: width, width}}>
-        {shownMovies.map(movie => (
+        {shownMovies.map((movie, index) => (
           <View style={{width: 0.68}} key={movie.id}>
             <Slide
+              index={index}
+              lastIndex={shownMovies.length - 1}
               key={movie.id}
               movie={movie}
               width={width}
