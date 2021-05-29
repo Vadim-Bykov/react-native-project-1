@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {useController} from 'react-hook-form';
 import {StyleSheet, View, TextInput, Text} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
@@ -15,6 +15,7 @@ export const Input = ({inputConfig}) => {
       name,
       control,
       rules,
+      setSecurePassword,
     },
   } = inputConfig;
 
@@ -23,7 +24,7 @@ export const Input = ({inputConfig}) => {
   useEffect(
     () =>
       inputRef.current.setNativeProps({style: {fontFamily: 'Nunito-Light'}}),
-    [],
+    [secureTextEntry],
   );
 
   const {field, fieldState} = useController({
@@ -33,10 +34,13 @@ export const Input = ({inputConfig}) => {
     rules,
   });
 
+  const showPassword = useCallback(() => setSecurePassword(prev => !prev), []);
+
   return (
     <>
       <View style={{...styles.inputContainer, width: width * 0.7}}>
         {iconName && <Icon name={iconName} type={type} color={color} />}
+
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
@@ -47,7 +51,17 @@ export const Input = ({inputConfig}) => {
           ref={inputRef}
           style={styles.input}
         />
+
+        {textContentType === 'password' && (
+          <Icon
+            name={secureTextEntry ? 'eye-check-outline' : 'eye-off-outline'}
+            type="material-community"
+            color={color}
+            onPress={showPassword}
+          />
+        )}
       </View>
+
       <View style={styles.errorContainer}>
         {fieldState.error && (
           <Text style={styles.error}>{fieldState.error.message}</Text>
@@ -68,7 +82,7 @@ const styles = StyleSheet.create({
   },
   input: {
     color: '#fff',
-    width: '90%',
+    flex: 1,
     marginLeft: 10,
   },
   errorContainer: {
