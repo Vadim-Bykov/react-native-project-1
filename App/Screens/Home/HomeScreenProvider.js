@@ -1,6 +1,10 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import {Text} from 'react-native';
-import {Button} from 'react-native';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
 import * as api from '../../api/movieApiService';
@@ -20,23 +24,21 @@ export const HomeScreenProvider = ({navigation}) => {
   const [pagerRef, setPagerRef] = useState(null);
   const [isBottomPart, setIsBottomPart] = useState(true);
   const [mode, setMode] = useState('section');
-
-  //preparation for pagination
-  const [sectionPage, setSectionPage] = useState(1);
-  const [genrePage, setGenrePage] = useState(1);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
   const movies = useQuery(
-    ['movies', sectionPage],
-    () => api.getMovies(currentSection, sectionPage),
+    'movies',
+    () => api.getMovies(currentSection, currentPage),
     {keepPreviousData: true},
   );
 
   useEffect(() => {
     if (movies.data) {
       setShownMovies(movies.data.results);
+      setTotalPages(movies.data.total_pages);
     }
   }, [movies.data]);
 
@@ -56,7 +58,7 @@ export const HomeScreenProvider = ({navigation}) => {
           pagerRef.current &&
           pagerRef.current.setPageWithoutAnimation(0);
       });
-  }, [currentSection, mode, sectionPage]);
+  }, [currentSection, mode, currentPage]);
 
   useEffect(() => {
     if (movies.isError)
@@ -68,41 +70,73 @@ export const HomeScreenProvider = ({navigation}) => {
       );
   }, [genres.isError, movies.isError]);
 
-  const onChangeGenre = async (genreId = currentGenreID) => {
-    setMode('genre');
+  useEffect(() => {
+    mode === 'genre' && genreRequest(currentGenreID, currentPage);
+  }, [mode, currentGenreID, currentPage]);
 
-    try {
-      dispatch(actions.setIsFetching(true));
+  const onChangeGenre = useCallback(
+    (genreId = currentGenreID) => {
+      if (mode === 'genre' && genreId === currentGenreID) return;
 
-      const shownMovies =
-        genreId === 0
-          ? await api.getMovies(currentSection, genrePage)
-          : await api.getMoviesByGenre(genreId, genrePage);
+      setCurrentGenreID(genreId);
+      setCurrentPage(1);
+      setMode('genre');
+    },
+    [currentGenreID, mode],
+  );
 
-      if (shownMovies) {
-        setShownMovies(shownMovies.results);
-        setCurrentGenreID(genreId);
-        setActiveIndex(0);
+  const genreRequest = useCallback(
+    async (genreId = currentGenreID, page = 1) => {
+      try {
+        dispatch(actions.setIsFetching(true));
+
+        const shownMovies =
+          genreId === 0
+            ? await api.getMovies(currentSection, page)
+            : await api.getMoviesByGenre(genreId, page);
+
+        if (shownMovies) {
+          setShownMovies(shownMovies.results);
+          setTotalPages(shownMovies.total_pages);
+          setActiveIndex(0);
+        }
+
+        if (pagerRef && pagerRef.current)
+          pagerRef.current.setPageWithoutAnimation(0);
+
+        dispatch(actions.setIsFetching(false));
+      } catch (error) {
+        dispatch(actions.setError(error.response.data.status_message));
+        console.error(error);
+
+        dispatch(actions.setIsFetching(false));
       }
+    },
+    [currentGenreID, pagerRef],
+  );
 
-      if (pagerRef && pagerRef.current)
-        pagerRef.current.setPageWithoutAnimation(0);
-
-      dispatch(actions.setIsFetching(false));
-    } catch (error) {
-      dispatch(actions.setError(error.response.data.status_message));
-      console.error(error);
-
-      dispatch(actions.setIsFetching(false));
-    }
-  };
-
-  const onChangeSection = name => {
+  const onChangeSection = useCallback(name => {
     setCurrentSection(name);
+    setCurrentPage(1);
     setMode('section');
-  };
+  }, []);
 
-  const goToMovieDetails = movieId => navigation.navigate('Details', {movieId});
+  const goToMovieDetails = useCallback(
+    movieId => navigation.navigate('Details', {movieId}),
+    [navigation],
+  );
+
+  const onNextPage = useCallback(() => {
+    currentPage === totalPages
+      ? setCurrentPage(prev => prev)
+      : setCurrentPage(prev => prev + 1);
+  }, [currentPage, totalPages]);
+
+  const onPrevPage = useCallback(() => {
+    currentPage === 1
+      ? setCurrentPage(prev => prev)
+      : setCurrentPage(prev => prev - 1);
+  }, [currentPage]);
 
   return (
     <MoviesContext.Provider
@@ -123,6 +157,11 @@ export const HomeScreenProvider = ({navigation}) => {
         setIsBottomPart,
         mode,
         setMode,
+        currentPage,
+        setCurrentPage,
+        totalPages,
+        onNextPage,
+        onPrevPage,
       }}>
       <HomeScreen />
     </MoviesContext.Provider>

@@ -9,18 +9,24 @@ import {View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as thunks from '../../../store/auth/operations';
 import * as selectors from '../../../store/auth/selectors';
+import * as actions from '../../../store/auth/actions';
 
 export const DrawerContent = props => {
   const {
     state: {routeNames, index},
     navigation,
   } = props;
+
   const user = useSelector(selectors.getUser);
 
   const dispatch = useDispatch();
 
-  const goToFavoritePage = () => navigation.navigate('Favorite');
+  const goToFavoritePage = () => {
+    dispatch(actions.setIsFetching(true));
+    navigation.navigate('Favorite');
+  };
   const goToHomePage = () => navigation.navigate('Home');
+  const goToChatList = () => navigation.navigate('Chats');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -76,6 +82,21 @@ export const DrawerContent = props => {
               )}
               labelStyle={styles.labelStyle}
               onPress={goToFavoritePage}
+            />
+
+            <DrawerItem
+              label="Chats"
+              activeTintColor="#5535E5"
+              activeBackgroundColor="#E9DCFB"
+              icon={({focused}) => (
+                <Icon
+                  type="antdesign"
+                  name="wechat"
+                  color={focused ? '#5535E5' : '#6A6A6A'}
+                />
+              )}
+              labelStyle={styles.labelStyle}
+              onPress={goToChatList}
             />
           </DrawerContentScrollView>
 
