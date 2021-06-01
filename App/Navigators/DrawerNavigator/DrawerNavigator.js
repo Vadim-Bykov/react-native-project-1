@@ -3,7 +3,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {FavoriteScreen} from '../../Screens/FavoriteScreen/FavoriteScreen';
 import {MoviesStackNavigator} from '../MoviesStackNavigator';
 import {DrawerContent} from './components/DrawerContent';
-import {ChatStackNavigator} from '../ChatStackNavigator';
+import {ForumStackNavigator} from '../ForumStackNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -29,7 +29,7 @@ export const DrawerNavigator = () => {
         }}
       />
 
-      <Drawer.Screen name="Chats" component={ChatStackNavigator} />
+      <Drawer.Screen name="Chats" component={ForumStackNavigator} />
     </Drawer.Navigator>
   );
 };
