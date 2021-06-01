@@ -26,6 +26,7 @@ export const DrawerContent = props => {
     navigation.navigate('Favorite');
   };
   const goToHomePage = () => navigation.navigate('Home');
+  const goToChatList = () => navigation.navigate('Chats');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -81,6 +82,21 @@ export const DrawerContent = props => {
               )}
               labelStyle={styles.labelStyle}
               onPress={goToFavoritePage}
+            />
+
+            <DrawerItem
+              label="Chats"
+              activeTintColor="#5535E5"
+              activeBackgroundColor="#E9DCFB"
+              icon={({focused}) => (
+                <Icon
+                  type="antdesign"
+                  name="wechat"
+                  color={focused ? '#5535E5' : '#6A6A6A'}
+                />
+              )}
+              labelStyle={styles.labelStyle}
+              onPress={goToChatList}
             />
           </DrawerContentScrollView>
 

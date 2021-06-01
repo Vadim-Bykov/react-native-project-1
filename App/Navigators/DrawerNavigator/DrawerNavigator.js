@@ -3,6 +3,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {FavoriteScreen} from '../../Screens/FavoriteScreen/FavoriteScreen';
 import {MoviesStackNavigator} from '../MoviesStackNavigator';
 import {DrawerContent} from './components/DrawerContent';
+import {ChatStackNavigator} from '../ChatStackNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,6 +28,8 @@ export const DrawerNavigator = () => {
           unmountOnBlur: true,
         }}
       />
+
+      <Drawer.Screen name="Chats" component={ChatStackNavigator} />
     </Drawer.Navigator>
   );
 };
