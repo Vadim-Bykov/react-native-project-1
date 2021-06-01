@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useForm, useWatch} from 'react-hook-form';
 import {
   StyleSheet,
@@ -31,6 +31,8 @@ export const AuthPage = ({configuration}) => {
   const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
   const {width, height} = useWindowDimensions();
+  const [securePassword, setSecurePassword] = useState(true);
+  const [secureConfirmPassword, setSecureConfirmPassword] = useState(true);
 
   const {
     control,
@@ -75,7 +77,7 @@ export const AuthPage = ({configuration}) => {
     input: {
       placeholder: 'Password',
       textContentType: 'password',
-      secureTextEntry: true,
+      secureTextEntry: securePassword,
       width,
       name: 'password',
       control,
@@ -84,6 +86,7 @@ export const AuthPage = ({configuration}) => {
         maxLength: {value: 25, message: 'Exceeded max length 25'},
         minLength: {value: 6, message: 'Not achieved min length 6'},
       },
+      setSecurePassword,
     },
   };
 
@@ -92,7 +95,7 @@ export const AuthPage = ({configuration}) => {
     input: {
       placeholder: 'Confirm password',
       textContentType: 'password',
-      secureTextEntry: true,
+      secureTextEntry: secureConfirmPassword,
       width,
       name: 'confirmPassword',
       control,
@@ -102,6 +105,7 @@ export const AuthPage = ({configuration}) => {
         minLength: {value: 6, message: 'Not achieved min length 6'},
         validate: value => value === password || 'The password do not match',
       },
+      setSecurePassword: setSecureConfirmPassword,
     },
   };
 
