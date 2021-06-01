@@ -25,7 +25,7 @@ export const Slide = ({movie, width, goToMovieDetails, index, lastIndex}) => {
           size={40}
           color="#FF6666"
           onPress={onPrevPage}
-          containerStyle={{position: 'absolute', top: width * 0.35, left: 0}}
+          containerStyle={[styles.arrowPrev, {top: width * 0.35}]}
         />
       )}
 
@@ -61,7 +61,7 @@ export const Slide = ({movie, width, goToMovieDetails, index, lastIndex}) => {
           size={40}
           color="#FF6666"
           onPress={onNextPage}
-          containerStyle={{position: 'absolute', top: width * 0.35, right: 0}}
+          containerStyle={[styles.arrowNext, {top: width * 0.35}]}
         />
       )}
     </>
@@ -76,5 +76,13 @@ const styles = StyleSheet.create({
   image: {
     borderRadius: 20,
     alignSelf: 'center',
+  },
+  arrowPrev: {
+    position: 'absolute',
+    left: 0,
+  },
+  arrowNext: {
+    position: 'absolute',
+    right: 0,
   },
 });
