@@ -1,67 +1,50 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
+import {NewForumModal} from './components/NewForumModal';
+
 
 export const ForumListScreen = () => {
-  // const user = useSelector(selectors.getUser);
-  // useEffect(() => getUser(), []);
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('users')
+      .doc('92uKtxsIdK7DdhH6i4UL')
+      .onSnapshot(documentSnapshot => {
+        console.log('User data: ', documentSnapshot.data());
+      });
 
-  const getUser = async () => {
-    try {
-      // await firestore().collection('users').add({name: 'Ada', age: 30});
-      // await firestore()
-      //   .collection('users')
-      //   .doc('92uKtxsIdK7DdhH6i4UL')
-      //   .update({
-      //     users: firestore.FieldValue.arrayUnion({
-      //       name: user.displayName,
-      //       email: user.email,
-      //       id: user.uid,
-      //     }),
-      //   });
+    return () => subscriber();
+  }, []);
 
-      // .update({messages: firestore.FieldValue.delete()});
+  const [loading, setLoading] = useState(true);
+  const [forums, setForums] = useState([]);
 
-      // await firestore().collection('users').add({
-      //   email: 'test@.gmail.com',
-      //   id: '1',
-      //   name: 'Vadim',
-      // });
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('forums')
+      .onSnapshot(querySnapshot => {
+        const forums = [];
 
-      await firestore()
-        .collection('users')
-        .get()
-        .then(querySnapshot => {
-          console.log('Total users: ', querySnapshot.docs);
-
-          querySnapshot.forEach(documentSnapshot => {
-            console.log(
-              'User ID: ',
-              documentSnapshot.id,
-              documentSnapshot.data(),
-            );
+        querySnapshot.forEach(documentSnapshot => {
+          forums.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
           });
         });
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
-  // useEffect(() => {
-  //   const subscriber = firestore()
-  //     .collection('users')
-  //     .doc('1')
-  //     .onSnapshot(documentSnapshot => {
-  //       console.log('User data: ', documentSnapshot.data());
-  //     });
+        setForums(forums);
+        setLoading(false);
+      });
 
-  //   // Stop listening for updates when no longer required
-  //   return () => subscriber();
-  // }, []);
+    return () => subscriber();
+  }, []);
+  console.log(forums);
+
   return (
     <View>
+    <NewForumModal />
       <Text>ChatListScreen</Text>
     </View>
   );

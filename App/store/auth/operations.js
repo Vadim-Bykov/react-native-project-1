@@ -9,19 +9,6 @@ GoogleSignin.configure({
     '846892742605-1lgkes0r5amg8rji2e1b4g11sbq2trev.apps.googleusercontent.com',
 });
 
-// const setUserDataBase = (name, email, id) => {
-//   firestore()
-//     .collection('users')
-//     .doc('92uKtxsIdK7DdhH6i4UL')
-//     .update({
-//       users: firestore.FieldValue.arrayUnion({
-//         name,
-//         email,
-//         id,
-//       }),
-//     });
-// };
-
 const setUserDataBase = user => {
   firestore()
     .collection('users')
@@ -52,13 +39,9 @@ export const signUp = userData => async dispatch => {
 
     const user = await auth().currentUser;
 
-    dispatch(actions.setUser(user));
-
-    console.log(user.displayName, user.email, user.uid);
-
     await setUserDataBase(user);
-    // await setUserDataBase(userData.userName, user.email, user.uid);
 
+    dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
@@ -75,10 +58,11 @@ export const signIn = userData => async dispatch => {
 
     await auth().signInWithEmailAndPassword(userData.email, userData.password);
 
-    await dispatch(actions.setUser(auth().currentUser));
+    const user = await auth().currentUser;
 
-    // await setUserDataBase(auth().currentUser);
+    await setUserDataBase(user);
 
+    dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
@@ -116,9 +100,11 @@ export const signInGoogle = () => async dispatch => {
 
     await auth().signInWithCredential(googleCredential);
 
-    // await setUserDataBase(auth().currentUser);
+    const user = await auth().currentUser;
 
-    dispatch(actions.setUser(auth().currentUser));
+    await setUserDataBase(user);
+
+    dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
@@ -139,12 +125,6 @@ export const authFireBase = () => async dispatch => {
     };
 
     await auth().onAuthStateChanged(setUserAuth);
-
-    const user = await auth().currentUser;
-
-    dispatch(actions.setUser(user));
-
-    console.log(user.displayName, user.email, user.uid);
 
     dispatch(actions.setInitialized());
     dispatch(actions.setIsFetching(false));

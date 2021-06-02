@@ -1,14 +1,18 @@
 import firestore from '@react-native-firebase/firestore';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {ForumListScreen} from '../Screens/Forums/ForumListScreen';
+import * as actions from '../store/common/actions';
 
 const Stack = createStackNavigator();
 
 export const ForumStackNavigator = ({navigation}) => {
-  const goToForum = () => navigation.navigate('Home');
+  const dispatch = useDispatch();
+
+  const showNewForumModal = () => dispatch(actions.setModalVisible(true));
 
   return (
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
@@ -22,7 +26,7 @@ export const ForumStackNavigator = ({navigation}) => {
               name="plus"
               color="#000"
               containerStyle={{marginRight: 15}}
-              onPress={goToForum}
+              onPress={showNewForumModal}
             />
           ),
         }}
