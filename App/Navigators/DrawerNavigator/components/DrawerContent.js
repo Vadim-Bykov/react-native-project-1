@@ -26,7 +26,7 @@ export const DrawerContent = props => {
     navigation.navigate('Favorite');
   };
   const goToHomePage = () => navigation.navigate('Home');
-  const goToChatList = () => navigation.navigate('Chats');
+  const goToForumtList = () => navigation.navigate('Forum');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -85,7 +85,8 @@ export const DrawerContent = props => {
             />
 
             <DrawerItem
-              label="Chats"
+              label="Forum"
+              focused={routeNames[index] === 'Forum' ? true : false}
               activeTintColor="#5535E5"
               activeBackgroundColor="#E9DCFB"
               icon={({focused}) => (
@@ -96,7 +97,7 @@ export const DrawerContent = props => {
                 />
               )}
               labelStyle={styles.labelStyle}
-              onPress={goToChatList}
+              onPress={goToForumtList}
             />
           </DrawerContentScrollView>
 

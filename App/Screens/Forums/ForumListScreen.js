@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
 import {NewForumModal} from './components/NewForumModal';
-
+import {Forum} from './components/Forum';
 
 export const ForumListScreen = () => {
   useEffect(() => {
@@ -12,7 +12,7 @@ export const ForumListScreen = () => {
       .collection('users')
       .doc('92uKtxsIdK7DdhH6i4UL')
       .onSnapshot(documentSnapshot => {
-        console.log('User data: ', documentSnapshot.data());
+        documentSnapshot && console.log('User data: ', documentSnapshot.data());
       });
 
     return () => subscriber();
@@ -21,18 +21,21 @@ export const ForumListScreen = () => {
   const [loading, setLoading] = useState(true);
   const [forums, setForums] = useState([]);
 
+  const renderItem = useCallback(({item}) => <Forum forum={item} />, []);
+
   useEffect(() => {
     const subscriber = firestore()
       .collection('forums')
       .onSnapshot(querySnapshot => {
         const forums = [];
 
-        querySnapshot.forEach(documentSnapshot => {
-          forums.push({
-            ...documentSnapshot.data(),
-            id: documentSnapshot.id,
+        querySnapshot &&
+          querySnapshot.forEach(documentSnapshot => {
+            forums.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
           });
-        });
 
         setForums(forums);
         setLoading(false);
@@ -44,8 +47,12 @@ export const ForumListScreen = () => {
 
   return (
     <View>
-    <NewForumModal />
-      <Text>ChatListScreen</Text>
+      <NewForumModal />
+      <FlatList
+        data={forums}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
     </View>
   );
 };

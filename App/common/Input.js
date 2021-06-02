@@ -16,6 +16,7 @@ export const Input = ({inputConfig}) => {
       control,
       rules,
       setSecurePassword,
+      multiline = false,
     },
   } = inputConfig;
 
@@ -38,7 +39,7 @@ export const Input = ({inputConfig}) => {
 
   return (
     <>
-      <View style={{...styles.inputContainer, width: width * 0.7}}>
+      <View style={{...styles.inputContainer, width}}>
         {iconName && <Icon name={iconName} type={type} color={color} />}
 
         <TextInput
@@ -49,6 +50,7 @@ export const Input = ({inputConfig}) => {
           value={field.value}
           onChangeText={field.onChange}
           ref={inputRef}
+          multiline={multiline}
           style={styles.input}
         />
 

@@ -48,7 +48,7 @@ export const AuthPage = ({configuration}) => {
     input: {
       placeholder: 'user name',
       textContentType: 'name',
-      width,
+      width: width * 0.7,
       name: 'userName',
       control,
       rules: {
@@ -62,7 +62,7 @@ export const AuthPage = ({configuration}) => {
     input: {
       placeholder: 'E-mail address',
       textContentType: 'emailAddress',
-      width,
+      width: width * 0.7,
       name: 'email',
       control,
       rules: {
@@ -78,7 +78,7 @@ export const AuthPage = ({configuration}) => {
       placeholder: 'Password',
       textContentType: 'password',
       secureTextEntry: securePassword,
-      width,
+      width: width * 0.7,
       name: 'password',
       control,
       rules: {
@@ -96,7 +96,7 @@ export const AuthPage = ({configuration}) => {
       placeholder: 'Confirm password',
       textContentType: 'password',
       secureTextEntry: secureConfirmPassword,
-      width,
+      width: width * 0.7,
       name: 'confirmPassword',
       control,
       rules: {

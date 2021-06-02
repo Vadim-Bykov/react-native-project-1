@@ -29,7 +29,7 @@ export const DrawerNavigator = () => {
         }}
       />
 
-      <Drawer.Screen name="Chats" component={ForumStackNavigator} />
+      <Drawer.Screen name="Forum" component={ForumStackNavigator} />
     </Drawer.Navigator>
   );
 };

@@ -1,3 +1,3 @@
 export const initialState = {
-  modalVisible: true,
+  modalVisible: false,
 };

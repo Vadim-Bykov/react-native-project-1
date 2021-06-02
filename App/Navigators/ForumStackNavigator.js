@@ -6,10 +6,11 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {ForumListScreen} from '../Screens/Forums/ForumListScreen';
 import * as actions from '../store/common/actions';
+import {TouchableOpacity} from 'react-native';
 
 const Stack = createStackNavigator();
 
-export const ForumStackNavigator = ({navigation}) => {
+export const ForumStackNavigator = () => {
   const dispatch = useDispatch();
 
   const showNewForumModal = () => dispatch(actions.setModalVisible(true));
@@ -17,17 +18,19 @@ export const ForumStackNavigator = ({navigation}) => {
   return (
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
       <Stack.Screen
-        name="ChatList"
+        name="ForumList"
         component={ForumListScreen}
         options={{
+          title: "Forums' list",
           headerRight: () => (
-            <Icon
-              type="antdesign"
-              name="plus"
-              color="#000"
-              containerStyle={{marginRight: 15}}
-              onPress={showNewForumModal}
-            />
+            <TouchableOpacity onPress={showNewForumModal}>
+              <Icon
+                type="antdesign"
+                name="plus"
+                color="#000"
+                containerStyle={{marginRight: 15}}
+              />
+            </TouchableOpacity>
           ),
         }}
       />
