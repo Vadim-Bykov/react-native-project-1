@@ -7,6 +7,7 @@ import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {ForumListScreen} from '../Screens/Forums/ForumListScreen';
 import * as actions from '../store/common/actions';
 import {TouchableOpacity} from 'react-native';
+import ForumScreen from '../Screens/Forums/ForumScreen';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,8 @@ export const ForumStackNavigator = () => {
           ),
         }}
       />
+
+      <Stack.Screen name="Forum" component={ForumScreen} />
     </Stack.Navigator>
   );
 };

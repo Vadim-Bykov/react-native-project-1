@@ -9,14 +9,12 @@ import {useForm} from 'react-hook-form';
 import {Input} from '../../../common/Input';
 import firestore from '@react-native-firebase/firestore';
 
-export const NewForumModal = () => {
+export const NewForumModal = ({user}) => {
   const modalVisible = useSelector(selectors.getModalVisible);
   const dispatch = useDispatch();
   const width = useWindowDimensions().width;
   const {control, handleSubmit, reset, formState} = useForm();
-  const {displayName, email, photoURL, uid} = useSelector(
-    authSelectors.getUser,
-  );
+  const {displayName, email, photoURL, uid} = user;
 
   const TitleInput = {
     // icon: {type: 'feather', iconName: 'user', color: '#DDBA33'},
@@ -77,6 +75,7 @@ export const NewForumModal = () => {
           photoURL,
           id: uid,
         },
+        time: Date.now(),
       });
   };
 
@@ -124,9 +123,7 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    // flexDirection: 'row',
     justifyContent: 'center',
-    // alignItems: 'center',
 
     margin: 20,
     backgroundColor: 'white',

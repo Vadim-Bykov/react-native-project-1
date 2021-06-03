@@ -1,29 +1,34 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
+import * as actions from '../../store/auth/actions';
 import {NewForumModal} from './components/NewForumModal';
 import {Forum} from './components/Forum';
+import {Loader} from '../../common/Loader';
 
 export const ForumListScreen = () => {
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection('users')
-      .doc('92uKtxsIdK7DdhH6i4UL')
-      .onSnapshot(documentSnapshot => {
-        documentSnapshot && console.log('User data: ', documentSnapshot.data());
-      });
+  const user = useSelector(selectors.getUser);
+  const isFetching = useSelector(selectors.getIsFetching);
+  const dispatch = useDispatch();
 
-    return () => subscriber();
-  }, []);
+  // useEffect(() => {
+  //   const subscriber = firestore()
+  //     .collection('users')
+  //     .doc('92uKtxsIdK7DdhH6i4UL')
+  //     .onSnapshot(documentSnapshot => {
+  //       documentSnapshot && console.log('User data: ', documentSnapshot.data());
+  //     });
 
-  const [loading, setLoading] = useState(true);
+  //   return () => subscriber();
+  // }, []);
+
   const [forums, setForums] = useState([]);
 
-  const renderItem = useCallback(({item}) => <Forum forum={item} />, []);
-
   useEffect(() => {
+    dispatch(actions.setIsFetching(true));
+
     const subscriber = firestore()
       .collection('forums')
       .onSnapshot(querySnapshot => {
@@ -34,27 +39,34 @@ export const ForumListScreen = () => {
             forums.push({
               ...documentSnapshot.data(),
               id: documentSnapshot.id,
+              date: new Date(documentSnapshot.data().time).toLocaleDateString(),
             });
           });
 
         setForums(forums);
-        setLoading(false);
+        dispatch(actions.setIsFetching(false));
       });
 
     return () => subscriber();
   }, []);
-  console.log(forums);
+  // console.log(forums);
+
+  const sortedForums = useMemo(
+    () => forums.sort((prev, next) => prev.time - next.time).reverse(),
+    [forums],
+  );
+
+  const renderItem = useCallback(({item}) => <Forum forum={item} />, []);
 
   return (
-    <View>
-      <NewForumModal />
+    <>
+      {isFetching && <Loader />}
+      {user && <NewForumModal user={user} />}
       <FlatList
-        data={forums}
+        data={sortedForums}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
-    </View>
+    </>
   );
 };
-
-const styles = StyleSheet.create({});
