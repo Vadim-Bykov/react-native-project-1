@@ -33,7 +33,6 @@ export const NewForumModal = ({user}) => {
   };
 
   const DescriptionInput = {
-    // icon: {type: 'feather', iconName: 'user', color: '#DDBA33'},
     input: {
       placeholder: 'Description',
       textContentType: 'name',
@@ -120,13 +119,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // zIndex: 1,
+    // backgroundColor: 'rgba(0,0,0, 0.4)',
   },
 
   modalView: {
     justifyContent: 'center',
 
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#EBEBEB',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,

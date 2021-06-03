@@ -1,15 +1,43 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, FlatList} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import {NewMessageInput} from './components/NewMessageInput';
 
-const ForumScreen = ({route}) => {
-  console.log(route.params.id);
-  return (
+export const ForumScreen = ({route}) => {
+  const {id, description} = route.params.forum;
+
+  const [messages, setMessages] = useState([]);
+
+  console.log(messages);
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('forums')
+      .doc(id)
+      .onSnapshot(document => setMessages(document.data().messages));
+
+    return () => subscriber();
+  }, []);
+
+  const renderItem = ({item}) => (
     <View>
-      <Text>ForumScreen</Text>
+      <Text>{item.message}</Text>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text>{description}</Text>
+      <FlatList
+        data={messages}
+        renderItem={renderItem}
+        keyExtractor={(_, index) => index}
+      />
+      <NewMessageInput forumId={id} />
     </View>
   );
 };
 
-export default ForumScreen;
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {flex: 1},
+});
