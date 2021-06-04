@@ -1,23 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {View, Modal, StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {useDispatch, useSelector} from 'react-redux';
-import * as selectors from '../../../store/common/selectors';
-import * as actions from '../../../store/common/actions';
-import * as authSelectors from '../../../store/auth/selectors';
 import {useForm} from 'react-hook-form';
 import {Input} from '../../../common/Input';
 import firestore from '@react-native-firebase/firestore';
 
-export const NewForumModal = ({user}) => {
-  const modalVisible = useSelector(selectors.getModalVisible);
-  const dispatch = useDispatch();
+export const NewForumModal = ({user, modalVisible, setModalVisible}) => {
   const width = useWindowDimensions().width;
   const {control, handleSubmit, reset, formState} = useForm();
   const {displayName, email, photoURL, uid} = user;
 
   const TitleInput = {
-    // icon: {type: 'feather', iconName: 'user', color: '#DDBA33'},
     input: {
       placeholder: 'Forum name',
       textContentType: 'name',
@@ -50,12 +43,12 @@ export const NewForumModal = ({user}) => {
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
       reset();
-      dispatch(actions.setModalVisible(false));
+      setModalVisible(false);
     }
   }, [formState, reset]);
 
   const onClose = () => {
-    dispatch(actions.setModalVisible(false));
+    setModalVisible(false);
     reset();
   };
 
@@ -65,13 +58,14 @@ export const NewForumModal = ({user}) => {
       .add({
         title: forumName,
         description,
-        user: {
-          name: displayName,
-          email,
-          photoURL,
-          id: uid,
-        },
-        time: Date.now(),
+        userRef: firestore().doc(`users/${uid}`),
+        // user: {
+        //   name: displayName,
+        //   email,
+        //   photoURL,
+        //   id: uid,
+        // },
+        creationTime: Date.now(),
       });
   };
 
@@ -88,6 +82,7 @@ export const NewForumModal = ({user}) => {
             <Input inputConfig={TitleInput} />
             <Input inputConfig={DescriptionInput} />
           </View>
+
           <View style={styles.buttonContainer}>
             <Icon
               name="close"
@@ -115,8 +110,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // zIndex: 1,
-    // backgroundColor: 'rgba(0,0,0, 0.4)',
   },
 
   modalView: {

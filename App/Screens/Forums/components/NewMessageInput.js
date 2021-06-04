@@ -15,10 +15,12 @@ import firestore from '@react-native-firebase/firestore';
 import {extractErrorMessage} from '../../../utils/utils';
 
 export const NewMessageInput = ({forumId}) => {
-  const {displayName, email, photoURL, uid} = useSelector(selectors.getUser);
-  const dispatch = useDispatch();
+  const user = useSelector(selectors.getUser);
+  const {displayName, email, photoURL, uid} = user;
+
   const {width} = useWindowDimensions();
   const {control, handleSubmit, reset, formState} = useForm();
+  const dispatch = useDispatch();
 
   const MessageInput = {
     icon: {type: 'antdesign', iconName: 'message1', color: '#DDBA33'},
@@ -57,6 +59,8 @@ export const NewMessageInput = ({forumId}) => {
       });
     reset();
   };
+
+  if (!user) return null;
 
   return (
     <View style={styles.container}>

@@ -12,13 +12,12 @@ GoogleSignin.configure({
 const setUserDataBase = user => async dispatch => {
   firestore()
     .collection('users')
-    .doc('92uKtxsIdK7DdhH6i4UL')
-    .update({
-      users: firestore.FieldValue.arrayUnion({
-        name: user.displayName,
-        email: user.email,
-        id: user.uid,
-      }),
+    .doc(user.uid)
+    .set({
+      name: user.displayName,
+      email: user.email,
+      id: user.uid,
+      photoURL: user.photoURL,
     })
     .catch(error => {
       console.error(error);
@@ -40,15 +39,15 @@ export const signUp = userData => async dispatch => {
       await userCredentials.user.updateProfile({
         displayName: userData.userName,
       });
+
+      const user = await auth().currentUser;
+
+      await dispatch(setUserDataBase(user));
+
+      dispatch(actions.setUser(user));
+      dispatch(actions.setIsAuth(true));
+      dispatch(actions.setIsFetching(false));
     }
-
-    const user = await auth().currentUser;
-
-    await dispatch(setUserDataBase(user));
-
-    dispatch(actions.setUser(user));
-    dispatch(actions.setIsAuth(true));
-    dispatch(actions.setIsFetching(false));
   } catch (error) {
     console.error(error);
 

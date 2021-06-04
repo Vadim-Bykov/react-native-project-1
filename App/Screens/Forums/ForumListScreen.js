@@ -1,5 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {FlatList} from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
+import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
@@ -7,22 +13,30 @@ import * as actions from '../../store/auth/actions';
 import {NewForumModal} from './components/NewForumModal';
 import {Forum} from './components/Forum';
 import {Loader} from '../../common/Loader';
+import {Icon} from 'react-native-elements';
 
-export const ForumListScreen = () => {
+export const ForumListScreen = ({navigation}) => {
   const user = useSelector(selectors.getUser);
   const isFetching = useSelector(selectors.getIsFetching);
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
 
-  // useEffect(() => {
-  //   const subscriber = firestore()
-  //     .collection('users')
-  //     .doc('92uKtxsIdK7DdhH6i4UL')
-  //     .onSnapshot(documentSnapshot => {
-  //       documentSnapshot && console.log('User data: ', documentSnapshot.data());
-  //     });
-
-  //   return () => subscriber();
-  // }, []);
+  useLayoutEffect(
+    () =>
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Icon
+              type="antdesign"
+              name="plus"
+              color="#000"
+              containerStyle={styles.forumListIcon}
+            />
+          </TouchableOpacity>
+        ),
+      }),
+    [navigation],
+  );
 
   const [forums, setForums] = useState([]);
 
@@ -61,7 +75,13 @@ export const ForumListScreen = () => {
   return (
     <>
       {isFetching && <Loader />}
-      {user && <NewForumModal user={user} />}
+      {user && (
+        <NewForumModal
+          user={user}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      )}
       <FlatList
         data={sortedForums}
         renderItem={renderItem}
@@ -70,3 +90,9 @@ export const ForumListScreen = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  forumListIcon: {
+    marginRight: 15,
+  },
+});
