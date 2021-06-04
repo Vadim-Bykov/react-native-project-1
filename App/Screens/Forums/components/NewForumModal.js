@@ -60,9 +60,6 @@ export const NewForumModal = ({user}) => {
   };
 
   const onSubmit = ({forumName, description}) => {
-    console.log(forumName);
-    console.log(description);
-
     firestore()
       .collection('forums')
       .add({

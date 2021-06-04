@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import {Avatar} from 'react-native-elements/dist/avatar/Avatar';
-import {BASE_IMAGE_URL} from '../../../../consts/consts';
+import {BASE_IMAGE_URL, DEFAULT_AVATAR} from '../../../../consts/consts';
 
 export const CastInfo = ({castInfo}) => {
   const renderCast = useCallback(
@@ -12,7 +12,7 @@ export const CastInfo = ({castInfo}) => {
           source={{
             uri: item.profile_path
               ? `${BASE_IMAGE_URL}w185/${item.profile_path}`
-              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROZzxwSXuX4cnu0J_5Rry0_Al5RqAafnKT3A&usqp=CAU',
+              : DEFAULT_AVATAR,
           }}
           size={60}
           containerStyle={{marginBottom: 12}}

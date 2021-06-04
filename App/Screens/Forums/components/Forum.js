@@ -29,11 +29,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '90%',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     alignSelf: 'center',
-    padding: 10,
-    marginTop: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomColor: 'gray',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   forumInfoBlock: {
     flex: 1,

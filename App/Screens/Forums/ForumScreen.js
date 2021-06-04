@@ -2,13 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {NewMessageInput} from './components/NewMessageInput';
+import {useSelector} from 'react-redux';
+import * as actions from '../../store/auth/selectors';
+import {GuestMessage} from './components/GuestMessage';
 
 export const ForumScreen = ({route}) => {
   const {id, description} = route.params.forum;
 
   const [messages, setMessages] = useState([]);
+  const user = useSelector(actions.getUser);
 
-  console.log(messages);
+  // console.log(messages);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -19,15 +23,13 @@ export const ForumScreen = ({route}) => {
     return () => subscriber();
   }, []);
 
-  const renderItem = ({item}) => (
-    <View>
-      <Text>{item.message}</Text>
-    </View>
+  const renderItem = ({item, index}) => (
+    <GuestMessage item={item} messages={messages} index={index} />
   );
 
   return (
     <View style={styles.container}>
-      <Text>{description}</Text>
+      {/* <Text>{description}</Text> */}
       <FlatList
         data={messages}
         renderItem={renderItem}

@@ -9,7 +9,7 @@ GoogleSignin.configure({
     '846892742605-1lgkes0r5amg8rji2e1b4g11sbq2trev.apps.googleusercontent.com',
 });
 
-const setUserDataBase = user => {
+const setUserDataBase = user => async dispatch => {
   firestore()
     .collection('users')
     .doc('92uKtxsIdK7DdhH6i4UL')
@@ -19,6 +19,11 @@ const setUserDataBase = user => {
         email: user.email,
         id: user.uid,
       }),
+    })
+    .catch(error => {
+      console.error(error);
+
+      dispatch(actions.setError(extractErrorMessage(error)));
     });
 };
 
@@ -39,7 +44,7 @@ export const signUp = userData => async dispatch => {
 
     const user = await auth().currentUser;
 
-    await setUserDataBase(user);
+    await dispatch(setUserDataBase(user));
 
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
@@ -59,8 +64,6 @@ export const signIn = userData => async dispatch => {
     await auth().signInWithEmailAndPassword(userData.email, userData.password);
 
     const user = await auth().currentUser;
-
-    await setUserDataBase(user);
 
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
@@ -102,7 +105,7 @@ export const signInGoogle = () => async dispatch => {
 
     const user = await auth().currentUser;
 
-    await setUserDataBase(user);
+    await dispatch(setUserDataBase(user));
 
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
