@@ -1,20 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
-import {DEFAULT_AVATAR} from '../../../consts/consts';
-import firestore from '@react-native-firebase/firestore';
+import {COMMON_ERROR_MESSAGE, DEFAULT_AVATAR} from '../../../consts/consts';
+// import firestore from '@react-native-firebase/firestore';
+import {useDispatch} from 'react-redux';
+import {getDataByRef} from '../../../api/firebaseService';
+import * as actions from '../../../store/auth/actions';
 
 export const OwnerInfo = React.memo(({userRefPath}) => {
   const [user, setUser] = useState(null);
-  console.log(userRefPath);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    firestore()
-      .doc(userRefPath)
-      .onSnapshot(user => user && setUser(user.data()));
+  const extractUser = useCallback(user => {
+    if (user.exists) {
+      setUser(user.data());
+    } else dispatch(actions.setError(COMMON_ERROR_MESSAGE));
   }, []);
 
-  console.log(user);
+  useEffect(() => {
+    getDataByRef(userRefPath, extractUser, dispatch);
+  }, []);
 
   if (!user) return null;
 

@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
 import * as actions from '../../store/auth/actions';
@@ -14,6 +14,8 @@ import {NewForumModal} from './components/NewForumModal';
 import {Forum} from './components/Forum';
 import {Loader} from '../../common/Loader';
 import {Icon} from 'react-native-elements';
+// import {extractErrorMessage} from '../../utils/utils';
+import {forumsSubscriber} from '../../api/firebaseService';
 
 export const ForumListScreen = ({navigation}) => {
   const user = useSelector(selectors.getUser);
@@ -40,30 +42,34 @@ export const ForumListScreen = ({navigation}) => {
 
   const [forums, setForums] = useState([]);
 
+  const observer = useCallback(querySnapshot => {
+    const forums = [];
+
+    if (querySnapshot) {
+      querySnapshot.empty &&
+        dispatch(
+          actions.setError('The resource is empty. Please add a new forum'),
+        );
+      querySnapshot.forEach(documentSnapshot => {
+        forums.push({
+          ...documentSnapshot.data(),
+          id: documentSnapshot.id,
+          date: new Date(documentSnapshot.data().time).toLocaleDateString(),
+        });
+      });
+    }
+
+    setForums(forums);
+    dispatch(actions.setIsFetching(false));
+  }, []);
+
   useEffect(() => {
     dispatch(actions.setIsFetching(true));
 
-    const subscriber = firestore()
-      .collection('forums')
-      .onSnapshot(querySnapshot => {
-        const forums = [];
+    forumsSubscriber(observer, dispatch);
 
-        querySnapshot &&
-          querySnapshot.forEach(documentSnapshot => {
-            forums.push({
-              ...documentSnapshot.data(),
-              id: documentSnapshot.id,
-              date: new Date(documentSnapshot.data().time).toLocaleDateString(),
-            });
-          });
-
-        setForums(forums);
-        dispatch(actions.setIsFetching(false));
-      });
-
-    return () => subscriber();
+    return () => forumsSubscriber(observer, dispatch)();
   }, []);
-  // console.log(forums);
 
   const sortedForums = useMemo(
     () => forums.sort((prev, next) => prev.time - next.time).reverse(),

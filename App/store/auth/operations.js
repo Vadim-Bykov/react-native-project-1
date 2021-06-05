@@ -2,29 +2,12 @@ import * as actions from './actions';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {extractErrorMessage} from '../../utils/utils';
-import firestore from '@react-native-firebase/firestore';
+import {setUserDataBase} from '../../api/firebaseService';
 
 GoogleSignin.configure({
   webClientId:
     '846892742605-1lgkes0r5amg8rji2e1b4g11sbq2trev.apps.googleusercontent.com',
 });
-
-const setUserDataBase = user => async dispatch => {
-  firestore()
-    .collection('users')
-    .doc(user.uid)
-    .set({
-      name: user.displayName,
-      email: user.email,
-      id: user.uid,
-      photoURL: user.photoURL,
-    })
-    .catch(error => {
-      console.error(error);
-
-      dispatch(actions.setError(extractErrorMessage(error)));
-    });
-};
 
 export const signUp = userData => async dispatch => {
   try {
