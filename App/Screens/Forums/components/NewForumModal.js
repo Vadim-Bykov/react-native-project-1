@@ -1,14 +1,15 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, Modal, StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {useForm} from 'react-hook-form';
 import {Input} from '../../../common/Input';
-import firestore from '@react-native-firebase/firestore';
+import {useDispatch} from 'react-redux';
+import * as firebaseService from '../../../api/firebaseService';
 
-export const NewForumModal = ({user, modalVisible, setModalVisible}) => {
+export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
   const width = useWindowDimensions().width;
   const {control, handleSubmit, reset, formState} = useForm();
-  const {displayName, email, photoURL, uid} = user;
+  const dispatch = useDispatch();
 
   const TitleInput = {
     input: {
@@ -47,27 +48,17 @@ export const NewForumModal = ({user, modalVisible, setModalVisible}) => {
     }
   }, [formState, reset]);
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setModalVisible(false);
     reset();
-  };
+  }, []);
 
-  const onSubmit = ({forumName, description}) => {
-    firestore()
-      .collection('forums')
-      .add({
-        title: forumName,
-        description,
-        userRef: firestore().doc(`users/${uid}`),
-        // user: {
-        //   name: displayName,
-        //   email,
-        //   photoURL,
-        //   id: uid,
-        // },
-        creationTime: Date.now(),
-      });
-  };
+  const onSubmit = useCallback(
+    ({forumName, description}) => {
+      firebaseService.addForum(forumName, description, userId, dispatch);
+    },
+    [userId],
+  );
 
   return (
     <Modal

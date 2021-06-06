@@ -1,7 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {ForumListScreen} from '../Screens/Forums/ForumListScreen';
@@ -11,8 +10,6 @@ import {StyleSheet} from 'react-native';
 const Stack = createStackNavigator();
 
 export const ForumStackNavigator = () => {
-  const dispatch = useDispatch();
-
   return (
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
       <Stack.Screen

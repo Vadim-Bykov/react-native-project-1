@@ -2,10 +2,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {COMMON_ERROR_MESSAGE, DEFAULT_AVATAR} from '../../../consts/consts';
-// import firestore from '@react-native-firebase/firestore';
 import {useDispatch} from 'react-redux';
 import {getDataByRef} from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
+// import {getDataByRef} from '../../../store/forums/operations';
 
 export const OwnerInfo = React.memo(({userRefPath}) => {
   const [user, setUser] = useState(null);
@@ -19,6 +19,7 @@ export const OwnerInfo = React.memo(({userRefPath}) => {
 
   useEffect(() => {
     getDataByRef(userRefPath, extractUser, dispatch);
+    // dispatch(getDataByRef(userRefPath, extractUser));
   }, []);
 
   if (!user) return null;

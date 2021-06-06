@@ -10,18 +10,22 @@ import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
 import * as actions from '../../store/auth/actions';
+import * as forumSelectors from '../../store/forums/selectors';
 import {NewForumModal} from './components/NewForumModal';
 import {Forum} from './components/Forum';
 import {Loader} from '../../common/Loader';
 import {Icon} from 'react-native-elements';
+import * as thunks from '../../store/forums/operations';
 // import {extractErrorMessage} from '../../utils/utils';
-import {forumsSubscriber} from '../../api/firebaseService';
+// import {forumsSubscriber} from '../../api/firebaseService';
 
 export const ForumListScreen = ({navigation}) => {
   const user = useSelector(selectors.getUser);
   const isFetching = useSelector(selectors.getIsFetching);
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const forums = useSelector(forumSelectors.getForums);
 
   useLayoutEffect(
     () =>
@@ -40,39 +44,46 @@ export const ForumListScreen = ({navigation}) => {
     [navigation],
   );
 
-  const [forums, setForums] = useState([]);
-
-  const observer = useCallback(querySnapshot => {
-    const forums = [];
-
-    if (querySnapshot) {
-      querySnapshot.empty &&
-        dispatch(
-          actions.setError('The resource is empty. Please add a new forum'),
-        );
-      querySnapshot.forEach(documentSnapshot => {
-        forums.push({
-          ...documentSnapshot.data(),
-          id: documentSnapshot.id,
-          date: new Date(documentSnapshot.data().time).toLocaleDateString(),
-        });
-      });
-    }
-
-    setForums(forums);
-    dispatch(actions.setIsFetching(false));
-  }, []);
-
   useEffect(() => {
-    dispatch(actions.setIsFetching(true));
-
-    forumsSubscriber(observer, dispatch);
-
-    return () => forumsSubscriber(observer, dispatch)();
+    dispatch(thunks.forumsSubscriber());
   }, []);
+
+  // const [forums, setForums] = useState([]);
+
+  // const observer = useCallback(querySnapshot => {
+  //   const forums = [];
+
+  //   if (querySnapshot) {
+  //     querySnapshot.empty &&
+  //       dispatch(
+  //         actions.setError('The resource is empty. Please add a new forum'),
+  //       );
+  //     querySnapshot.forEach(documentSnapshot => {
+  //       forums.push({
+  //         ...documentSnapshot.data(),
+  //         id: documentSnapshot.id,
+  //         date: new Date(documentSnapshot.data().time).toLocaleDateString(),
+  //       });
+  //     });
+  //   }
+
+  //   setForums(forums);
+  //   dispatch(actions.setIsFetching(false));
+  // }, []);
+
+  // useEffect(() => {
+  //   dispatch(actions.setIsFetching(true));
+
+  //   forumsSubscriber(observer, dispatch);
+
+  //   return () => forumsSubscriber(observer, dispatch)();
+  // }, []);
 
   const sortedForums = useMemo(
-    () => forums.sort((prev, next) => prev.time - next.time).reverse(),
+    () =>
+      forums
+        .sort((prev, next) => prev.creationTime - next.creationTime)
+        .reverse(),
     [forums],
   );
 
@@ -83,7 +94,7 @@ export const ForumListScreen = ({navigation}) => {
       {isFetching && <Loader />}
       {user && (
         <NewForumModal
-          user={user}
+          userId={user.uid}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
         />

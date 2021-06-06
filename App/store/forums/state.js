@@ -1,3 +1,4 @@
 export const initialState = {
-  modalVisible: false,
+  forums: [],
+  messages: [],
 };

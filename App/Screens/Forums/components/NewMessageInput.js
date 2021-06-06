@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useForm} from 'react-hook-form';
 import {
   StyleSheet,
@@ -10,16 +10,13 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {useDispatch, useSelector} from 'react-redux';
 import {Input} from '../../../common/Input';
 import * as selectors from '../../../store/auth/selectors';
-import * as actions from '../../../store/auth/actions';
-import firestore from '@react-native-firebase/firestore';
-import {extractErrorMessage} from '../../../utils/utils';
+import {addMessage} from '../../../api/firebaseService';
 
 export const NewMessageInput = ({forumId}) => {
   const user = useSelector(selectors.getUser);
-  const {displayName, email, photoURL, uid} = user;
 
   const {width} = useWindowDimensions();
-  const {control, handleSubmit, reset, formState} = useForm();
+  const {control, handleSubmit, reset} = useForm();
   const dispatch = useDispatch();
 
   const MessageInput = {
@@ -37,30 +34,10 @@ export const NewMessageInput = ({forumId}) => {
     },
   };
 
-  const onSubmit = ({message}) => {
-    firestore()
-      .collection('forums')
-      .doc(forumId)
-      .update({
-        messages: firestore.FieldValue.arrayUnion({
-          message,
-          user: {
-            name: displayName,
-            email,
-            photoURL,
-            id: uid,
-          },
-          timeMessage: Date.now(),
-        }),
-      })
-      .catch(error => {
-        console.error(error);
-        dispatch(actions.setError(extractErrorMessage(error)));
-      });
+  const onSubmit = useCallback(async ({message}) => {
+    await addMessage(forumId, message, user, dispatch);
     reset();
-  };
-
-  if (!user) return null;
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -83,10 +60,8 @@ export const NewMessageInput = ({forumId}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    //  backgroundColor: 'gray',
     justifyContent: 'space-between',
     alignItems: 'center',
-    //  marginBottom: -10,
   },
   sendIcon: {
     marginRight: 10,

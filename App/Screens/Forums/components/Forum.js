@@ -10,7 +10,6 @@ export const Forum = React.memo(({forum}) => {
     forum,
   ]);
 
-  console.log(forum);
   return (
     <TouchableOpacity
       style={styles.container}
