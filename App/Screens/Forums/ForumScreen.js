@@ -6,26 +6,31 @@ import * as actions from '../../store/auth/actions';
 import {GuestMessage} from './components/GuestMessage';
 import * as firebaseService from '../../api/firebaseService';
 import {Keyboard} from 'react-native';
-import {extractErrorMessage} from '../../utils/utils';
+import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
 
-export const ForumScreen = React.memo(({route}) => {
-  // console.log(route.params.forum.forumId);
-  const {id, description, forumId} = route.params.forum;
+export const ForumScreen = ({route}) => {
+  const {description, documentId} = route.params.forum;
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
 
   const flatListRef = useRef(null);
 
-  const observer = useCallback(forum => {
-    if (forum.exists) {
-      forum.data().messages
-        ? setMessages(forum.data().messages)
-        : setMessages([]);
+  const observer = useCallback(querySnapshot => {
+    const messages = [];
+
+    if (querySnapshot) {
+      // if(querySnapshot.empty)
+      querySnapshot.forEach(documentSnapshot => {
+        messages.push({
+          ...documentSnapshot.data(),
+        });
+      });
     }
+
+    setMessages(sortByCreationTime(messages));
   }, []);
 
   const errorHandler = useCallback(error => {
-    // if (error.code === 'firestore/permission-denied') return;
     console.error(error);
     dispatch(actions.setError(extractErrorMessage(error)));
   }, []);
@@ -34,7 +39,7 @@ export const ForumScreen = React.memo(({route}) => {
     const unsubscribe = firebaseService.messagesSubscriber(
       observer,
       errorHandler,
-      id,
+      documentId,
     );
 
     return unsubscribe;
@@ -47,22 +52,31 @@ export const ForumScreen = React.memo(({route}) => {
     [messages],
   );
 
-  const scrollToEnd = useCallback(() => flatListRef.current.scrollToEnd(), [
-    flatListRef,
-  ]);
+  const scrollToEnd = useCallback(
+    () => flatListRef.current && flatListRef.current.scrollToEnd(),
+    [flatListRef.current],
+  );
 
-  // const res = () => c  // console.log(flatListRef);
+  // const res = useCallback(() => {
+  //   console.log(flatListRef);
+  //   setTimeout(() => {
+  //     console.log('scrollToEnd');
+  //     scrollToEnd();
+  //   }, 2000);
+  // }, [flatListRef.current]);
 
-  // useEffect(
-  //   flatListRef => {
-  //     flatListRef &&
-  //       flatListRef.current &&
-  //       Keyboard.addListener('keyboardDidShow', scrollToEnd);
+  // const [isListener, setIsListener] = useState(false);
 
-  //     return Keyboard.addListener('keyboardDidShow', scrollToEnd);
-  //   },
-  //   [flatListRef.current],
-  // );console.log('keyboardDidShow');
+  // useEffect(() => {
+  //   console.log(isListener);
+  //   if (flatListRef.current && !isListener) {
+  //     console.log('isListener');
+  //     setIsListener(prev => !prev);
+  //     Keyboard.addListener('keyboardDidShow', res);
+  //   }
+
+  //   return Keyboard.removeListener('keyboardDidShow', res);
+  // }, [flatListRef.current]);
 
   return (
     <View style={styles.container}>
@@ -71,7 +85,7 @@ export const ForumScreen = React.memo(({route}) => {
         <FlatList
           data={messages}
           renderItem={renderItem}
-          keyExtractor={(_, index) => index}
+          keyExtractor={item => item.documentId}
           ref={flatListRef}
           onContentSizeChange={scrollToEnd}
         />
@@ -80,10 +94,10 @@ export const ForumScreen = React.memo(({route}) => {
           <Text>There no messages. Please add the first one.</Text>
         </View>
       )}
-      <NewMessageInput forumId={forumId} />
+      <NewMessageInput forumId={documentId} />
     </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {flex: 1},

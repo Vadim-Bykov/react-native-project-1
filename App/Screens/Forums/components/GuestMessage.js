@@ -27,15 +27,14 @@ export const GuestMessage = React.memo(({item, messages, index}) => {
   }, []);
 
   const today =
-    new Date(item.timeMessage).toLocaleDateString() ===
+    new Date(item.creationTime).toLocaleDateString() ===
     new Date().toLocaleDateString();
 
   const showPhoto =
     index === 0 ||
     (index > 0 && item.userRef.path !== messages[index - 1].userRef.path);
-  // index === 0 || (index > 0 && item.user.id !== messages[index - 1].user.id);
 
-  const dateMessage = new Date(item.timeMessage).toLocaleDateString();
+  const dateMessage = new Date(item.creationTime).toLocaleDateString();
 
   return (
     <View style={[styles.container, showPhoto && styles.extraMargin]}>
@@ -51,7 +50,7 @@ export const GuestMessage = React.memo(({item, messages, index}) => {
       <View style={[styles.withPhoto, !showPhoto && styles.withoutPhoto]}>
         <Text>{item.message}</Text>
         <Text style={styles.time}>
-          {new Date(item.timeMessage)
+          {new Date(item.creationTime)
             .toLocaleTimeString()
             .split(':')
             .slice(0, 2)

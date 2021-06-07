@@ -25,9 +25,8 @@ export const forumsSubscriber = (observer, errorHandler) => {
 
 export const getDataByRef = userRefPath => firestore().doc(userRefPath).get();
 
-const addForumId = forumId => {
-  firestore().collection('forums').doc(forumId).update({forumId});
-};
+const addDocumentId = (collection, documentId) =>
+  firestore().collection(collection).doc(documentId).update({documentId});
 
 export const addForum = (forumName, description, userId) =>
   firestore()
@@ -38,17 +37,37 @@ export const addForum = (forumName, description, userId) =>
       userRef: firestore().doc(`users/${userId}`),
       creationTime: Date.now(),
     })
-    .then(forum => addForumId(forum.id));
+    .then(forum => addDocumentId('forums', forum.id));
 
 export const messagesSubscriber = (observer, errorHandler, forumId) =>
   firestore()
-    .collection('forums')
-    .doc(forumId)
+    .collection('messages')
+    .where('forumId', '==', forumId)
     .onSnapshot(observer, errorHandler);
+
+export const addMessage = (forumId, message, user) =>
+  firestore()
+    .collection('messages')
+    .add({
+      message,
+      forumId,
+      userRef: firestore().doc(`users/${user.uid}`),
+      creationTime: Date.now(),
+    })
+    .then(message => addDocumentId('messages', message.id));
+
+// const addForumId = forumId =>
+//   firestore().collection('forums').doc(forumId).update({forumId});
+
+// export const messagesSubscriber = (observer, errorHandler, forumId) =>
+//   firestore()
+//     .collection('forums')
+//     .doc(forumId)
+//     .onSnapshot(observer, errorHandler);
 
 // export const addMessage = (forumId, message, user) =>
 //   firestore()
-//     .collection('messages')
+//     .collection('forums')
 //     .doc(forumId)
 //     .update({
 //       messages: firestore.FieldValue.arrayUnion({
@@ -57,18 +76,6 @@ export const messagesSubscriber = (observer, errorHandler, forumId) =>
 //         timeMessage: Date.now(),
 //       }),
 //     });
-
-export const addMessage = (forumId, message, user) =>
-  firestore()
-    .collection('forums')
-    .doc(forumId)
-    .update({
-      messages: firestore.FieldValue.arrayUnion({
-        message,
-        userRef: firestore().doc(`users/${user.uid}`),
-        timeMessage: Date.now(),
-      }),
-    });
 
 // export const forumsSubscriber = (observer, dispatch) => {
 //   return firestore()

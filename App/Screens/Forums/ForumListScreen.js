@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
@@ -13,7 +7,7 @@ import {NewForumModal} from './components/NewForumModal';
 import {Forum} from './components/Forum';
 import {Loader} from '../../common/Loader';
 import {Icon} from 'react-native-elements';
-import {extractErrorMessage} from '../../utils/utils';
+import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
 import * as firebaseService from '../../api/firebaseService';
 
 export const ForumListScreen = ({navigation}) => {
@@ -57,7 +51,7 @@ export const ForumListScreen = ({navigation}) => {
       });
     }
 
-    setForums(forums);
+    setForums(sortByCreationTime(forums).reverse());
     dispatch(actions.setIsFetching(false));
   }, []);
 
@@ -77,14 +71,6 @@ export const ForumListScreen = ({navigation}) => {
     return unsubscribe;
   }, []);
 
-  const sortedForums = useMemo(
-    () =>
-      forums
-        .sort((prev, next) => prev.creationTime - next.creationTime)
-        .reverse(),
-    [forums],
-  );
-
   const renderItem = useCallback(({item}) => <Forum forum={item} />, []);
 
   return (
@@ -98,9 +84,9 @@ export const ForumListScreen = ({navigation}) => {
         />
       )}
       <FlatList
-        data={sortedForums}
+        data={forums}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.documentId}
       />
     </>
   );

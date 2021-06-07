@@ -11,3 +11,6 @@ export const extractErrorMessage = error => {
   }
   return errorMessage;
 };
+
+export const sortByCreationTime = array =>
+  array.sort((prev, next) => prev.creationTime - next.creationTime);
