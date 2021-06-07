@@ -10,9 +10,9 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {useDispatch, useSelector} from 'react-redux';
 import {Input} from '../../../common/Input';
 import * as selectors from '../../../store/auth/selectors';
-import {addMessage} from '../../../api/firebaseService';
+import * as firebaseService from '../../../api/firebaseService';
 
-export const NewMessageInput = ({forumId}) => {
+export const NewMessageInput = React.memo(({forumId}) => {
   const user = useSelector(selectors.getUser);
 
   const {width} = useWindowDimensions();
@@ -34,9 +34,14 @@ export const NewMessageInput = ({forumId}) => {
     },
   };
 
-  const onSubmit = useCallback(async ({message}) => {
-    await addMessage(forumId, message, user, dispatch);
-    reset();
+  const onSubmit = useCallback(({message}) => {
+    firebaseService
+      .addMessage(forumId, message, user)
+      .then(() => reset())
+      .catch(error => {
+        console.error(error);
+        dispatch(setError(extractErrorMessage(error)));
+      });
   }, []);
 
   return (
@@ -55,7 +60,7 @@ export const NewMessageInput = ({forumId}) => {
       </TouchableOpacity>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

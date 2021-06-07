@@ -3,9 +3,9 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {COMMON_ERROR_MESSAGE, DEFAULT_AVATAR} from '../../../consts/consts';
 import {useDispatch} from 'react-redux';
-import {getDataByRef} from '../../../api/firebaseService';
+import * as firebaseService from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
-// import {getDataByRef} from '../../../store/forums/operations';
+import {extractErrorMessage} from '../../../utils/utils';
 
 export const OwnerInfo = React.memo(({userRefPath}) => {
   const [user, setUser] = useState(null);
@@ -18,8 +18,13 @@ export const OwnerInfo = React.memo(({userRefPath}) => {
   }, []);
 
   useEffect(() => {
-    getDataByRef(userRefPath, extractUser, dispatch);
-    // dispatch(getDataByRef(userRefPath, extractUser));
+    firebaseService
+      .getDataByRef(userRefPath)
+      .then(extractUser)
+      .catch(error => {
+        console.error(error);
+        dispatch(actions.setError(extractErrorMessage(error)));
+      });
   }, []);
 
   if (!user) return null;

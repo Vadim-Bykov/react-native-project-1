@@ -2,11 +2,11 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-elements/dist/avatar/Avatar';
 import {useDispatch} from 'react-redux';
-import {getDataByRef} from '../../../api/firebaseService';
+import * as firebaseService from '../../../api/firebaseService';
 import {DEFAULT_AVATAR} from '../../../consts/consts';
 import * as actions from '../../../store/auth/actions';
 
-export const GuestMessage = ({item, messages, index}) => {
+export const GuestMessage = React.memo(({item, messages, index}) => {
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
 
@@ -17,18 +17,23 @@ export const GuestMessage = ({item, messages, index}) => {
   }, []);
 
   useEffect(() => {
-    getDataByRef(item.userRef.path, extractUser, dispatch);
+    firebaseService
+      .getDataByRef(item.userRef.path)
+      .then(extractUser)
+      .catch(error => {
+        console.error(error);
+        dispatch(actions.setError(extractErrorMessage(error)));
+      });
   }, []);
 
   const today =
     new Date(item.timeMessage).toLocaleDateString() ===
     new Date().toLocaleDateString();
 
-  const showPhoto = true;
-  // index === 0 ||
-  // (index > 0 && item.userRef.path !== messages[index - 1].userRef.path);
+  const showPhoto =
+    index === 0 ||
+    (index > 0 && item.userRef.path !== messages[index - 1].userRef.path);
   // index === 0 || (index > 0 && item.user.id !== messages[index - 1].user.id);
-  console.log(item);
 
   const dateMessage = new Date(item.timeMessage).toLocaleDateString();
 
@@ -40,7 +45,6 @@ export const GuestMessage = ({item, messages, index}) => {
           rounded
           source={{
             uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
-            // uri: item.user.photoURL ? item.user.photoURL : DEFAULT_AVATAR,
           }}
         />
       )}
@@ -56,7 +60,7 @@ export const GuestMessage = ({item, messages, index}) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

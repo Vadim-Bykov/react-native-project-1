@@ -1,26 +1,20 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import {NewMessageInput} from './components/NewMessageInput';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import * as actions from '../../store/auth/actions';
 import {GuestMessage} from './components/GuestMessage';
-import {messagesSubscriber} from '../../api/firebaseService';
-// import {messagesSubscriber} from '../../store/forums/operations';
-import * as selectors from '../../store/forums/selectors';
+import * as firebaseService from '../../api/firebaseService';
 import {Keyboard} from 'react-native';
+import {extractErrorMessage} from '../../utils/utils';
 
 export const ForumScreen = React.memo(({route}) => {
-  const {id, description} = route.params.forum;
+  // console.log(route.params.forum.forumId);
+  const {id, description, forumId} = route.params.forum;
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
-  console.log(messages);
+
   const flatListRef = useRef(null);
-
-  // const messages = useSelector(selectors.getMessages);
-
-  // useEffect(() => {
-  //   dispatch(messagesSubscriber(id));
-  // }, []);
 
   const observer = useCallback(forum => {
     if (forum.exists) {
@@ -30,35 +24,45 @@ export const ForumScreen = React.memo(({route}) => {
     }
   }, []);
 
-  useEffect(() => {
-    messagesSubscriber(observer, dispatch, id);
-
-    return () => messagesSubscriber(observer, dispatch)();
+  const errorHandler = useCallback(error => {
+    // if (error.code === 'firestore/permission-denied') return;
+    console.error(error);
+    dispatch(actions.setError(extractErrorMessage(error)));
   }, []);
 
-  // useEffect(() => {
-  //   const subscriber = firestore()
-  //     .collection('forums')
-  //     .doc(id)
-  //     .onSnapshot(document => setMessages(document.data().messages));
+  useEffect(() => {
+    const unsubscribe = firebaseService.messagesSubscriber(
+      observer,
+      errorHandler,
+      id,
+    );
 
-  //   return () => subscriber();
-  // }, []);
+    return unsubscribe;
+  }, []);
 
   const renderItem = useCallback(
     ({item, index}) => (
       <GuestMessage item={item} messages={messages} index={index} />
     ),
-    [],
+    [messages],
   );
 
-  const scrollToEnd = useCallback(() => flatListRef.current.scrollToEnd(), []);
+  const scrollToEnd = useCallback(() => flatListRef.current.scrollToEnd(), [
+    flatListRef,
+  ]);
 
-  // useEffect(() => {
-  //   Keyboard.addListener('keyboardDidShow', scrollToEnd);
+  // const res = () => c  // console.log(flatListRef);
 
-  //   return Keyboard.addListener('keyboardDidShow', scrollToEnd);
-  // }, []);
+  // useEffect(
+  //   flatListRef => {
+  //     flatListRef &&
+  //       flatListRef.current &&
+  //       Keyboard.addListener('keyboardDidShow', scrollToEnd);
+
+  //     return Keyboard.addListener('keyboardDidShow', scrollToEnd);
+  //   },
+  //   [flatListRef.current],
+  // );console.log('keyboardDidShow');
 
   return (
     <View style={styles.container}>
@@ -76,7 +80,7 @@ export const ForumScreen = React.memo(({route}) => {
           <Text>There no messages. Please add the first one.</Text>
         </View>
       )}
-      <NewMessageInput forumId={id} />
+      <NewMessageInput forumId={forumId} />
     </View>
   );
 });
