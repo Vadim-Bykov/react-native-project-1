@@ -1,15 +1,21 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import {NewMessageInput} from './components/NewMessageInput';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import * as actions from '../../store/auth/actions';
+import {OwnerMessage} from './components/OwnerMessage';
 import {GuestMessage} from './components/GuestMessage';
 import * as firebaseService from '../../api/firebaseService';
 import {Keyboard} from 'react-native';
 import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
+import * as selectors from '../../store/auth/selectors';
+import {Loader} from '../../common/Loader';
 
 export const ForumScreen = ({route}) => {
   const {description, documentId} = route.params.forum;
+  // const isFetching = useSelector(selectors.getIsFetching);
+
+  const ownerData = useSelector(selectors.getUser);
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
 
@@ -46,9 +52,24 @@ export const ForumScreen = ({route}) => {
   }, []);
 
   const renderItem = useCallback(
-    ({item, index}) => (
-      <GuestMessage item={item} messages={messages} index={index} />
-    ),
+    ({item, index}) => {
+      const isOwner = item.userRef.id === ownerData._user.uid;
+      return (
+        // <>
+        //   {item.userRef.id === ownerData._user.uid ? (
+        //     <OwnerMessage item={item} messages={messages} index={index} />
+        //   ) : (
+        <GuestMessage
+          item={item}
+          messages={messages}
+          index={index}
+          isOwner={isOwner}
+          ownerPhoto={ownerData._user.photoURL}
+        />
+        //   )}
+        // </>
+      );
+    },
     [messages],
   );
 
@@ -78,6 +99,8 @@ export const ForumScreen = ({route}) => {
   //   return Keyboard.removeListener('keyboardDidShow', res);
   // }, [flatListRef.current]);
 
+  // if (isFetching) return <Loader />;
+
   return (
     <View style={styles.container}>
       <Text>{description}</Text>
@@ -87,6 +110,7 @@ export const ForumScreen = ({route}) => {
           renderItem={renderItem}
           keyExtractor={item => item.documentId}
           ref={flatListRef}
+          // initialScrollIndex={messages.length - 1}
           onContentSizeChange={scrollToEnd}
         />
       ) : (

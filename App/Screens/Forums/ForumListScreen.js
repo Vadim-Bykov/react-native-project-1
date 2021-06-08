@@ -45,7 +45,6 @@ export const ForumListScreen = ({navigation}) => {
       querySnapshot.forEach(documentSnapshot => {
         forums.push({
           ...documentSnapshot.data(),
-          // id: documentSnapshot.id,
           date: new Date(documentSnapshot.data().time).toLocaleDateString(),
         });
       });

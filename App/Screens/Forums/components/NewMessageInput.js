@@ -13,7 +13,7 @@ import * as selectors from '../../../store/auth/selectors';
 import * as firebaseService from '../../../api/firebaseService';
 
 export const NewMessageInput = React.memo(({forumId}) => {
-  const user = useSelector(selectors.getUser);
+  const {uid} = useSelector(selectors.getUser);
 
   const {width} = useWindowDimensions();
   const {control, handleSubmit, reset} = useForm();
@@ -36,7 +36,7 @@ export const NewMessageInput = React.memo(({forumId}) => {
 
   const onSubmit = useCallback(({message}) => {
     firebaseService
-      .addMessage(forumId, message, user)
+      .addMessage(forumId, message, uid)
       .then(() => reset())
       .catch(error => {
         console.error(error);

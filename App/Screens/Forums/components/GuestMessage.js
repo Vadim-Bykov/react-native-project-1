@@ -6,62 +6,97 @@ import * as firebaseService from '../../../api/firebaseService';
 import {DEFAULT_AVATAR} from '../../../consts/consts';
 import * as actions from '../../../store/auth/actions';
 
-export const GuestMessage = React.memo(({item, messages, index}) => {
-  const [user, setUser] = useState(null);
-  const dispatch = useDispatch();
+export const GuestMessage = React.memo(
+  ({item, messages, index, isOwner, ownerPhoto}) => {
+    const [user, setUser] = useState(null);
+    const dispatch = useDispatch();
 
-  const extractUser = useCallback(user => {
-    if (user.exists) {
-      setUser(user.data());
-    } else dispatch(actions.setError(COMMON_ERROR_MESSAGE));
-  }, []);
+    const extractUser = useCallback(user => {
+      if (user.exists) {
+        setUser(user.data());
+      } else dispatch(actions.setError(COMMON_ERROR_MESSAGE));
+    }, []);
 
-  useEffect(() => {
-    firebaseService
-      .getDataByRef(item.userRef.path)
-      .then(extractUser)
-      .catch(error => {
-        console.error(error);
-        dispatch(actions.setError(extractErrorMessage(error)));
-      });
-  }, []);
+    useEffect(() => {
+      firebaseService
+        .getDataByRef(item.userRef.path)
+        .then(extractUser)
+        .catch(error => {
+          console.error(error);
+          dispatch(actions.setError(extractErrorMessage(error)));
+        });
+    }, []);
 
-  const today =
-    new Date(item.creationTime).toLocaleDateString() ===
-    new Date().toLocaleDateString();
+    const getLocalDate = useCallback(
+      creationTime => new Date(creationTime).toLocaleDateString(),
+      [],
+    );
 
-  const showPhoto =
-    index === 0 ||
-    (index > 0 && item.userRef.path !== messages[index - 1].userRef.path);
+    const today =
+      new Date(item.creationTime).toLocaleDateString() ===
+      new Date().toLocaleDateString();
 
-  const dateMessage = new Date(item.creationTime).toLocaleDateString();
+    const showPhoto =
+      index === 0 ||
+      (index > 0 && item.userRef.path !== messages[index - 1].userRef.path);
 
-  return (
-    <View style={[styles.container, showPhoto && styles.extraMargin]}>
-      <Text>{today ? 'Today' : dateMessage}</Text>
-      {showPhoto && user && (
-        <Avatar
-          rounded
-          source={{
-            uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
-          }}
-        />
-      )}
-      <View style={[styles.withPhoto, !showPhoto && styles.withoutPhoto]}>
-        <Text>{item.message}</Text>
-        <Text style={styles.time}>
-          {new Date(item.creationTime)
-            .toLocaleTimeString()
-            .split(':')
-            .slice(0, 2)
-            .join(':')}
-        </Text>
-      </View>
-    </View>
-  );
-});
+    const dateMessage = getLocalDate(item.creationTime);
+    const showDate =
+      index === 0 ||
+      (index > 0 &&
+        dateMessage !== getLocalDate(messages[index - 1].creationTime));
+
+    return (
+      <>
+        {showDate && (
+          <View style={styles.date}>
+            <Text>{today ? 'Today' : dateMessage}</Text>
+          </View>
+        )}
+        <View
+          View
+          style={[
+            isOwner ? styles.ownerContainer : styles.container,
+            showPhoto && styles.extraMargin,
+          ]}>
+          {showPhoto && (
+            <Avatar
+              rounded
+              source={{
+                uri: user
+                  ? user.photoURL
+                    ? user.photoURL
+                    : DEFAULT_AVATAR
+                  : DEFAULT_AVATAR,
+              }}
+            />
+          )}
+          <View
+            style={[
+              isOwner ? styles.ownerWithPhoto : styles.withPhoto,
+              !showPhoto &&
+                (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
+            ]}>
+            <Text>{item.message}</Text>
+            <Text style={styles.time}>
+              {new Date(item.creationTime)
+                .toLocaleTimeString()
+                .split(':')
+                .slice(0, 2)
+                .join(':')}
+            </Text>
+          </View>
+        </View>
+      </>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
+  date: {
+    marginVertical: 10,
+    alignSelf: 'center',
+  },
   container: {
     marginLeft: 20,
     marginRight: 60,
@@ -69,6 +104,14 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     marginTop: 2,
   },
+  ownerContainer: {
+    marginLeft: 20,
+    marginRight: 60,
+    flexDirection: 'row-reverse',
+    flexShrink: 1,
+    marginTop: 2,
+  },
+
   extraMargin: {marginTop: 10},
   withPhoto: {
     backgroundColor: '#EBEBEB',
@@ -78,9 +121,21 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 5,
   },
+  ownerWithPhoto: {
+    backgroundColor: '#CDE6FF',
+    borderTopLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    padding: 10,
+    marginRight: 5,
+  },
   withoutPhoto: {
     borderTopLeftRadius: 10,
     marginLeft: 40,
+  },
+  ownerWithoutPhoto: {
+    borderTopLeftRadius: 10,
+    marginRight: 40,
   },
   time: {
     alignSelf: 'flex-end',

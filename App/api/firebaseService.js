@@ -45,13 +45,13 @@ export const messagesSubscriber = (observer, errorHandler, forumId) =>
     .where('forumId', '==', forumId)
     .onSnapshot(observer, errorHandler);
 
-export const addMessage = (forumId, message, user) =>
+export const addMessage = (forumId, message, userId) =>
   firestore()
     .collection('messages')
     .add({
       message,
       forumId,
-      userRef: firestore().doc(`users/${user.uid}`),
+      userRef: firestore().doc(`users/${userId}`),
       creationTime: Date.now(),
     })
     .then(message => addDocumentId('messages', message.id));
