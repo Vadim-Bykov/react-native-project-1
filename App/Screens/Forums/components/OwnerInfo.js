@@ -33,12 +33,13 @@ export const OwnerInfo = React.memo(({userRefPath}) => {
     <View style={styles.ownerInfo}>
       <Avatar
         rounded
+        size="medium"
         source={{
           uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
         }}
       />
 
-      <Text>{user.name}</Text>
+      <Text>Author: {user.name}</Text>
     </View>
   );
 });
@@ -46,6 +47,7 @@ export const OwnerInfo = React.memo(({userRefPath}) => {
 const styles = StyleSheet.create({
   ownerInfo: {
     alignItems: 'flex-end',
+    maxWidth: '45%',
   },
   badge: {
     width: 32,

@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     alignSelf: 'center',
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -45,7 +46,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#515CF0',
+    color: '#000',
+    fontStyle: 'italic',
   },
   creationTime: {
     fontSize: 11,

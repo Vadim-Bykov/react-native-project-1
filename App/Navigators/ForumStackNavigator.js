@@ -1,4 +1,3 @@
-import firestore from '@react-native-firebase/firestore';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
@@ -17,6 +16,7 @@ export const ForumStackNavigator = () => {
         component={ForumListScreen}
         options={{
           title: "Forums' list",
+          headerTintColor: '#8B5AB1',
         }}
       />
 
@@ -27,8 +27,9 @@ export const ForumStackNavigator = () => {
           headerTitle: route.params.forum.title,
           headerStyle: styles.forumHeader,
           headerBackImage: () => (
-            <Icon type="ionicon" name="chevron-back" color="#000" />
+            <Icon type="ionicon" name="chevron-back" color="#8B5AB1" />
           ),
+          headerTintColor: '#8B5AB1',
         })}
       />
     </Stack.Navigator>
@@ -41,7 +42,3 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
 });
-
-// new Date().toDateString()
-// new Date().toGMTString();
-// Date.now();

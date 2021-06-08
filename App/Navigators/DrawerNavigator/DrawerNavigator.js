@@ -17,6 +17,7 @@ export const DrawerNavigator = () => {
         component={FavoriteScreen}
         options={{
           headerShown: true,
+          headerTitleStyle: {color: '#8B5AB1'},
           headerLeft: () => null,
           headerTitle: 'Saved',
           headerStyle: {

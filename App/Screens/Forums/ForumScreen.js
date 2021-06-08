@@ -13,7 +13,7 @@ import {Loader} from '../../common/Loader';
 
 export const ForumScreen = ({route}) => {
   const {description, documentId} = route.params.forum;
-  // const isFetching = useSelector(selectors.getIsFetching);
+  const isFetching = useSelector(selectors.getIsFetching);
 
   const ownerData = useSelector(selectors.getUser);
   const dispatch = useDispatch();
@@ -34,6 +34,7 @@ export const ForumScreen = ({route}) => {
     }
 
     setMessages(sortByCreationTime(messages));
+    dispatch(actions.setIsFetching(false));
   }, []);
 
   const errorHandler = useCallback(error => {
@@ -42,6 +43,8 @@ export const ForumScreen = ({route}) => {
   }, []);
 
   useEffect(() => {
+    dispatch(actions.setIsFetching(true));
+
     const unsubscribe = firebaseService.messagesSubscriber(
       observer,
       errorHandler,
@@ -64,7 +67,6 @@ export const ForumScreen = ({route}) => {
           messages={messages}
           index={index}
           isOwner={isOwner}
-          ownerPhoto={ownerData._user.photoURL}
         />
         //   )}
         // </>
@@ -99,12 +101,10 @@ export const ForumScreen = ({route}) => {
   //   return Keyboard.removeListener('keyboardDidShow', res);
   // }, [flatListRef.current]);
 
-  // if (isFetching) return <Loader />;
-
   return (
     <View style={styles.container}>
-      <Text>{description}</Text>
-      {messages.length ? (
+      <Text style={styles.description}>{description}</Text>
+      {messages.length || isFetching ? (
         <FlatList
           data={messages}
           renderItem={renderItem}
@@ -112,6 +112,7 @@ export const ForumScreen = ({route}) => {
           ref={flatListRef}
           // initialScrollIndex={messages.length - 1}
           onContentSizeChange={scrollToEnd}
+          onEndReached={() => console.log('Ok')}
         />
       ) : (
         <View style={styles.emptyScreen}>
@@ -125,5 +126,15 @@ export const ForumScreen = ({route}) => {
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  emptyScreen: {flex: 1},
+  description: {
+    paddingHorizontal: 20,
+    fontStyle: 'italic',
+    fontSize: 16,
+  },
+  emptyScreen: {
+    flex: 1,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

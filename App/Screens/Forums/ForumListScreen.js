@@ -23,9 +23,10 @@ export const ForumListScreen = ({navigation}) => {
         headerRight: () => (
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Icon
-              type="antdesign"
+              type="feather"
               name="plus"
-              color="#000"
+              size={32}
+              color="#8B5AB1"
               containerStyle={styles.forumListIcon}
             />
           </TouchableOpacity>

@@ -1,14 +1,14 @@
 import React, {useCallback} from 'react';
-import {useForm} from 'react-hook-form';
+import {useController, useForm} from 'react-hook-form';
 import {
   StyleSheet,
   useWindowDimensions,
   View,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {useDispatch, useSelector} from 'react-redux';
-import {Input} from '../../../common/Input';
 import * as selectors from '../../../store/auth/selectors';
 import * as firebaseService from '../../../api/firebaseService';
 
@@ -18,21 +18,6 @@ export const NewMessageInput = React.memo(({forumId}) => {
   const {width} = useWindowDimensions();
   const {control, handleSubmit, reset} = useForm();
   const dispatch = useDispatch();
-
-  const MessageInput = {
-    icon: {type: 'antdesign', iconName: 'message1', color: '#DDBA33'},
-    input: {
-      placeholder: 'Enter your message',
-      textContentType: 'name',
-      width: width * 0.86,
-      name: 'message',
-      control,
-      rules: {
-        required: 'This field is required',
-      },
-      multiline: true,
-    },
-  };
 
   const onSubmit = useCallback(({message}) => {
     firebaseService
@@ -44,20 +29,48 @@ export const NewMessageInput = React.memo(({forumId}) => {
       });
   }, []);
 
+  const {field} = useController({
+    control,
+    name: 'message',
+    defaultValue: '',
+    rules: {required: 'This field is required'},
+  });
+
   return (
     <View style={styles.container}>
-      <View>
-        <Input inputConfig={MessageInput} />
+      <View style={[styles.inputContainer, {width: width * 0.86}]}>
+        <Icon name="message1" type="antdesign" color="#8B5AB1" />
+
+        <TextInput
+          placeholder="Enter your message"
+          placeholderTextColor="#696A6C"
+          textContentType="name"
+          value={field.value}
+          onChangeText={field.onChange}
+          multiline={true}
+          style={styles.input}
+        />
       </View>
-      <TouchableOpacity onPress={handleSubmit(onSubmit)} activeOpacity={0.6}>
+
+      {field.value ? (
+        <TouchableOpacity onPress={handleSubmit(onSubmit)} activeOpacity={0.6}>
+          <Icon
+            type="ionicon"
+            name="ios-send"
+            color={'#8B5AB1'}
+            size={28}
+            style={styles.sendIcon}
+          />
+        </TouchableOpacity>
+      ) : (
         <Icon
-          type="ionicon"
-          name="ios-send"
-          color="#DDBA33"
+          type="foundation"
+          name="prohibited"
+          color={'#8B5AB1'}
           size={28}
           style={styles.sendIcon}
         />
-      </TouchableOpacity>
+      )}
     </View>
   );
 });
@@ -67,6 +80,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderTopColor: 'gray',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    marginTop: 5,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  input: {
+    color: '#000',
+    flex: 1,
+    marginLeft: 10,
   },
   sendIcon: {
     marginRight: 10,
