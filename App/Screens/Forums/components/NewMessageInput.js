@@ -13,13 +13,24 @@ import * as selectors from '../../../store/auth/selectors';
 import * as firebaseService from '../../../api/firebaseService';
 
 export const NewMessageInput = React.memo(({forumId}) => {
-  const {uid} = useSelector(selectors.getUser);
-
   const {width} = useWindowDimensions();
-  const {control, handleSubmit, reset} = useForm();
+  const {uid} = useSelector(selectors.getUser);
   const dispatch = useDispatch();
 
+  const {control, handleSubmit, reset} = useForm();
+
+  const {field, fieldState} = useController({
+    control,
+    name: 'message',
+    defaultValue: '',
+    rules: {
+      required: true,
+      validate: value => !!value.trim(),
+    },
+  });
+
   const [fieldValue, setFieldValue] = useState('');
+
   useEffect(() => {
     setFieldValue(field.value);
   }, [field.value]);
@@ -33,16 +44,6 @@ export const NewMessageInput = React.memo(({forumId}) => {
         dispatch(setError(extractErrorMessage(error)));
       });
   }, []);
-
-  const {field, fieldState} = useController({
-    control,
-    name: 'message',
-    defaultValue: '',
-    rules: {
-      required: true,
-      validate: value => !!value.trim(),
-    },
-  });
 
   return (
     <View style={styles.container}>
@@ -59,6 +60,7 @@ export const NewMessageInput = React.memo(({forumId}) => {
           style={styles.input}
         />
       </View>
+
       {fieldValue && fieldValue.trim() && !fieldState.error ? (
         <TouchableOpacity onPress={handleSubmit(onSubmit)} activeOpacity={0.6}>
           <Icon

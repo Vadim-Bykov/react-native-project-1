@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
 import * as actions from '../../store/auth/actions';
@@ -39,10 +39,10 @@ export const ForumListScreen = ({navigation}) => {
     const forums = [];
 
     if (querySnapshot) {
-      querySnapshot.empty &&
-        dispatch(
-          actions.setError('The resource is empty. Please add a new forum'),
-        );
+      // querySnapshot.empty &&
+      //   dispatch(
+      //     actions.setError('The resource is empty. Please add a new forum'),
+      //   );
       querySnapshot.forEach(documentSnapshot => {
         forums.push({
           ...documentSnapshot.data(),
@@ -83,11 +83,17 @@ export const ForumListScreen = ({navigation}) => {
           setModalVisible={setModalVisible}
         />
       )}
-      <FlatList
-        data={forums}
-        renderItem={renderItem}
-        keyExtractor={item => item.documentId}
-      />
+      {forums.length ? (
+        <FlatList
+          data={forums}
+          renderItem={renderItem}
+          keyExtractor={item => item.documentId}
+        />
+      ) : (
+        <View style={styles.emptyScreen}>
+          <Text>No forums. Please add the first one.</Text>
+        </View>
+      )}
     </>
   );
 };
@@ -95,5 +101,10 @@ export const ForumListScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   forumListIcon: {
     marginRight: 15,
+  },
+  emptyScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

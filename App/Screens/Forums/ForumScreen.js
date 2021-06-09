@@ -13,6 +13,7 @@ import {Message} from './components/Message';
 import * as firebaseService from '../../api/firebaseService';
 import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
 import * as selectors from '../../store/auth/selectors';
+import {Loader} from '../../common/Loader';
 
 export const ForumScreen = ({route}) => {
   const {description, documentId} = route.params.forum;
@@ -77,26 +78,30 @@ export const ForumScreen = ({route}) => {
   // );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.description}>{description}</Text>
+    <>
+      {isFetching && <Loader />}
 
-      {messages.length || isFetching ? (
-        <FlatList
-          data={messages}
-          renderItem={renderItem}
-          keyExtractor={item => item.documentId}
-          ref={flatListRef}
-          inverted
-          contentContainerStyle={styles.flatListContainer}
-          // onContentSizeChange={}
-        />
-      ) : (
-        <View style={styles.emptyScreen}>
-          <Text>There no messages. Please add the first one.</Text>
-        </View>
-      )}
-      <NewMessageInput forumId={documentId} />
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.description}>{description}</Text>
+
+        {messages.length || isFetching ? (
+          <FlatList
+            data={messages}
+            renderItem={renderItem}
+            keyExtractor={item => item.documentId}
+            ref={flatListRef}
+            inverted
+            contentContainerStyle={styles.flatListContainer}
+            // onContentSizeChange={}
+          />
+        ) : (
+          <View style={styles.emptyScreen}>
+            <Text>No messages. Please add the first one.</Text>
+          </View>
+        )}
+        <NewMessageInput forumId={documentId} />
+      </View>
+    </>
   );
 };
 
@@ -116,7 +121,6 @@ const styles = StyleSheet.create({
   },
   emptyScreen: {
     flex: 1,
-
     justifyContent: 'center',
     alignItems: 'center',
   },

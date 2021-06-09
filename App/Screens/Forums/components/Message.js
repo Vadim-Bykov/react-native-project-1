@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Avatar} from 'react-native-elements/dist/avatar/Avatar';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
@@ -48,13 +49,7 @@ export const Message = React.memo(({item, messages, index, isOwner}) => {
 
   return (
     <>
-      {/* {showDate && (
-        <View style={styles.date}>
-          <Text>{today ? 'Today' : dateMessage}</Text>
-        </View>
-      )} */}
       <View
-        View
         style={[
           isOwner ? styles.ownerContainer : styles.container,
           showPhoto && styles.extraMargin,
@@ -67,21 +62,27 @@ export const Message = React.memo(({item, messages, index, isOwner}) => {
             }}
           />
         )}
-        <View
-          style={[
-            isOwner ? styles.ownerWithPhoto : styles.withPhoto,
-            !showPhoto &&
-              (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
-          ]}>
-          <Text>{item.message}</Text>
-          <Text style={styles.time}>
-            {new Date(item.creationTime)
-              .toLocaleTimeString()
-              .split(':')
-              .slice(0, 2)
-              .join(':')}
-          </Text>
-        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.6}
+          // onPressOut={() => console.log('Out')}
+          onLongPress={() => console.log('long')}>
+          <View
+            style={[
+              isOwner ? styles.ownerWithPhoto : styles.withPhoto,
+              !showPhoto &&
+                (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
+            ]}>
+            <Text>{item.message}</Text>
+            <Text style={styles.time}>
+              {new Date(item.creationTime)
+                .toLocaleTimeString()
+                .split(':')
+                .slice(0, 2)
+                .join(':')}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {showDate && (
