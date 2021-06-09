@@ -51,7 +51,7 @@ export const ForumListScreen = ({navigation}) => {
       });
     }
 
-    setForums(sortByCreationTime(forums).reverse());
+    setForums(sortByCreationTime(forums));
     dispatch(actions.setIsFetching(false));
   }, []);
 

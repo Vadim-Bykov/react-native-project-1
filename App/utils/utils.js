@@ -13,4 +13,4 @@ export const extractErrorMessage = error => {
 };
 
 export const sortByCreationTime = array =>
-  array.sort((prev, next) => prev.creationTime - next.creationTime);
+  array.sort((prev, next) => prev.creationTime - next.creationTime).reverse();

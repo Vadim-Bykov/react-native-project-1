@@ -6,7 +6,7 @@ import * as firebaseService from '../../../api/firebaseService';
 import {DEFAULT_AVATAR} from '../../../consts/consts';
 import * as actions from '../../../store/auth/actions';
 
-export const GuestMessage = React.memo(({item, messages, index, isOwner}) => {
+export const Message = React.memo(({item, messages, index, isOwner}) => {
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
 
@@ -36,22 +36,23 @@ export const GuestMessage = React.memo(({item, messages, index, isOwner}) => {
     new Date().toLocaleDateString();
 
   const showPhoto =
-    index === 0 ||
-    (index > 0 && item.userRef.path !== messages[index - 1].userRef.path);
+    index === messages.length - 1 ||
+    (index < messages.length - 1 &&
+      item.userRef.path !== messages[index + 1].userRef.path);
 
   const dateMessage = getLocalDate(item.creationTime);
   const showDate =
-    index === 0 ||
-    (index > 0 &&
-      dateMessage !== getLocalDate(messages[index - 1].creationTime));
+    index === messages.length - 1 ||
+    (index < messages.length - 1 &&
+      dateMessage !== getLocalDate(messages[index + 1].creationTime));
 
   return (
     <>
-      {showDate && (
+      {/* {showDate && (
         <View style={styles.date}>
           <Text>{today ? 'Today' : dateMessage}</Text>
         </View>
-      )}
+      )} */}
       <View
         View
         style={[
@@ -62,11 +63,7 @@ export const GuestMessage = React.memo(({item, messages, index, isOwner}) => {
           <Avatar
             rounded
             source={{
-              uri: user
-                ? user.photoURL
-                  ? user.photoURL
-                  : DEFAULT_AVATAR
-                : DEFAULT_AVATAR,
+              uri: user && user.photoURL ? user.photoURL : DEFAULT_AVATAR,
             }}
           />
         )}
@@ -86,6 +83,12 @@ export const GuestMessage = React.memo(({item, messages, index, isOwner}) => {
           </Text>
         </View>
       </View>
+
+      {showDate && (
+        <View style={styles.date}>
+          <Text>{today ? 'Today' : dateMessage}</Text>
+        </View>
+      )}
     </>
   );
 });
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
     marginLeft: 40,
   },
   ownerWithoutPhoto: {
-    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     marginRight: 40,
   },
   time: {

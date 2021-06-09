@@ -22,7 +22,7 @@ export const NewMessageInput = React.memo(({forumId}) => {
   const onSubmit = useCallback(({message}) => {
     firebaseService
       .addMessage(forumId, message, uid)
-      .then(() => reset())
+      .then(reset)
       .catch(error => {
         console.error(error);
         dispatch(setError(extractErrorMessage(error)));
