@@ -21,6 +21,7 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
       control,
       rules: {
         required: 'This field is required',
+        validate: value => !!value.trim() || 'No whitespaces',
         minLength: {value: 6, message: 'Not achieved min length 6'},
         maxLength: {value: 30, message: 'Exceeded max length 30'},
       },
@@ -36,7 +37,8 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
       control,
       rules: {
         required: 'This field is required',
-        minLength: {value: 10, message: 'Not achieved min length 10'},
+        validate: value => !!value.trim() || 'Not only spaces',
+        minLength: {value: 6, message: 'Not achieved min length 6'},
       },
       multiline: true,
     },
@@ -109,9 +111,8 @@ const styles = StyleSheet.create({
 
   modalView: {
     justifyContent: 'center',
-
     margin: 20,
-    backgroundColor: '#EBEBEB',
+    backgroundColor: '#C7C7C7',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,

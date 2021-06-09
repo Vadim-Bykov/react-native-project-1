@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useController, useForm} from 'react-hook-form';
 import {
   StyleSheet,
@@ -19,6 +19,11 @@ export const NewMessageInput = React.memo(({forumId}) => {
   const {control, handleSubmit, reset} = useForm();
   const dispatch = useDispatch();
 
+  const [fieldValue, setFieldValue] = useState('');
+  useEffect(() => {
+    setFieldValue(field.value);
+  }, [field.value]);
+
   const onSubmit = useCallback(({message}) => {
     firebaseService
       .addMessage(forumId, message, uid)
@@ -29,11 +34,14 @@ export const NewMessageInput = React.memo(({forumId}) => {
       });
   }, []);
 
-  const {field} = useController({
+  const {field, fieldState} = useController({
     control,
     name: 'message',
     defaultValue: '',
-    rules: {required: 'This field is required'},
+    rules: {
+      required: true,
+      validate: value => !!value.trim(),
+    },
   });
 
   return (
@@ -51,8 +59,7 @@ export const NewMessageInput = React.memo(({forumId}) => {
           style={styles.input}
         />
       </View>
-
-      {field.value ? (
+      {fieldValue && fieldValue.trim() && !fieldState.error ? (
         <TouchableOpacity onPress={handleSubmit(onSubmit)} activeOpacity={0.6}>
           <Icon
             type="ionicon"

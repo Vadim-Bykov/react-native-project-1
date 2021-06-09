@@ -53,6 +53,7 @@ export const AuthPage = ({configuration}) => {
       control,
       rules: {
         required: 'This field is required',
+        validate: value => !!value.trim() || 'Not only spaces',
       },
     },
   };
@@ -85,6 +86,7 @@ export const AuthPage = ({configuration}) => {
         required: 'This password field is required',
         maxLength: {value: 25, message: 'Exceeded max length 25'},
         minLength: {value: 6, message: 'Not achieved min length 6'},
+        validate: value => !!value.trim() || 'Not only spaces',
       },
       setSecurePassword,
     },
