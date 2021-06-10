@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {useDispatch, useSelector} from 'react-redux';
+import * as actions from '../../../store/auth/actions';
 import * as selectors from '../../../store/auth/selectors';
 import * as firebaseService from '../../../api/firebaseService';
 
@@ -36,13 +37,12 @@ export const NewMessageInput = React.memo(({forumId}) => {
   }, [field.value]);
 
   const onSubmit = useCallback(({message}) => {
-    firebaseService
-      .addMessage(forumId, message, uid)
-      .then(reset)
-      .catch(error => {
-        console.error(error);
-        dispatch(setError(extractErrorMessage(error)));
-      });
+    firebaseService.addMessage(forumId, message, uid).catch(error => {
+      console.error(error);
+      dispatch(actions.setError(extractErrorMessage(error)));
+    });
+
+    reset();
   }, []);
 
   return (

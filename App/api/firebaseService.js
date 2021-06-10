@@ -56,6 +56,12 @@ export const addMessage = (forumId, message, userId) =>
     })
     .then(message => addDocumentId('messages', message.id));
 
+export const removeMessage = messageId =>
+  firestore().collection('messages').doc(messageId).delete();
+
+export const removeForum = forumId =>
+  firestore().collection('forums').doc(forumId).delete();
+
 // const addForumId = forumId =>
 //   firestore().collection('forums').doc(forumId).update({forumId});
 
