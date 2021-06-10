@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useCallback} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements';
 import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
@@ -7,18 +7,19 @@ import * as actions from '../../../store/auth/actions';
 
 export const MessageContent = ({item, isOwner, showPhoto}) => {
   const menu = useRef();
-
   const hideMenu = () => menu.current.hide();
-
   const showMenu = () => menu.current.show();
 
-  const removeMessage = () => {
-    firebaseService.removeMessage(item.documentId).catch(error => {
+  const {documentId, message, creationTime} = item;
+
+  const removeMessage = useCallback(() => {
+    firebaseService.removeDocument('messages', documentId).catch(error => {
       console.error(error);
       dispatch(actions.setError(extractErrorMessage(error)));
     });
+
     hideMenu();
-  };
+  }, []);
 
   return (
     <Menu
@@ -31,9 +32,9 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
               !showPhoto &&
                 (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
             ]}>
-            <Text>{item.message}</Text>
+            <Text>{message}</Text>
             <Text style={styles.time}>
-              {new Date(item.creationTime)
+              {new Date(creationTime)
                 .toLocaleTimeString()
                 .split(':')
                 .slice(0, 2)
@@ -56,8 +57,8 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
           <Icon
             type="material-community"
             name="delete"
-            color="red"
-            onPress={removeMessage}
+            color={isOwner ? 'red' : 'gray'}
+            onPress={isOwner ? removeMessage : null}
           />
           {/* <Text>Yes</Text> */}
         </View>

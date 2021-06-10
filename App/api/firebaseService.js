@@ -56,11 +56,42 @@ export const addMessage = (forumId, message, userId) =>
     })
     .then(message => addDocumentId('messages', message.id));
 
-export const removeMessage = messageId =>
-  firestore().collection('messages').doc(messageId).delete();
+export const removeDocument = (collection, documentId) =>
+  firestore().collection(collection).doc(documentId).delete();
 
-export const removeForum = forumId =>
-  firestore().collection('forums').doc(forumId).delete();
+export const massDeleteUsers = forumId => {
+  const batch = firestore().batch();
+  return firestore()
+    .collection('messages')
+    .where('forumId', '==', forumId)
+    .get()
+    .then(usersQuerySnapshot =>
+      usersQuerySnapshot.forEach(documentSnapshot => {
+        batch.delete(documentSnapshot.ref);
+      }),
+    )
+    .then(() => batch.commit());
+};
+
+// export const massDeleteUsers = async (forumId, dispatch) => {
+//   try {
+//     const usersQuerySnapshot = await firestore()
+//       .collection('messages')
+//       .where('forumId', '==', forumId)
+//       .get();
+
+//     const batch = firestore().batch();
+
+//     usersQuerySnapshot.forEach(documentSnapshot => {
+//       batch.delete(documentSnapshot.ref);
+//     });
+
+//     return batch.commit();
+//   } catch (error) {
+//     console.error(error);
+//     dispatch(actions.setError(extractErrorMessage(error)));
+//   }
+// };
 
 // const addForumId = forumId =>
 //   firestore().collection('forums').doc(forumId).update({forumId});

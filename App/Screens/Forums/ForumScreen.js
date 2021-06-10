@@ -14,11 +14,10 @@ import * as firebaseService from '../../api/firebaseService';
 import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
 import * as selectors from '../../store/auth/selectors';
 import {Loader} from '../../common/Loader';
-import {Icon} from 'react-native-elements';
 import {RemoveForum} from './components/RemoveForum';
 
 export const ForumScreen = ({navigation, route}) => {
-  const {description, documentId} = route.params.forum;
+  const {description, documentId, userRef} = route.params.forum;
   const isFetching = useSelector(selectors.getIsFetching);
 
   const user = useSelector(selectors.getUser);
@@ -27,11 +26,21 @@ export const ForumScreen = ({navigation, route}) => {
 
   const flatListRef = useRef(null);
 
-  const goBack = () => useCallback(() => navigation.goBack(), [navigation]);
+  const goBack = useCallback(() => navigation.goBack(), []);
+
+  const isForumOwner = userRef.id === user._user.uid;
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <RemoveForum forumId={documentId} goBack={goBack} />,
+      headerRight: isForumOwner
+        ? () => (
+            <RemoveForum
+              forumId={documentId}
+              goBack={goBack}
+              userRef={userRef}
+            />
+          )
+        : null,
       headerRightContainerStyle: styles.forumListIcon,
     });
   }, [navigation]);

@@ -17,6 +17,7 @@ export const ForumStackNavigator = () => {
         options={{
           title: "Forums' list",
           headerTintColor: '#8B5AB1',
+          detachPreviousScreen: true,
         }}
       />
 

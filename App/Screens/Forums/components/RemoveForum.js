@@ -1,26 +1,38 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements';
 import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
+import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
 
-export const RemoveForum = ({forumId, goBack}) => {
+export const RemoveForum = ({forumId, goBack, userRef}) => {
   const menu = useRef();
-
   const hideMenu = () => menu.current.hide();
-
   const showMenu = () => menu.current.show();
 
-  const removeForum = () => {
-    // console.log(forumId);
-    // firebaseService.removeForum(forumId).catch(error => {
-    //   console.error(error);
-    //   dispatch(actions.setError(extractErrorMessage(error)));
-    // });
+  const dispatch = useDispatch();
+
+  const removeForum = useCallback(() => {
+    firebaseService
+      .removeDocument('forums', forumId)
+      .then(() =>
+        firebaseService
+          .massDeleteUsers(forumId, dispatch)
+          .then(res => console.log(res))
+          .catch(error => {
+            console.error(error);
+            dispatch(actions.setError(extractErrorMessage(error)));
+          }),
+      )
+      .catch(error => {
+        console.error(error);
+        dispatch(actions.setError(extractErrorMessage(error)));
+      });
+
     hideMenu();
-    // goBack();
-  };
+    goBack();
+  }, []);
 
   return (
     <Menu
@@ -38,7 +50,7 @@ export const RemoveForum = ({forumId, goBack}) => {
           />
         </TouchableOpacity>
       }>
-      <MenuItem>Delete message ?</MenuItem>
+      <MenuItem>Delete forum ?</MenuItem>
       <MenuDivider />
       <MenuItem>
         <View style={styles.menuItem}>
