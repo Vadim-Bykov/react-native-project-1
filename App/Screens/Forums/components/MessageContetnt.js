@@ -4,6 +4,7 @@ import {Icon} from 'react-native-elements';
 import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 import * as firebaseService from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
+import {MessageInfo} from './MessageInfo';
 
 export const MessageContent = ({item, isOwner, showPhoto}) => {
   const menu = useRef();
@@ -33,13 +34,14 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
                 (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
             ]}>
             <Text>{message}</Text>
-            <Text style={styles.time}>
+            <MessageInfo creationTime={creationTime} messageId={documentId} />
+            {/* <Text style={styles.time}>
               {new Date(creationTime)
                 .toLocaleTimeString()
                 .split(':')
                 .slice(0, 2)
                 .join(':')}
-            </Text>
+            </Text> */}
           </View>
         </TouchableOpacity>
       }>
@@ -99,9 +101,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     marginRight: 40,
   },
-  time: {
-    alignSelf: 'flex-end',
-    fontSize: 10,
-    color: '#696A6C',
-  },
+  // time: {
+  //   alignSelf: 'flex-end',
+  //   fontSize: 10,
+  //   color: '#696A6C',
+  // },
 });

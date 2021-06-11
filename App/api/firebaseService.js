@@ -59,38 +59,46 @@ export const addMessage = (forumId, message, userId) =>
 export const removeDocument = (collection, documentId) =>
   firestore().collection(collection).doc(documentId).delete();
 
-export const massDeleteUsers = forumId => {
-  const batch = firestore().batch();
-  return firestore()
-    .collection('messages')
-    .where('forumId', '==', forumId)
-    .get()
-    .then(usersQuerySnapshot =>
-      usersQuerySnapshot.forEach(documentSnapshot => {
-        batch.delete(documentSnapshot.ref);
-      }),
-    )
-    .then(() => batch.commit());
+export const massDeleteMessages = async forumId => {
+  try {
+    const usersQuerySnapshot = await firestore()
+      .collection('messages')
+      .where('forumId', '==', forumId)
+      .get();
+
+    const batch = firestore().batch();
+
+    usersQuerySnapshot.forEach(documentSnapshot => {
+      batch.delete(documentSnapshot.ref);
+    });
+
+    return batch.commit();
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-// export const massDeleteUsers = async (forumId, dispatch) => {
-//   try {
-//     const usersQuerySnapshot = await firestore()
-//       .collection('messages')
-//       .where('forumId', '==', forumId)
-//       .get();
+export const likeMessage = (
+  collection,
+  messageId,
+  likesCount,
+  dislikesCount,
+) => {
+  firestore().collection(collection).doc(messageId).update({});
+};
 
-//     const batch = firestore().batch();
-
-//     usersQuerySnapshot.forEach(documentSnapshot => {
-//       batch.delete(documentSnapshot.ref);
-//     });
-
-//     return batch.commit();
-//   } catch (error) {
-//     console.error(error);
-//     dispatch(actions.setError(extractErrorMessage(error)));
-//   }
+// export const massDeleteUsers = forumId => {
+//   const batch = firestore().batch();
+//   return firestore()
+//     .collection('messages')
+//     .where('forumId', '==', forumId)
+//     .get()
+//     .then(usersQuerySnapshot =>
+//       usersQuerySnapshot.forEach(documentSnapshot => {
+//         batch.delete(documentSnapshot.ref);
+//       }),
+//     )
+//     .then(() => batch.commit());
 // };
 
 // const addForumId = forumId =>

@@ -18,7 +18,7 @@ export const RemoveForum = ({forumId, goBack, userRef}) => {
       .removeDocument('forums', forumId)
       .then(() =>
         firebaseService
-          .massDeleteUsers(forumId, dispatch)
+          .massDeleteMessages(forumId)
           .then(res => console.log(res))
           .catch(error => {
             console.error(error);

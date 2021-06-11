@@ -83,7 +83,7 @@ export const ForumListScreen = ({navigation}) => {
           setModalVisible={setModalVisible}
         />
       )}
-      {forums.length ? (
+      {forums.length || isFetching ? (
         <FlatList
           data={forums}
           renderItem={renderItem}
