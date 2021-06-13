@@ -49,11 +49,8 @@ export const ForumScreen = ({navigation, route}) => {
     const messages = [];
 
     if (querySnapshot) {
-      // if(querySnapshot.empty)
       querySnapshot.forEach(documentSnapshot => {
-        messages.push({
-          ...documentSnapshot.data(),
-        });
+        messages.push(documentSnapshot.data());
       });
     }
 
@@ -92,11 +89,6 @@ export const ForumScreen = ({navigation, route}) => {
     [messages],
   );
 
-  // const scrollToEnd = useCallback(
-  //   () => flatListRef.current && flatListRef.current.scrollToEnd(),
-  //   [flatListRef.current],
-  // );
-
   return (
     <>
       {isFetching && <Loader />}
@@ -108,11 +100,10 @@ export const ForumScreen = ({navigation, route}) => {
           <FlatList
             data={messages}
             renderItem={renderItem}
-            keyExtractor={item => item.documentId}
+            keyExtractor={item => item.creationTime}
             ref={flatListRef}
             inverted
             contentContainerStyle={styles.flatListContainer}
-            // onContentSizeChange={}
           />
         ) : (
           <View style={styles.emptyScreen}>

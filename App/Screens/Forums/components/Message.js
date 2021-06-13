@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-elements/dist/avatar/Avatar';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
-import {DEFAULT_AVATAR} from '../../../consts/consts';
+import {COMMON_ERROR_MESSAGE, DEFAULT_AVATAR} from '../../../consts/consts';
 import * as actions from '../../../store/auth/actions';
 import {MessageContent} from './MessageContetnt';
 
@@ -14,7 +14,13 @@ export const Message = React.memo(({item, messages, index, isOwner}) => {
   const extractUser = useCallback(user => {
     if (user.exists) {
       setUser(user.data());
-    } else dispatch(actions.setError(COMMON_ERROR_MESSAGE));
+    } else {
+      dispatch(
+        actions.setError(
+          `${COMMON_ERROR_MESSAGE} The user may not have been saved in the database`,
+        ),
+      );
+    }
   }, []);
 
   useEffect(() => {
@@ -42,14 +48,11 @@ export const Message = React.memo(({item, messages, index, isOwner}) => {
       item.userRef.path !== messages[index + 1].userRef.path);
 
   const dateMessage = getLocalDate(item.creationTime);
+
   const showDate =
     index === messages.length - 1 ||
     (index < messages.length - 1 &&
       dateMessage !== getLocalDate(messages[index + 1].creationTime));
-
-  // const menu = useRef();
-  // const hideMenu = () => menu.current.hide();
-  // const showMenu = () => menu.current.show();
 
   return (
     <>
@@ -68,31 +71,6 @@ export const Message = React.memo(({item, messages, index, isOwner}) => {
         )}
 
         <MessageContent item={item} isOwner={isOwner} showPhoto={showPhoto} />
-        {/* <Menu
-          ref={menu}
-          button={
-            <TouchableOpacity activeOpacity={0.6} onLongPress={showMenu}>
-              <View
-                style={[
-                  isOwner ? styles.ownerWithPhoto : styles.withPhoto,
-                  !showPhoto &&
-                    (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
-                ]}>
-                <Text>{item.message}</Text>
-                <Text style={styles.time}>
-                  {new Date(item.creationTime)
-                    .toLocaleTimeString()
-                    .split(':')
-                    .slice(0, 2)
-                    .join(':')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          }>
-          <MenuItem onPress={hideMenu}>Menu item 1</MenuItem>
-          <MenuDivider />
-          <MenuItem onPress={hideMenu}>Menu item 4</MenuItem>
-        </Menu> */}
       </View>
 
       {showDate && (
@@ -124,34 +102,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  extraMargin: {marginTop: 10},
-  // withPhoto: {
-  //   backgroundColor: '#EBEBEB',
-  //   borderTopRightRadius: 10,
-  //   borderBottomRightRadius: 10,
-  //   borderBottomLeftRadius: 10,
-  //   padding: 10,
-  //   marginLeft: 5,
-  // },
-  // ownerWithPhoto: {
-  //   backgroundColor: '#CDE6FF',
-  //   borderTopLeftRadius: 10,
-  //   borderBottomRightRadius: 10,
-  //   borderBottomLeftRadius: 10,
-  //   padding: 10,
-  //   marginRight: 5,
-  // },
-  // withoutPhoto: {
-  //   borderTopLeftRadius: 10,
-  //   marginLeft: 40,
-  // },
-  // ownerWithoutPhoto: {
-  //   borderTopRightRadius: 10,
-  //   marginRight: 40,
-  // },
-  // time: {
-  //   alignSelf: 'flex-end',
-  //   fontSize: 10,
-  //   color: '#696A6C',
-  // },
+  extraMargin: {
+    marginTop: 10,
+  },
 });

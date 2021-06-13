@@ -25,8 +25,29 @@ export const forumsSubscriber = (observer, errorHandler) => {
 
 export const getDataByRef = userRefPath => firestore().doc(userRefPath).get();
 
-const addDocumentId = (collection, documentId) =>
-  firestore().collection(collection).doc(documentId).update({documentId});
+const createLikeDocument = (collection, forumId, messageId) =>
+  firestore().collection(collection).doc(messageId).set({
+    count: 0,
+    forumId,
+    messageId,
+    usersId: [],
+  });
+
+const addDocumentId = (collection, documentId, forumIdForLikeDoc) =>
+  firestore()
+    .collection(collection)
+    .doc(documentId)
+    .update({documentId})
+    .then(
+      () =>
+        forumIdForLikeDoc &&
+        createLikeDocument('likes', forumIdForLikeDoc, documentId),
+    )
+    .then(
+      () =>
+        forumIdForLikeDoc &&
+        createLikeDocument('dislikes', forumIdForLikeDoc, documentId),
+    );
 
 export const addForum = (forumName, description, userId) =>
   firestore()
@@ -54,16 +75,16 @@ export const addMessage = (forumId, message, userId) =>
       userRef: firestore().doc(`users/${userId}`),
       creationTime: Date.now(),
     })
-    .then(message => addDocumentId('messages', message.id));
+    .then(message => addDocumentId('messages', message.id, forumId));
 
 export const removeDocument = (collection, documentId) =>
   firestore().collection(collection).doc(documentId).delete();
 
-export const massDeleteMessages = async forumId => {
+export const massDeleteDocs = async (collection, documentId, idField) => {
   try {
     const usersQuerySnapshot = await firestore()
-      .collection('messages')
-      .where('forumId', '==', forumId)
+      .collection(collection)
+      .where(idField, '==', documentId)
       .get();
 
     const batch = firestore().batch();
@@ -78,116 +99,30 @@ export const massDeleteMessages = async forumId => {
   }
 };
 
-export const likeMessage = (
-  collection,
-  messageId,
-  likesCount,
-  dislikesCount,
+export const getDocumentById = (collection, documentId) =>
+  firestore().collection(collection).doc(documentId).get();
+
+export const updateLikeCount = async (
+  {collection, messageId, forumId, count, userId, action},
+  dispatch,
 ) => {
-  firestore().collection(collection).doc(messageId).update({});
+  try {
+    const res = await firestore()
+      .collection(collection)
+      .doc(messageId)
+      .update({
+        count,
+        forumId,
+        messageId,
+        usersId:
+          action === 'add'
+            ? firestore.FieldValue.arrayUnion(userId)
+            : firestore.FieldValue.arrayRemove(userId),
+      });
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    dispatch(actions.setError(extractErrorMessage(error)));
+  }
 };
-
-// export const massDeleteUsers = forumId => {
-//   const batch = firestore().batch();
-//   return firestore()
-//     .collection('messages')
-//     .where('forumId', '==', forumId)
-//     .get()
-//     .then(usersQuerySnapshot =>
-//       usersQuerySnapshot.forEach(documentSnapshot => {
-//         batch.delete(documentSnapshot.ref);
-//       }),
-//     )
-//     .then(() => batch.commit());
-// };
-
-// const addForumId = forumId =>
-//   firestore().collection('forums').doc(forumId).update({forumId});
-
-// export const messagesSubscriber = (observer, errorHandler, forumId) =>
-//   firestore()
-//     .collection('forums')
-//     .doc(forumId)
-//     .onSnapshot(observer, errorHandler);
-
-// export const addMessage = (forumId, message, user) =>
-//   firestore()
-//     .collection('forums')
-//     .doc(forumId)
-//     .update({
-//       messages: firestore.FieldValue.arrayUnion({
-//         message,
-//         userRef: firestore().doc(`users/${user.uid}`),
-//         timeMessage: Date.now(),
-//       }),
-//     });
-
-// export const forumsSubscriber = (observer, dispatch) => {
-//   return firestore()
-//     .collection('forums')
-//     .onSnapshot(observer, error => {
-//       if (error.code === 'firestore/permission-denied') return;
-//       console.error(error);
-//       dispatch(actions.setError(extractErrorMessage(error)));
-//     });
-// };
-
-// export const getDataByRef = (userRefPath, extractUser, dispatch) => {
-//   firestore()
-//     .doc(userRefPath)
-//     .get()
-//     .then(extractUser)
-//     .catch(error => {
-//       console.error(error);
-//       dispatch(actions.setError(extractErrorMessage(error)));
-//     });
-// };
-
-// export const addForum = (forumName, description, userId, dispatch) => {
-//   firestore()
-//     .collection('forums')
-//     .add({
-//       title: forumName,
-//       description,
-//       userRef: firestore().doc(`users/${userId}`),
-//       creationTime: Date.now(),
-//     })
-//     .catch(error => {
-//       console.error(error);
-//       dispatch(actions.setError(extractErrorMessage(error)));
-//     });
-// };
-
-// export const messagesSubscriber = (observer, dispatch, id) => {
-//   return firestore()
-//     .collection('forums')
-//     .doc(id)
-//     .onSnapshot(observer, error => {
-//       if (error.code === 'firestore/permission-denied') return;
-//       console.error(error);
-//       dispatch(actions.setError(extractErrorMessage(error)));
-//     });
-// };
-
-// export const addMessage = (forumId, message, user, dispatch) => {
-//   firestore()
-//     .collection('forums')
-//     .doc(forumId)
-//     .update({
-//       messages: firestore.FieldValue.arrayUnion({
-//         message,
-//         userRef: firestore().doc(`users/${user.uid}`),
-//         // user: {
-//         //   name: displayName,
-//         //   email,
-//         //   photoURL,
-//         //   id: uid,
-//         // },
-//         timeMessage: Date.now(),
-//       }),
-//     })
-//     .catch(error => {
-//       console.error(error);
-//       dispatch(setError(extractErrorMessage(error)));
-//     });
-// };

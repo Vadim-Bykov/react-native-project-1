@@ -11,7 +11,7 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
   const hideMenu = () => menu.current.hide();
   const showMenu = () => menu.current.show();
 
-  const {documentId, message, creationTime} = item;
+  const {documentId, message, creationTime, forumId} = item;
 
   const removeMessage = useCallback(() => {
     firebaseService.removeDocument('messages', documentId).catch(error => {
@@ -19,14 +19,20 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
       dispatch(actions.setError(extractErrorMessage(error)));
     });
 
+    firebaseService.massDeleteDocs('likes', documentId, 'messageId');
+    firebaseService.massDeleteDocs('dislikes', documentId, 'messageId');
+
     hideMenu();
-  }, []);
+  }, [documentId]);
 
   return (
     <Menu
       ref={menu}
       button={
-        <TouchableOpacity activeOpacity={0.6} onLongPress={showMenu}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onLongPress={showMenu}
+          delayLongPress={700}>
           <View
             style={[
               isOwner ? styles.ownerWithPhoto : styles.withPhoto,
@@ -34,14 +40,13 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
                 (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
             ]}>
             <Text>{message}</Text>
-            <MessageInfo creationTime={creationTime} messageId={documentId} />
-            {/* <Text style={styles.time}>
-              {new Date(creationTime)
-                .toLocaleTimeString()
-                .split(':')
-                .slice(0, 2)
-                .join(':')}
-            </Text> */}
+
+            <MessageInfo
+              creationTime={creationTime}
+              messageId={documentId}
+              forumId={forumId}
+              isOwner={isOwner}
+            />
           </View>
         </TouchableOpacity>
       }>
@@ -55,14 +60,12 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
             color="green"
             onPress={hideMenu}
           />
-          {/* <Text>No</Text> */}
           <Icon
             type="material-community"
             name="delete"
             color={isOwner ? 'red' : 'gray'}
             onPress={isOwner ? removeMessage : null}
           />
-          {/* <Text>Yes</Text> */}
         </View>
       </MenuItem>
     </Menu>
@@ -101,9 +104,4 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     marginRight: 40,
   },
-  // time: {
-  //   alignSelf: 'flex-end',
-  //   fontSize: 10,
-  //   color: '#696A6C',
-  // },
 });

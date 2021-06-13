@@ -39,15 +39,8 @@ export const ForumListScreen = ({navigation}) => {
     const forums = [];
 
     if (querySnapshot) {
-      // querySnapshot.empty &&
-      //   dispatch(
-      //     actions.setError('The resource is empty. Please add a new forum'),
-      //   );
       querySnapshot.forEach(documentSnapshot => {
-        forums.push({
-          ...documentSnapshot.data(),
-          date: new Date(documentSnapshot.data().time).toLocaleDateString(),
-        });
+        forums.push(documentSnapshot.data());
       });
     }
 
@@ -87,7 +80,7 @@ export const ForumListScreen = ({navigation}) => {
         <FlatList
           data={forums}
           renderItem={renderItem}
-          keyExtractor={item => item.documentId}
+          keyExtractor={item => item.creationTime}
         />
       ) : (
         <View style={styles.emptyScreen}>

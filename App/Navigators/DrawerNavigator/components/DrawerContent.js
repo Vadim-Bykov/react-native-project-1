@@ -26,7 +26,7 @@ export const DrawerContent = props => {
     navigation.navigate('Favorite');
   };
   const goToHomePage = () => navigation.navigate('Home');
-  const goToForumtList = () => navigation.navigate('Forum');
+  const goToForumList = () => navigation.navigate('Forum');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -97,7 +97,7 @@ export const DrawerContent = props => {
                 />
               )}
               labelStyle={styles.labelStyle}
-              onPress={goToForumtList}
+              onPress={goToForumList}
             />
           </DrawerContentScrollView>
 

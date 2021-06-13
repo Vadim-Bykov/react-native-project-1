@@ -1,12 +1,12 @@
 import React, {useCallback, useRef} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements';
 import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
 
-export const RemoveForum = ({forumId, goBack, userRef}) => {
+export const RemoveForum = ({forumId, goBack}) => {
   const menu = useRef();
   const hideMenu = () => menu.current.hide();
   const showMenu = () => menu.current.show();
@@ -16,15 +16,11 @@ export const RemoveForum = ({forumId, goBack, userRef}) => {
   const removeForum = useCallback(() => {
     firebaseService
       .removeDocument('forums', forumId)
-      .then(() =>
-        firebaseService
-          .massDeleteMessages(forumId)
-          .then(res => console.log(res))
-          .catch(error => {
-            console.error(error);
-            dispatch(actions.setError(extractErrorMessage(error)));
-          }),
-      )
+      .then(() => {
+        firebaseService.massDeleteDocs('messages', forumId, 'forumId');
+        firebaseService.massDeleteDocs('likes', forumId, 'forumId');
+        firebaseService.massDeleteDocs('dislikes', forumId, 'forumId');
+      })
       .catch(error => {
         console.error(error);
         dispatch(actions.setError(extractErrorMessage(error)));
@@ -37,7 +33,6 @@ export const RemoveForum = ({forumId, goBack, userRef}) => {
   return (
     <Menu
       ref={menu}
-      // style={styles.forumListIcon}
       button={
         <TouchableOpacity onPress={showMenu}>
           <Icon
@@ -45,7 +40,6 @@ export const RemoveForum = ({forumId, goBack, userRef}) => {
             name="delete-sweep-outline"
             size={32}
             color="#8B5AB1"
-            // containerStyle={styles.forumListIcon}
             onPress={showMenu}
           />
         </TouchableOpacity>
@@ -60,15 +54,12 @@ export const RemoveForum = ({forumId, goBack, userRef}) => {
             color="green"
             onPress={hideMenu}
           />
-          {/* <Text>No</Text> */}
           <Icon
             type="material-community"
             name="delete"
             color="red"
-            // onPress={removeMessage}
             onPress={removeForum}
           />
-          {/* <Text>Yes</Text> */}
         </View>
       </MenuItem>
     </Menu>
@@ -82,9 +73,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-
-  forumListIcon: {
-    marginRight: 15,
   },
 });

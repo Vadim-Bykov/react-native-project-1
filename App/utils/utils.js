@@ -14,3 +14,14 @@ export const extractErrorMessage = error => {
 
 export const sortByCreationTime = array =>
   array.sort((prev, next) => prev.creationTime - next.creationTime).reverse();
+
+export const getLikeCount = (likes, isLikedMessage) => {
+  let count = 0;
+  if (isLikedMessage) {
+    count = likes ? likes.count - 1 : 1;
+  } else {
+    count = likes ? likes.count + 1 : 1;
+  }
+
+  return count;
+};
