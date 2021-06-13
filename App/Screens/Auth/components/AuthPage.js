@@ -24,7 +24,6 @@ export const AuthPage = ({configuration}) => {
     btnText,
     redirectionText,
     redirectTo,
-    onSummit,
   } = configuration;
 
   const dispatch = useDispatch();
@@ -119,8 +118,6 @@ export const AuthPage = ({configuration}) => {
     if (data) {
       dispatch(thunks.signIn(data));
     }
-
-    onSummit(data);
   }, []);
 
   return (

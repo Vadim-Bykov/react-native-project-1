@@ -29,10 +29,7 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
     <Menu
       ref={menu}
       button={
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onLongPress={showMenu}
-          delayLongPress={700}>
+        <TouchableOpacity activeOpacity={0.6} onLongPress={showMenu}>
           <View
             style={[
               isOwner ? styles.ownerWithPhoto : styles.withPhoto,
