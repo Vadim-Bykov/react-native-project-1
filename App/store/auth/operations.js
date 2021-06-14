@@ -2,6 +2,7 @@ import * as actions from './actions';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {extractErrorMessage} from '../../utils/utils';
+import {setUserDataBase} from '../../api/firebaseService';
 
 GoogleSignin.configure({
   webClientId:
@@ -21,12 +22,15 @@ export const signUp = userData => async dispatch => {
       await userCredentials.user.updateProfile({
         displayName: userData.userName,
       });
+
+      const user = await auth().currentUser;
+
+      await dispatch(setUserDataBase(user));
+
+      dispatch(actions.setUser(user));
+      dispatch(actions.setIsAuth(true));
+      dispatch(actions.setIsFetching(false));
     }
-
-    await dispatch(actions.setUser(auth().currentUser));
-
-    dispatch(actions.setIsAuth(true));
-    dispatch(actions.setIsFetching(false));
   } catch (error) {
     console.error(error);
 
@@ -41,8 +45,9 @@ export const signIn = userData => async dispatch => {
 
     await auth().signInWithEmailAndPassword(userData.email, userData.password);
 
-    await dispatch(actions.setUser(auth().currentUser));
+    const user = await auth().currentUser;
 
+    dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {
@@ -80,7 +85,11 @@ export const signInGoogle = () => async dispatch => {
 
     await auth().signInWithCredential(googleCredential);
 
-    dispatch(actions.setUser(auth().currentUser));
+    const user = await auth().currentUser;
+
+    await dispatch(setUserDataBase(user));
+
+    dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
   } catch (error) {

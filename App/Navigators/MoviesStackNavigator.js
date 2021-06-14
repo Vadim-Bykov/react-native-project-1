@@ -25,11 +25,11 @@ export const MoviesStackNavigator = ({navigation}) => {
           headerRightContainerStyle: {paddingRight: 20},
           headerLeft: () => (
             <TouchableOpacity onPress={navigation.openDrawer}>
-              <Icon name="menu" color="#000" />
+              <Icon name="menu" color="#8B5AB1" />
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <Icon type="antdesign" name="search1" color="#000" />
+            <Icon type="antdesign" name="search1" color="#8B5AB1" />
           ),
         }}
       />
@@ -41,7 +41,7 @@ export const MoviesStackNavigator = ({navigation}) => {
           headerTitle: false,
           headerTransparent: true,
           headerBackImage: () => (
-            <Icon type="ionicon" name="chevron-back" color="#fff" />
+            <Icon type="ionicon" name="chevron-back" color="#8B5AB1" />
           ),
           headerLeftContainerStyle: {paddingLeft: 10},
           headerStatusBarHeight: 0,

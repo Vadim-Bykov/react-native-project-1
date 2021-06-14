@@ -2,6 +2,9 @@ import {CardStyleInterpolators} from '@react-navigation/stack';
 
 export const BASE_IMAGE_URL = 'http://image.tmdb.org/t/p/';
 
+export const DEFAULT_AVATAR =
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROZzxwSXuX4cnu0J_5Rry0_Al5RqAafnKT3A&usqp=CAU';
+
 export const STACK_CONFIG = {
   animation: 'timing',
   config: {

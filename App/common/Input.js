@@ -13,9 +13,12 @@ export const Input = ({inputConfig}) => {
       secureTextEntry = false,
       width,
       name,
+      setSecurePassword,
+      multiline = false,
+      backgroundColor = 'rgba(0,0,0, 0.4)',
+      colorText = '#fff',
       control,
       rules,
-      setSecurePassword,
     },
   } = inputConfig;
 
@@ -38,7 +41,7 @@ export const Input = ({inputConfig}) => {
 
   return (
     <>
-      <View style={{...styles.inputContainer, width: width * 0.7}}>
+      <View style={[styles.inputContainer, {width, backgroundColor}]}>
         {iconName && <Icon name={iconName} type={type} color={color} />}
 
         <TextInput
@@ -49,7 +52,8 @@ export const Input = ({inputConfig}) => {
           value={field.value}
           onChangeText={field.onChange}
           ref={inputRef}
-          style={styles.input}
+          multiline={multiline}
+          style={[styles.input, {color: colorText}]}
         />
 
         {textContentType === 'password' && (
@@ -74,14 +78,14 @@ export const Input = ({inputConfig}) => {
 const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(0,0,0, 0.4)',
+    // backgroundColor: 'rgba(0,0,0, 0.4)',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
     marginVertical: 10,
   },
   input: {
-    color: '#fff',
+    // color: '#fff',
     flex: 1,
     marginLeft: 10,
   },

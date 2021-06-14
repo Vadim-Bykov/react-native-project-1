@@ -10,7 +10,6 @@ export const StarBlock = ({data, width}) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const dispatch = useDispatch();
-  // AsyncStorage.removeItem('favoriteMovies', (err) => console.log(err));
 
   useEffect(() => {
     AsyncStorage.getItem('favoriteMovies', (err, res) => {

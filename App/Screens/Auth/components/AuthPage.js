@@ -24,7 +24,6 @@ export const AuthPage = ({configuration}) => {
     btnText,
     redirectionText,
     redirectTo,
-    onSummit,
   } = configuration;
 
   const dispatch = useDispatch();
@@ -48,11 +47,12 @@ export const AuthPage = ({configuration}) => {
     input: {
       placeholder: 'user name',
       textContentType: 'name',
-      width,
+      width: width * 0.7,
       name: 'userName',
       control,
       rules: {
         required: 'This field is required',
+        validate: value => !!value.trim() || 'Not only spaces',
       },
     },
   };
@@ -62,7 +62,7 @@ export const AuthPage = ({configuration}) => {
     input: {
       placeholder: 'E-mail address',
       textContentType: 'emailAddress',
-      width,
+      width: width * 0.7,
       name: 'email',
       control,
       rules: {
@@ -78,13 +78,14 @@ export const AuthPage = ({configuration}) => {
       placeholder: 'Password',
       textContentType: 'password',
       secureTextEntry: securePassword,
-      width,
+      width: width * 0.7,
       name: 'password',
       control,
       rules: {
         required: 'This password field is required',
         maxLength: {value: 25, message: 'Exceeded max length 25'},
         minLength: {value: 6, message: 'Not achieved min length 6'},
+        validate: value => !!value.trim() || 'Not only spaces',
       },
       setSecurePassword,
     },
@@ -96,7 +97,7 @@ export const AuthPage = ({configuration}) => {
       placeholder: 'Confirm password',
       textContentType: 'password',
       secureTextEntry: secureConfirmPassword,
-      width,
+      width: width * 0.7,
       name: 'confirmPassword',
       control,
       rules: {
@@ -117,8 +118,6 @@ export const AuthPage = ({configuration}) => {
     if (data) {
       dispatch(thunks.signIn(data));
     }
-
-    onSummit(data);
   }, []);
 
   return (
