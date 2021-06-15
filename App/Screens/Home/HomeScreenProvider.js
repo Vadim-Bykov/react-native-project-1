@@ -8,6 +8,7 @@ import React, {
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
 import * as api from '../../api/movieApiService';
+import {PushController} from '../../api/PushController ';
 import * as actions from '../../store/auth/actions';
 import {HomeScreen} from './HomeScreen';
 
@@ -164,6 +165,7 @@ export const HomeScreenProvider = ({navigation}) => {
         onPrevPage,
       }}>
       <HomeScreen />
+      <PushController />
     </MoviesContext.Provider>
   );
 };
