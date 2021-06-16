@@ -15,9 +15,7 @@ export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
   const [isDisLikedMessage, setIsDisLikedMessage] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
-  const {
-    _user: {uid},
-  } = useSelector(selectors.getUser);
+  const {uid} = useSelector(selectors.getUser);
   const dispatch = useDispatch();
 
   const updateStateLikes = useCallback(

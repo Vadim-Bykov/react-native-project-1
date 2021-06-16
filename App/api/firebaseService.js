@@ -126,3 +126,13 @@ export const updateLikeCount = async (
     dispatch(actions.setError(extractErrorMessage(error)));
   }
 };
+
+export const updateDocument = (collection, documentId, data) => {
+  try {
+    console.log(data);
+    return firestore().collection(collection).doc(documentId).update(data);
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
