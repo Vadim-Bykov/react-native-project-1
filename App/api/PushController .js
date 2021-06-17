@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Button} from 'react-native';
+import {AppState} from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import {useNavigation} from '@react-navigation/core';
 import firestore from '@react-native-firebase/firestore';
@@ -8,17 +8,15 @@ import * as selectors from '../store/auth/selectors';
 import * as actions from '../store/auth/actions';
 import * as firebaseService from './firebaseService';
 
-export const pushForumNotification = async (title, message, forumData) => {
-  const {creationTime} = forumData;
-  console.log(forumData);
+export const pushForumNotification = (title, description, forumId) => {
   PushNotification.localNotification({
     channelId: 'fcm_fallback_notification_channel',
-    title, // (optional)
-    message, // (required)
+    title,
+    message: description,
     playSound: true,
     soundName: 'default',
     userInteraction: true,
-    // userInfo: 'creationTime',
+    userInfo: {forumId},
   });
 };
 
@@ -30,9 +28,7 @@ export const PushController = () => {
   useEffect(() => {
     user &&
       PushNotification.configure({
-        onRegister: function (token) {
-          console.log('TOKEN:', token);
-
+        onRegister: token => {
           const userTokens = {
             tokens: firestore.FieldValue.arrayUnion(token.token),
           };
@@ -45,13 +41,21 @@ export const PushController = () => {
             });
         },
 
-        // (required) Called when a remote or local notification is opened or received
-        onNotification: function (notification) {
-          console.log('NOTIFICATION:', notification);
-          navigation.navigate('Forum');
+        onNotification: notification => {
+          notification.data.forumId &&
+            firebaseService
+              .getDocumentById('forums', notification.data.forumId)
+              .then(forum => {
+                if (forum.exists) {
+                  navigation.navigate('Forum', {forum: forum.data()});
+                }
+              })
+              .catch(error => {
+                console.error(dispatch);
+                dispatch(actions.setError(error));
+              });
         },
 
-        // Android only
         senderID: '1090501687137',
 
         popInitialNotification: true,
@@ -59,12 +63,5 @@ export const PushController = () => {
       });
   }, [user]);
 
-  return (
-    <View>
-      <Button
-        onPress={() => pushForumNotification('Forum', 'Discretion')}
-        title="Push"
-      />
-    </View>
-  );
+  return null;
 };

@@ -61,8 +61,7 @@ export const addForum = (forumName, description, userId) =>
     })
     .then(forum => {
       addDocumentId('forums', forum.id);
-      return forum.get();
-      // pushForumNotification(forumName, description, forum);
+      pushForumNotification(forumName, description, forum.id);
     })
     .catch(error => Promise.reject(error));
 
@@ -133,11 +132,9 @@ export const updateLikeCount = async (
   }
 };
 
-export const updateDocument = (collection, documentId, data) => {
-  try {
-    return firestore().collection(collection).doc(documentId).update(data);
-  } catch (error) {
-    console.error(error);
-    return Promise.reject(error);
-  }
-};
+export const updateDocument = (collection, documentId, data) =>
+  firestore()
+    .collection(collection)
+    .doc(documentId)
+    .update(data)
+    .catch(error => Promise.reject(error));

@@ -6,7 +6,6 @@ import {Input} from '../../../common/Input';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import {extractErrorMessage} from '../../../utils/utils';
-import {pushForumNotification} from '../../../api/PushController ';
 
 export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
   const width = useWindowDimensions().width;
@@ -59,16 +58,10 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
 
   const onSubmit = useCallback(
     ({forumName, description}) => {
-      firebaseService
-        .addForum(forumName, description, userId)
-        .then(forum => {
-          const forumData = forum.data();
-          pushForumNotification(forumName, description, forumData);
-        })
-        .catch(error => {
-          console.error(error);
-          dispatch(actions.setError(extractErrorMessage(error)));
-        });
+      firebaseService.addForum(forumName, description, userId).catch(error => {
+        console.error(error);
+        dispatch(actions.setError(extractErrorMessage(error)));
+      });
     },
     [userId],
   );
