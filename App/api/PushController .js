@@ -8,7 +8,9 @@ import * as selectors from '../store/auth/selectors';
 import * as actions from '../store/auth/actions';
 import * as firebaseService from './firebaseService';
 
-export const pushForumNotification = async (title, message, data) => {
+export const pushForumNotification = async (title, message, forumData) => {
+  const {creationTime} = forumData;
+  console.log(forumData);
   PushNotification.localNotification({
     channelId: 'fcm_fallback_notification_channel',
     title, // (optional)
@@ -16,7 +18,7 @@ export const pushForumNotification = async (title, message, data) => {
     playSound: true,
     soundName: 'default',
     userInteraction: true,
-    userInfo: data,
+    // userInfo: 'creationTime',
   });
 };
 

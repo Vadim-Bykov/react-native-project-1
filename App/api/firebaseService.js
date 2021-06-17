@@ -1,6 +1,7 @@
 import * as actions from '../store/auth/actions';
 import {extractErrorMessage} from '../utils/utils';
 import firestore from '@react-native-firebase/firestore';
+import {pushForumNotification} from './PushController ';
 
 export const setUserDataBase = user => async dispatch => {
   firestore()
@@ -58,7 +59,12 @@ export const addForum = (forumName, description, userId) =>
       userRef: firestore().doc(`users/${userId}`),
       creationTime: Date.now(),
     })
-    .then(forum => addDocumentId('forums', forum.id));
+    .then(forum => {
+      addDocumentId('forums', forum.id);
+      return forum.get();
+      // pushForumNotification(forumName, description, forum);
+    })
+    .catch(error => Promise.reject(error));
 
 export const messagesSubscriber = (observer, errorHandler, forumId) =>
   firestore()
@@ -129,7 +135,6 @@ export const updateLikeCount = async (
 
 export const updateDocument = (collection, documentId, data) => {
   try {
-    console.log(data);
     return firestore().collection(collection).doc(documentId).update(data);
   } catch (error) {
     console.error(error);

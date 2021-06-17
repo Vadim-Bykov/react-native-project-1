@@ -61,7 +61,10 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
     ({forumName, description}) => {
       firebaseService
         .addForum(forumName, description, userId)
-        .then(() => pushForumNotification(forumName, description))
+        .then(forum => {
+          const forumData = forum.data();
+          pushForumNotification(forumName, description, forumData);
+        })
         .catch(error => {
           console.error(error);
           dispatch(actions.setError(extractErrorMessage(error)));
