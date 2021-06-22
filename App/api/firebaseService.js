@@ -1,7 +1,7 @@
 import * as actions from '../store/auth/actions';
 import {extractErrorMessage} from '../utils/utils';
 import firestore from '@react-native-firebase/firestore';
-import {pushForumNotification} from './PushController ';
+import {pushForumNotification} from './pushNotificationService';
 
 export const setUserDataBase = user => async dispatch => {
   firestore()

@@ -6,10 +6,13 @@ import React, {
   useState,
 } from 'react';
 import {useQuery} from 'react-query';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import * as api from '../../api/movieApiService';
-import {PushController} from '../../api/PushController ';
+import * as firebaseService from '../../api/firebaseService';
+import firestore from '@react-native-firebase/firestore';
+import {pushController} from '../../api/pushNotificationService';
 import * as actions from '../../store/auth/actions';
+import * as selectors from '../../store/auth/selectors';
 import {HomeScreen} from './HomeScreen';
 
 export const MoviesContext = createContext();
@@ -27,6 +30,7 @@ export const HomeScreenProvider = ({navigation}) => {
   const [mode, setMode] = useState('section');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const user = useSelector(selectors.getUser);
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
@@ -139,6 +143,41 @@ export const HomeScreenProvider = ({navigation}) => {
       : setCurrentPage(prev => prev - 1);
   }, [currentPage]);
 
+  const addUserToken = useCallback(
+    token => {
+      const userTokens = {
+        tokens: firestore.FieldValue.arrayUnion(token),
+      };
+
+      firebaseService
+        .updateDocument('users', user.uid, userTokens)
+        .catch(error => {
+          console.error(dispatch);
+          dispatch(actions.setError(error));
+        });
+    },
+    [user],
+  );
+
+  const goToCreatedForum = useCallback(forumId => {
+    firebaseService
+      .getDocumentById('forums', forumId)
+      .then(forum => {
+        if (forum.exists) {
+          navigation.navigate('Forum', {forum: forum.data()});
+        }
+      })
+      .catch(error => {
+        console.error(dispatch);
+        dispatch(actions.setError(error));
+      });
+  }, []);
+
+  useEffect(() => {
+    user && pushController(addUserToken, goToCreatedForum);
+    // user && pushController(navigation, user.uid, dispatch);
+  }, [user]);
+
   return (
     <MoviesContext.Provider
       value={{
@@ -165,7 +204,6 @@ export const HomeScreenProvider = ({navigation}) => {
         onPrevPage,
       }}>
       <HomeScreen />
-      <PushController />
     </MoviesContext.Provider>
   );
 };
