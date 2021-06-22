@@ -175,7 +175,6 @@ export const HomeScreenProvider = ({navigation}) => {
 
   useEffect(() => {
     user && pushController(addUserToken, goToCreatedForum);
-    // user && pushController(navigation, user.uid, dispatch);
   }, [user]);
 
   return (
