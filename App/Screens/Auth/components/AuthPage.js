@@ -17,6 +17,7 @@ import * as selectors from '../../../store/auth/selectors';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {Loader} from '../../../common/Loader';
 import {Error} from '../../../common/Error';
+import {UserImage} from './UserImage';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -147,6 +148,8 @@ export const AuthPage = ({configuration}) => {
               {showPasswordConfirmation && (
                 <Input inputConfig={confirmPasswordInput} />
               )}
+
+              {showPasswordConfirmation && <UserImage  />}
 
               <TouchableOpacity
                 style={{...styles.btn, width: width * 0.6}}
