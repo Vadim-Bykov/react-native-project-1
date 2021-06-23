@@ -18,6 +18,9 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {Loader} from '../../../common/Loader';
 import {Error} from '../../../common/Error';
 import {UserImage} from './UserImage';
+import * as firebaseService from '../../../api/firebaseService';
+import {setError} from '../../../store/auth/actions';
+import {extractErrorMessage} from '../../../utils/utils';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -33,6 +36,7 @@ export const AuthPage = ({configuration}) => {
   const {width, height} = useWindowDimensions();
   const [securePassword, setSecurePassword] = useState(true);
   const [secureConfirmPassword, setSecureConfirmPassword] = useState(true);
+  const [imageData, setImageData] = useState(null);
 
   const {
     control,
@@ -111,15 +115,25 @@ export const AuthPage = ({configuration}) => {
     },
   };
 
-  const onPressHandler = useCallback(data => {
-    if (showPasswordConfirmation && data) {
-      return dispatch(thunks.signUp(data));
-    }
+  const onPressHandler = useCallback(
+    async data => {
+      if (showPasswordConfirmation && data) {
+        await dispatch(thunks.signUp(data));
 
-    if (data) {
-      dispatch(thunks.signIn(data));
-    }
-  }, []);
+        imageData &&
+          firebaseService
+            .uploadUserPhoto(imageData.uri, imageData.fileName)
+            .catch(error => dispatch(setError(extractErrorMessage(error))));
+      }
+
+      if (data) {
+        dispatch(thunks.signIn(data));
+      }
+    },
+    [imageData],
+  );
+
+  console.log(imageData);
 
   return (
     <>
@@ -146,10 +160,14 @@ export const AuthPage = ({configuration}) => {
               <Input inputConfig={passwordInput} />
 
               {showPasswordConfirmation && (
-                <Input inputConfig={confirmPasswordInput} />
+                <>
+                  <Input inputConfig={confirmPasswordInput} />
+                  <UserImage
+                    imageUri={imageData && imageData.uri}
+                    setImageData={setImageData}
+                  />
+                </>
               )}
-
-              {showPasswordConfirmation && <UserImage  />}
 
               <TouchableOpacity
                 style={{...styles.btn, width: width * 0.6}}

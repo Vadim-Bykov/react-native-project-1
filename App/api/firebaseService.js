@@ -1,6 +1,7 @@
 import * as actions from '../store/auth/actions';
 import {extractErrorMessage} from '../utils/utils';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 export const setUserDataBase = user => async dispatch => {
   firestore()
@@ -124,5 +125,24 @@ export const updateLikeCount = async (
   } catch (error) {
     console.error(error);
     dispatch(actions.setError(extractErrorMessage(error)));
+  }
+};
+
+// const updateUserData =
+
+export const uploadUserPhoto = async (uri, fileName) => {
+  try {
+    const reference = storage().ref(fileName);
+    await reference.putFile(uri);
+    const photoURL = await reference.getDownloadURL();
+
+    // task.on('state_changed', taskSnapshot => {
+    //   console.log(
+    //     `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+    //   );
+    // });
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
   }
 };
