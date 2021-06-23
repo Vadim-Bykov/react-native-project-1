@@ -4,12 +4,13 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {Icon} from 'react-native-elements';
+import {Icon, Avatar} from 'react-native-elements';
 import {View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as thunks from '../../../store/auth/operations';
 import * as selectors from '../../../store/auth/selectors';
 import * as actions from '../../../store/auth/actions';
+import {DEFAULT_AVATAR} from '../../../consts/consts';
 
 export const DrawerContent = props => {
   const {
@@ -38,10 +39,21 @@ export const DrawerContent = props => {
       {user ? (
         <>
           <View style={styles.header}>
-            <View>
-              <Text style={styles.headerTitle}>Username</Text>
-              <Text>{user.displayName}</Text>
+            <View style={styles.userData}>
+              <Avatar
+                rounded
+                size="medium"
+                source={{
+                  uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
+                }}
+              />
+
+              <View>
+                <Text style={styles.headerTitle}>Username</Text>
+                <Text>{user.displayName}</Text>
+              </View>
             </View>
+
             <Icon
               name="close"
               color="#6A6A6A"
@@ -50,7 +62,6 @@ export const DrawerContent = props => {
           </View>
 
           <DrawerContentScrollView {...props}>
-            {/* <DrawerItemList {...props} /> */}
             <DrawerItem
               label="Home"
               focused={routeNames[index] === 'Home' ? true : false}
@@ -126,6 +137,9 @@ const styles = StyleSheet.create({
     padding: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  userData: {
+    flexDirection: 'row',
   },
   headerTitle: {
     fontSize: 24,

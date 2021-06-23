@@ -18,9 +18,6 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {Loader} from '../../../common/Loader';
 import {Error} from '../../../common/Error';
 import {UserImage} from './UserImage';
-import * as firebaseService from '../../../api/firebaseService';
-import {setError} from '../../../store/auth/actions';
-import {extractErrorMessage} from '../../../utils/utils';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -116,14 +113,15 @@ export const AuthPage = ({configuration}) => {
   };
 
   const onPressHandler = useCallback(
-    async data => {
+    data => {
       if (showPasswordConfirmation && data) {
-        await dispatch(thunks.signUp(data));
-
-        imageData &&
-          firebaseService
-            .uploadUserPhoto(imageData.uri, imageData.fileName)
-            .catch(error => dispatch(setError(extractErrorMessage(error))));
+        dispatch(
+          thunks.signUp({
+            ...data,
+            uri: imageData?.uri,
+            fileName: imageData?.fileName,
+          }),
+        );
       }
 
       if (data) {
@@ -132,8 +130,6 @@ export const AuthPage = ({configuration}) => {
     },
     [imageData],
   );
-
-  console.log(imageData);
 
   return (
     <>

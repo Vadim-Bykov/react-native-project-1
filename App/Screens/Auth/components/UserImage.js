@@ -12,7 +12,6 @@ export const UserImage = ({imageUri, setImageData}) => {
   const addPhoto = useCallback(() => {
     const options = {
       mediaType: 'photo',
-      // includeBase64: true,
       maxHeight: 200,
       maxWidth: 200,
     };
@@ -28,26 +27,15 @@ export const UserImage = ({imageUri, setImageData}) => {
         } else {
           const ImageData = assets[0];
           setImageData(ImageData);
-          //   let path = this.getPlatformPath(response).value;
-          //   let fileName = this.getFileName(response.fileName, path);
-          //   this.setState({imagePath: path});
-          //   this.uploadImageToStorage(path, fileName);
         }
       },
     );
   }, []);
 
-  console.log(imageUri);
-
   return (
     <View style={styles.container}>
       {imageUri ? (
-        <Avatar
-          rounded
-          source={{uri: imageUri}}
-          size="medium"
-          // containerStyle={styles.avatar}
-        />
+        <Avatar rounded source={{uri: imageUri}} size="medium" />
       ) : (
         <Text style={styles.text}>Add your photo</Text>
       )}
@@ -68,9 +56,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  // avatar: {
-  //   marginRight: 10,
-  // },
   text: {
     color: '#fff',
   },

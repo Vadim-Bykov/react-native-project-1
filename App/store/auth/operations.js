@@ -2,7 +2,7 @@ import * as actions from './actions';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {extractErrorMessage} from '../../utils/utils';
-import {setUserDataBase} from '../../api/firebaseService';
+import * as firebaseService from '../../api/firebaseService';
 
 GoogleSignin.configure({
   webClientId:
@@ -10,22 +10,29 @@ GoogleSignin.configure({
 });
 
 export const signUp = userData => async dispatch => {
+  const {uri, fileName, email, password, userName} = userData;
   try {
     dispatch(actions.setIsFetching(true));
 
     const userCredentials = await auth().createUserWithEmailAndPassword(
-      userData.email,
-      userData.password,
+      email,
+      password,
     );
+
+    const photoURL =
+      uri && fileName
+        ? await firebaseService.uploadUserPhoto(uri, fileName)
+        : null;
 
     if (userCredentials.user) {
       await userCredentials.user.updateProfile({
-        displayName: userData.userName,
+        displayName: userName,
+        photoURL,
       });
 
       const user = await auth().currentUser;
 
-      await dispatch(setUserDataBase(user));
+      await dispatch(firebaseService.setUserDataBase(user));
 
       dispatch(actions.setUser(user));
       dispatch(actions.setIsAuth(true));
@@ -87,7 +94,7 @@ export const signInGoogle = () => async dispatch => {
 
     const user = await auth().currentUser;
 
-    await dispatch(setUserDataBase(user));
+    await dispatch(firebaseService.setUserDataBase(user));
 
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));

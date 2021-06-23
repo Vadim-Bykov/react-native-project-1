@@ -128,14 +128,12 @@ export const updateLikeCount = async (
   }
 };
 
-// const updateUserData =
-
 export const uploadUserPhoto = async (uri, fileName) => {
   try {
     const reference = storage().ref(fileName);
     await reference.putFile(uri);
     const photoURL = await reference.getDownloadURL();
-
+    return photoURL;
     // task.on('state_changed', taskSnapshot => {
     //   console.log(
     //     `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
