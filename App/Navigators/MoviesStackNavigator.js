@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {Icon} from 'react-native-elements';
-import {HomeScreenProvider} from '../Screens/Home/HomeScreenProvider';
+import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {DetailsScreen} from '../Screens/Home/DetailsScreen';
 import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native';
@@ -14,7 +14,7 @@ export const MoviesStackNavigator = ({navigation}) => {
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
       <Stack.Screen
         name="Movies"
-        component={HomeScreenProvider}
+        component={HomeScreen}
         options={{
           headerBackground: () => (
             <View style={{flex: 1, backgroundColor: '#F1F1F1'}} />

@@ -1,6 +1,6 @@
 import PushNotification from 'react-native-push-notification';
 
-export const pushForumNotification = (title, description, forumId) => {
+export const localNotify = (title, description, forumId) => {
   PushNotification.localNotification({
     channelId: 'fcm_fallback_notification_channel',
     title,
@@ -11,7 +11,7 @@ export const pushForumNotification = (title, description, forumId) => {
   });
 };
 
-export const pushController = (addUserToken, goToCreatedForum) => {
+export const configurePushNotification = (addUserToken, goToCreatedForum) => {
   PushNotification.configure({
     onRegister: token => {
       addUserToken(token.token);

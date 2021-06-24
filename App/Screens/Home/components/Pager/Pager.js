@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, useWindowDimensions} from 'react-native';
 import PagerView from 'react-native-pager-view';
-import {useMovieContext} from '../../HomeScreenProvider';
+import {useMovieContext} from '../../HomeScreen';
 import BottomPart from './BottomPart';
 import {Slide} from './Slide';
 

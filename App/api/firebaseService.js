@@ -1,7 +1,7 @@
 import * as actions from '../store/auth/actions';
 import {extractErrorMessage} from '../utils/utils';
 import firestore from '@react-native-firebase/firestore';
-import {pushForumNotification} from './pushNotificationService';
+import {localNotify} from '../notification/pushNotificationService';
 
 export const setUserDataBase = user => async dispatch => {
   firestore()
@@ -70,7 +70,7 @@ export const addForum = (forumName, description, userId) =>
     })
     .then(forum => {
       addDocumentId('forums', forum.id);
-      pushForumNotification(forumName, description, forum.id);
+      localNotify(forumName, description, forum.id);
     })
     .catch(error => Promise.reject(error));
 
