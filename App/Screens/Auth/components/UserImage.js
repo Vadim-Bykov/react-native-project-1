@@ -16,20 +16,19 @@ export const UserImage = ({imageUri, setImageData}) => {
       maxWidth: 200,
     };
 
-    launchImageLibrary(
-      options,
-      ({assets, didCancel, errorMessage, errorCode}) => {
-        if (didCancel) {
-          console.log('User cancelled image picker');
-        } else if (errorCode) {
-          console.error(errorCode, errorMessage);
-          dispatch(actions.setError(errorMessage));
-        } else {
-          const ImageData = assets[0];
-          setImageData(ImageData);
-        }
-      },
-    );
+    const handleImage = ({assets, didCancel, errorMessage, errorCode}) => {
+      if (didCancel) {
+        dispatch(actions.setError('User cancelled image picker'));
+      } else if (errorCode) {
+        console.error(errorCode, errorMessage);
+        dispatch(actions.setError(errorMessage));
+      } else {
+        const ImageData = assets[0];
+        setImageData(ImageData);
+      }
+    };
+
+    launchImageLibrary(options, handleImage);
   }, []);
 
   return (
