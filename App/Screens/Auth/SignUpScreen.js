@@ -5,7 +5,7 @@ export const SignUpScreen = ({navigation}) => {
   const goToSignIn = () => navigation.navigate('SignIn');
 
   const configuration = {
-    showPasswordConfirmation: true,
+    isSignUpScreen: true,
     btnText: 'Sign up',
     redirectionText: 'Already have account? Sign In',
     redirectTo: goToSignIn,

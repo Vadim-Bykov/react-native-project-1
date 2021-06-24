@@ -48,7 +48,7 @@ export const DrawerContent = props => {
                 }}
               />
 
-              <View>
+              <View style={styles.usernameBlock}>
                 <Text style={styles.headerTitle}>Username</Text>
                 <Text>{user.displayName}</Text>
               </View>
@@ -140,6 +140,11 @@ const styles = StyleSheet.create({
   },
   userData: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  usernameBlock: {
+    paddingBottom: 3,
+    marginLeft: 5,
   },
   headerTitle: {
     fontSize: 24,

@@ -1,6 +1,5 @@
-import React from 'react';
-import {useCallback} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {StyleSheet, Text, View, ToastAndroid, Platform} from 'react-native';
 import {Avatar, Icon} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch} from 'react-redux';
@@ -12,13 +11,14 @@ export const UserImage = ({imageUri, setImageData}) => {
   const addPhoto = useCallback(() => {
     const options = {
       mediaType: 'photo',
-      maxHeight: 200,
-      maxWidth: 200,
+      maxHeight: 300,
+      maxWidth: 300,
     };
 
     const handleImage = ({assets, didCancel, errorMessage, errorCode}) => {
       if (didCancel) {
-        dispatch(actions.setError('User cancelled image picker'));
+        Platform.OS === 'android' &&
+          ToastAndroid.show('Adding an image was canceled', ToastAndroid.SHORT);
       } else if (errorCode) {
         console.error(errorCode, errorMessage);
         dispatch(actions.setError(errorMessage));
@@ -33,32 +33,44 @@ export const UserImage = ({imageUri, setImageData}) => {
 
   return (
     <View style={styles.container}>
-      {imageUri ? (
-        <Avatar rounded source={{uri: imageUri}} size="medium" />
-      ) : (
-        <Text style={styles.text}>Add your photo</Text>
-      )}
       <Icon
         type="entypo"
         name="add-user"
         color="#DDBA33"
-        size={35}
+        size={imageUri ? 25 : 75}
         onPress={addPhoto}
-        containerStyle={styles.icon}
+        containerStyle={imageUri ? styles.iconWithPhoto : styles.icon}
       />
+
+      {imageUri ? (
+        <Avatar
+          rounded
+          source={{uri: imageUri}}
+          size={120}
+          onPress={addPhoto}
+        />
+      ) : (
+        <Text style={styles.text}>Add your photo</Text>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
   },
   text: {
     color: '#fff',
   },
   icon: {
-    marginHorizontal: 10,
+    marginBottom: 5,
+    marginLeft: 15,
+  },
+  iconWithPhoto: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
+    zIndex: 1,
   },
 });

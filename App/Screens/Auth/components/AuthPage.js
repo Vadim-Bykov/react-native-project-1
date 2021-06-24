@@ -21,7 +21,7 @@ import {UserImage} from './UserImage';
 
 export const AuthPage = ({configuration}) => {
   const {
-    showPasswordConfirmation = false,
+    isSignUpScreen = false,
     btnText,
     redirectionText,
     redirectTo,
@@ -114,7 +114,7 @@ export const AuthPage = ({configuration}) => {
 
   const onPressHandler = useCallback(
     data => {
-      if (showPasswordConfirmation && data) {
+      if (isSignUpScreen && data) {
         dispatch(
           thunks.signUp({
             ...data,
@@ -140,30 +140,33 @@ export const AuthPage = ({configuration}) => {
         style={styles.imageBackground}>
         <View style={styles.wrapper}>
           <ScrollView contentContainerStyle={styles.container}>
-            <View style={styles.imageContainer}>
-              <Image
-                style={styles.logo}
-                source={require('../../../assets/images/logo1.png')}
-              />
-            </View>
-
-            <View style={styles.form}>
-              {showPasswordConfirmation && (
-                <Input inputConfig={userNameInput} />
-              )}
-
-              <Input inputConfig={emailInput} />
-              <Input inputConfig={passwordInput} />
-
-              {showPasswordConfirmation && (
-                <>
-                  <Input inputConfig={confirmPasswordInput} />
+            <View
+              style={[
+                styles.imageContainer,
+                isSignUpScreen && {marginBottom: 10},
+              ]}>
+              <>
+                {isSignUpScreen ? (
                   <UserImage
                     imageUri={imageData && imageData.uri}
                     setImageData={setImageData}
                   />
-                </>
-              )}
+                ) : (
+                  <Image
+                    style={styles.logo}
+                    source={require('../../../assets/images/logo1.png')}
+                  />
+                )}
+              </>
+            </View>
+
+            <View style={styles.form}>
+              {isSignUpScreen && <Input inputConfig={userNameInput} />}
+
+              <Input inputConfig={emailInput} />
+              <Input inputConfig={passwordInput} />
+
+              {isSignUpScreen && <Input inputConfig={confirmPasswordInput} />}
 
               <TouchableOpacity
                 style={{...styles.btn, width: width * 0.6}}
@@ -184,7 +187,7 @@ export const AuthPage = ({configuration}) => {
             <TouchableOpacity
               style={[
                 {...styles.redirect, marginTop: height * 0.05},
-                !showPasswordConfirmation &&
+                !isSignUpScreen &&
                   width < height &&
                   styles.redirectSignInScreen,
               ]}
