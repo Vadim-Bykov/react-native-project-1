@@ -80,7 +80,6 @@ export const DrawerContent = props => {
 
             <DrawerItem
               label="Favorites"
-              // focused={index === 1 ? true : false}
               focused={routeNames[index] === 'Favorite' ? true : false}
               activeTintColor="#5535E5"
               activeBackgroundColor="#E9DCFB"
