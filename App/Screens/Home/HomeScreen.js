@@ -14,6 +14,7 @@ import {configurePushNotification} from '../../notification/pushNotificationServ
 import * as actions from '../../store/auth/actions';
 import * as selectors from '../../store/auth/selectors';
 import {HomeScreenComponent} from './HomeScreenComponent';
+import {extractErrorMessage} from '../../utils/utils';
 
 export const MoviesContext = createContext();
 
@@ -152,8 +153,8 @@ export const HomeScreen = ({navigation}) => {
       firebaseService
         .updateDocument('users', user.uid, userTokens)
         .catch(error => {
-          console.error(dispatch);
-          dispatch(actions.setError(error));
+          console.error(error);
+          dispatch(actions.setError(extractErrorMessage(error)));
         });
     },
     [user],
@@ -168,13 +169,16 @@ export const HomeScreen = ({navigation}) => {
         }
       })
       .catch(error => {
-        console.error(dispatch);
-        dispatch(actions.setError(error));
+        console.error(error);
+        dispatch(actions.setError(extractErrorMessage(error)));
       });
   }, []);
 
   useEffect(() => {
-    user && configurePushNotification(addUserToken, goToCreatedForum);
+    user &&
+      setTimeout(() => {
+        configurePushNotification(addUserToken, goToCreatedForum);
+      }, 5000);
   }, [user]);
 
   return (
