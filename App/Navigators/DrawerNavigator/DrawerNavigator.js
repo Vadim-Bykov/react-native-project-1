@@ -30,7 +30,7 @@ export const DrawerNavigator = () => {
         }}
       />
 
-      <Drawer.Screen name="Forum" component={ForumStackNavigator} />
+      <Drawer.Screen name="Forums" component={ForumStackNavigator} />
     </Drawer.Navigator>
   );
 };

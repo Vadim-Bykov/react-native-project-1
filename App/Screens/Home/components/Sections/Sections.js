@@ -2,7 +2,7 @@ import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Section} from './Section';
 import {MOVIE_SECTIONS} from '../../../../consts/consts';
-import {useMovieContext} from '../../HomeScreenProvider';
+import {useMovieContext} from '../../HomeScreen';
 
 export const Sections = () => {
   const {currentSection, onChangeSection, mode} = useMovieContext();

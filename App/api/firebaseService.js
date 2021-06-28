@@ -2,6 +2,7 @@ import * as actions from '../store/auth/actions';
 import {extractErrorMessage} from '../utils/utils';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import {localNotify} from '../notification/pushNotificationService';
 
 export const setUserDataBase = user => async dispatch => {
   firestore()
@@ -24,15 +25,23 @@ export const forumsSubscriber = (observer, errorHandler) => {
   return firestore().collection('forums').onSnapshot(observer, errorHandler);
 };
 
-export const getDataByRef = userRefPath => firestore().doc(userRefPath).get();
+export const getDataByRef = userRefPath =>
+  firestore()
+    .doc(userRefPath)
+    .get()
+    .catch(error => Promise.reject(error));
 
 const createLikeDocument = (collection, forumId, messageId) =>
-  firestore().collection(collection).doc(messageId).set({
-    count: 0,
-    forumId,
-    messageId,
-    usersId: [],
-  });
+  firestore()
+    .collection(collection)
+    .doc(messageId)
+    .set({
+      count: 0,
+      forumId,
+      messageId,
+      usersId: [],
+    })
+    .catch(error => Promise.reject(error));
 
 const addDocumentId = (collection, documentId, forumIdForLikeDoc) =>
   firestore()
@@ -48,7 +57,8 @@ const addDocumentId = (collection, documentId, forumIdForLikeDoc) =>
       () =>
         forumIdForLikeDoc &&
         createLikeDocument('dislikes', forumIdForLikeDoc, documentId),
-    );
+    )
+    .catch(error => Promise.reject(error));
 
 export const addForum = (forumName, description, userId) =>
   firestore()
@@ -59,7 +69,11 @@ export const addForum = (forumName, description, userId) =>
       userRef: firestore().doc(`users/${userId}`),
       creationTime: Date.now(),
     })
-    .then(forum => addDocumentId('forums', forum.id));
+    .then(forum => {
+      addDocumentId('forums', forum.id);
+      localNotify(forumName, description, forum.id);
+    })
+    .catch(error => Promise.reject(error));
 
 export const messagesSubscriber = (observer, errorHandler, forumId) =>
   firestore()
@@ -76,10 +90,15 @@ export const addMessage = (forumId, message, userId) =>
       userRef: firestore().doc(`users/${userId}`),
       creationTime: Date.now(),
     })
-    .then(message => addDocumentId('messages', message.id, forumId));
+    .then(message => addDocumentId('messages', message.id, forumId))
+    .catch(error => Promise.reject(error));
 
 export const removeDocument = (collection, documentId) =>
-  firestore().collection(collection).doc(documentId).delete();
+  firestore()
+    .collection(collection)
+    .doc(documentId)
+    .delete()
+    .catch(error => Promise.reject(error));
 
 export const massDeleteDocs = async (collection, documentId, idField) => {
   try {
@@ -97,11 +116,16 @@ export const massDeleteDocs = async (collection, documentId, idField) => {
     return batch.commit();
   } catch (error) {
     console.error(error);
+    return Promise.reject(error);
   }
 };
 
 export const getDocumentById = (collection, documentId) =>
-  firestore().collection(collection).doc(documentId).get();
+  firestore()
+    .collection(collection)
+    .doc(documentId)
+    .get()
+    .catch(error => Promise.reject(error));
 
 export const updateLikeCount = async (
   {collection, messageId, forumId, count, userId, action},
@@ -142,3 +166,9 @@ export const uploadUserPhoto = async (uri, fileName) => {
     return Promise.reject(error);
   }
 };
+export const updateDocument = (collection, documentId, data) =>
+  firestore()
+    .collection(collection)
+    .doc(documentId)
+    .update(data)
+    .catch(error => Promise.reject(error));

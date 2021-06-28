@@ -27,7 +27,7 @@ export const DrawerContent = props => {
     navigation.navigate('Favorite');
   };
   const goToHomePage = () => navigation.navigate('Home');
-  const goToForumList = () => navigation.navigate('Forum');
+  const goToForumList = () => navigation.navigate('Forums');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -95,8 +95,8 @@ export const DrawerContent = props => {
             />
 
             <DrawerItem
-              label="Forum"
-              focused={routeNames[index] === 'Forum' ? true : false}
+              label="Forums"
+              focused={routeNames[index] === 'Forums' ? true : false}
               activeTintColor="#5535E5"
               activeBackgroundColor="#E9DCFB"
               icon={({focused}) => (
