@@ -1,7 +1,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Genre} from './Genre';
-import {useMovieContext} from '../../HomeScreenProvider';
+import {useMovieContext} from '../../HomeScreen';
 
 export const Genres = () => {
   const {onChangeGenre, currentGenreID, genresApi, mode} = useMovieContext();

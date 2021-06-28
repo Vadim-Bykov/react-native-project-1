@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {BASE_IMAGE_URL} from '../../../../consts/consts';
-import {useMovieContext} from '../../HomeScreenProvider';
+import {useMovieContext} from '../../HomeScreen';
 
 export const Slide = ({movie, width, goToMovieDetails, index, lastIndex}) => {
   const {
