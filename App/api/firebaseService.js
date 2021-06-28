@@ -1,6 +1,7 @@
 import * as actions from '../store/auth/actions';
 import {extractErrorMessage} from '../utils/utils';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import {localNotify} from '../notification/pushNotificationService';
 
 export const setUserDataBase = user => async dispatch => {
@@ -151,6 +152,20 @@ export const updateLikeCount = async (
   }
 };
 
+export const uploadUserPhoto = async (uri, fileName) => {
+  try {
+    const reference = storage().ref(fileName);
+
+    await reference.putFile(uri);
+
+    const photoURL = await reference.getDownloadURL();
+
+    return photoURL;
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
 export const updateDocument = (collection, documentId, data) =>
   firestore()
     .collection(collection)
