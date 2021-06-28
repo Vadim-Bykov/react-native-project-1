@@ -15,7 +15,7 @@ export const UserImage = ({imageUri, setImageData}) => {
       maxWidth: 300,
     };
 
-    const handleImage = ({assets, didCancel, errorMessage, errorCode}) => {
+    const handleAddImage = ({assets, didCancel, errorMessage, errorCode}) => {
       if (didCancel) {
         Platform.OS === 'android' &&
           ToastAndroid.show('Adding an image was canceled', ToastAndroid.SHORT);
@@ -28,7 +28,7 @@ export const UserImage = ({imageUri, setImageData}) => {
       }
     };
 
-    launchImageLibrary(options, handleImage);
+    launchImageLibrary(options, handleAddImage);
   }, []);
 
   return (
