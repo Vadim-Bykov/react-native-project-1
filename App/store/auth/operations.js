@@ -35,7 +35,7 @@ export const signUp = userData => async dispatch => {
 
       await dispatch(firebaseService.setUserDataBase(user));
 
-      await configurePushNotification(user.uid);
+      await configurePushNotification(user.uid, dispatch);
 
       dispatch(actions.setUser(user));
       dispatch(actions.setIsAuth(true));
@@ -57,7 +57,7 @@ export const signIn = userData => async dispatch => {
 
     const user = await auth().currentUser;
 
-    await configurePushNotification(user.uid);
+    await configurePushNotification(user.uid, dispatch);
 
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
@@ -101,7 +101,7 @@ export const signInGoogle = () => async dispatch => {
 
     await dispatch(firebaseService.setUserDataBase(user));
 
-    await configurePushNotification(user.uid);
+    await configurePushNotification(user.uid, dispatch);
 
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
@@ -117,9 +117,11 @@ export const signInGoogle = () => async dispatch => {
 export const authFireBase = () => async dispatch => {
   try {
     dispatch(actions.setIsFetching(true));
-    const setUserAuth = user => {
+    const setUserAuth = async user => {
       user
-        ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
+        ? (dispatch(actions.setIsAuth(true)),
+          dispatch(actions.setUser(user)),
+          await configurePushNotification(user.uid, dispatch))
         : dispatch(actions.setIsAuth(false));
     };
 

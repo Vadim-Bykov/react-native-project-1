@@ -4,4 +4,5 @@ export const initialState = {
   isFetching: false,
   errorMessage: null,
   initialized: false,
+  isOnPressedNotification: false,
 };

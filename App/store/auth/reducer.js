@@ -33,6 +33,12 @@ export const authReducer = (state = initialState, action) => {
         initialized: true,
       };
 
+    case actionTypes.AUTH_IS_ON_PRESSED_NOTIFICATION:
+      return {
+        ...state,
+        isOnPressedNotification: action.boolean,
+      };
+
     default:
       return state;
   }

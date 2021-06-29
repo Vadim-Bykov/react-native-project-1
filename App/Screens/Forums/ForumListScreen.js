@@ -66,6 +66,15 @@ export const ForumListScreen = ({navigation}) => {
 
   const renderItem = useCallback(({item}) => <Forum forum={item} />, []);
 
+  const isOnPressedNotification = useSelector(
+    selectors.getIsOnPressedNotification,
+  );
+
+  useEffect(() => {
+    isOnPressedNotification && navigation.navigate('Forum', {forum: forums[0]});
+    dispatch(actions.setIsOnPressedNotification(false));
+  }, [isOnPressedNotification, forums.length]);
+
   return (
     <>
       {isFetching && <Loader />}

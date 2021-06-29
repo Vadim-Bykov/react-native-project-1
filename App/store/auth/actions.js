@@ -21,3 +21,8 @@ export const setError = errorMessage => ({
 });
 
 export const setInitialized = () => ({type: actionTypes.AUTH_SET_INITIALIZED});
+
+export const setIsOnPressedNotification = boolean => ({
+  type: actionTypes.AUTH_IS_ON_PRESSED_NOTIFICATION,
+  boolean,
+});
