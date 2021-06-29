@@ -166,9 +166,34 @@ export const uploadUserPhoto = async (uri, fileName) => {
     return Promise.reject(error);
   }
 };
+
 export const updateDocument = (collection, documentId, data) =>
   firestore()
     .collection(collection)
     .doc(documentId)
     .update(data)
     .catch(error => Promise.reject(error));
+
+export const goToCreatedForum = forumId => {
+  getDocumentById('forums', forumId)
+    .then(forum => {
+      if (forum.exists) {
+        navigation.navigate('Forum', {forum: forum.data()});
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      dispatch(actions.setError(extractErrorMessage(error)));
+    });
+};
+
+export const addUserToken = (token, userId) => {
+  const userTokens = {
+    tokens: firestore.FieldValue.arrayUnion(token),
+  };
+
+  updateDocument('users', userId, userTokens).catch(error => {
+    console.error(error);
+    dispatch(actions.setError(extractErrorMessage(error)));
+  });
+};

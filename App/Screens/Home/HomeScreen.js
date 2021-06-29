@@ -144,43 +144,6 @@ export const HomeScreen = ({navigation}) => {
       : setCurrentPage(prev => prev - 1);
   }, [currentPage]);
 
-  const addUserToken = useCallback(
-    token => {
-      const userTokens = {
-        tokens: firestore.FieldValue.arrayUnion(token),
-      };
-
-      firebaseService
-        .updateDocument('users', user.uid, userTokens)
-        .catch(error => {
-          console.error(error);
-          dispatch(actions.setError(extractErrorMessage(error)));
-        });
-    },
-    [user],
-  );
-
-  const goToCreatedForum = useCallback(forumId => {
-    firebaseService
-      .getDocumentById('forums', forumId)
-      .then(forum => {
-        if (forum.exists) {
-          navigation.navigate('Forum', {forum: forum.data()});
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        dispatch(actions.setError(extractErrorMessage(error)));
-      });
-  }, []);
-
-  useEffect(() => {
-    user &&
-      setTimeout(() => {
-        configurePushNotification(addUserToken, goToCreatedForum);
-      }, 5000);
-  }, [user]);
-
   return (
     <MoviesContext.Provider
       value={{
