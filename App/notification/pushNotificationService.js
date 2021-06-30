@@ -22,7 +22,6 @@ export const configurePushNotification = (userId, dispatch) => {
     onNotification: notification => {
       notification.data.forumId &&
         dispatch(actions.setIsOnPressedNotification(true));
-      // firebaseService.goToCreatedForum(notification.data.forumId);
     },
 
     onRegistrationError: err => {
