@@ -10,7 +10,6 @@ export const Error = () => {
   const errorMessage = useSelector(getErrorMessage);
   const [modalVisible, setModalVisible] = useState(!!errorMessage);
   const width = useWindowDimensions().width;
-  console.log(errorMessage);
 
   const onClose = () => {
     setModalVisible(!modalVisible);

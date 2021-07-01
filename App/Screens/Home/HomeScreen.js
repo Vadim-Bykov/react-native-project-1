@@ -14,6 +14,7 @@ import {configurePushNotification} from '../../notification/pushNotificationServ
 import * as actions from '../../store/auth/actions';
 import * as selectors from '../../store/auth/selectors';
 import {HomeScreenComponent} from './HomeScreenComponent';
+import {extractErrorMessage} from '../../utils/utils';
 
 export const MoviesContext = createContext();
 
@@ -142,40 +143,6 @@ export const HomeScreen = ({navigation}) => {
       ? setCurrentPage(prev => prev)
       : setCurrentPage(prev => prev - 1);
   }, [currentPage]);
-
-  const addUserToken = useCallback(
-    token => {
-      const userTokens = {
-        tokens: firestore.FieldValue.arrayUnion(token),
-      };
-
-      firebaseService
-        .updateDocument('users', user.uid, userTokens)
-        .catch(error => {
-          console.error(dispatch);
-          dispatch(actions.setError(error));
-        });
-    },
-    [user],
-  );
-
-  const goToCreatedForum = useCallback(forumId => {
-    firebaseService
-      .getDocumentById('forums', forumId)
-      .then(forum => {
-        if (forum.exists) {
-          navigation.navigate('Forum', {forum: forum.data()});
-        }
-      })
-      .catch(error => {
-        console.error(dispatch);
-        dispatch(actions.setError(error));
-      });
-  }, []);
-
-  useEffect(() => {
-    user && configurePushNotification(addUserToken, goToCreatedForum);
-  }, [user]);
 
   return (
     <MoviesContext.Provider

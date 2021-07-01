@@ -122,9 +122,7 @@ export const AuthPage = ({configuration}) => {
             fileName: imageData?.fileName,
           }),
         );
-      }
-
-      if (data) {
+      } else if (data) {
         dispatch(thunks.signIn(data));
       }
     },

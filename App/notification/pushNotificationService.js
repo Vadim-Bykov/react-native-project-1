@@ -1,4 +1,6 @@
 import PushNotification from 'react-native-push-notification';
+import * as firebaseService from '../api/firebaseService';
+import * as actions from '../store/auth/actions';
 
 export const localNotify = (title, description, forumId) => {
   PushNotification.localNotification({
@@ -11,14 +13,20 @@ export const localNotify = (title, description, forumId) => {
   });
 };
 
-export const configurePushNotification = (addUserToken, goToCreatedForum) => {
+export const configurePushNotification = (userId, dispatch) => {
   PushNotification.configure({
     onRegister: token => {
-      addUserToken(token.token);
+      firebaseService.addUserToken(token.token, userId, dispatch);
     },
 
     onNotification: notification => {
-      notification.data.forumId && goToCreatedForum(notification.data.forumId);
+      notification.data.forumId &&
+        dispatch(actions.setIsOnPressedNotification(true));
+    },
+
+    onRegistrationError: err => {
+      console.error(err);
+      dispatch(actions.setError(err.message));
     },
 
     senderID: '1090501687137',

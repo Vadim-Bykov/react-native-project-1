@@ -3,6 +3,7 @@ import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {extractErrorMessage} from '../../utils/utils';
 import * as firebaseService from '../../api/firebaseService';
+import {configurePushNotification} from '../../notification/pushNotificationService';
 
 GoogleSignin.configure({
   webClientId:
@@ -34,6 +35,8 @@ export const signUp = userData => async dispatch => {
 
       await dispatch(firebaseService.setUserDataBase(user));
 
+      await configurePushNotification(user.uid, dispatch);
+
       dispatch(actions.setUser(user));
       dispatch(actions.setIsAuth(true));
       dispatch(actions.setIsFetching(false));
@@ -53,6 +56,8 @@ export const signIn = userData => async dispatch => {
     await auth().signInWithEmailAndPassword(userData.email, userData.password);
 
     const user = await auth().currentUser;
+
+    await configurePushNotification(user.uid, dispatch);
 
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
@@ -96,6 +101,8 @@ export const signInGoogle = () => async dispatch => {
 
     await dispatch(firebaseService.setUserDataBase(user));
 
+    await configurePushNotification(user.uid, dispatch);
+
     dispatch(actions.setUser(user));
     dispatch(actions.setIsAuth(true));
     dispatch(actions.setIsFetching(false));
@@ -110,9 +117,11 @@ export const signInGoogle = () => async dispatch => {
 export const authFireBase = () => async dispatch => {
   try {
     dispatch(actions.setIsFetching(true));
-    const setUserAuth = user => {
+    const setUserAuth = async user => {
       user
-        ? dispatch(actions.setIsAuth(true)) && dispatch(actions.setUser(user))
+        ? (dispatch(actions.setIsAuth(true)),
+          dispatch(actions.setUser(user)),
+          await configurePushNotification(user.uid, dispatch))
         : dispatch(actions.setIsAuth(false));
     };
 
