@@ -2,13 +2,14 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import {useController} from 'react-hook-form';
 import {StyleSheet, View, TextInput, Text} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
+import {COLOR_WHITE} from '../consts/consts';
 
 export const Input = ({inputConfig}) => {
   const {
-    icon: {iconName, type = 'material', color = '#fff'} = {},
+    icon: {iconName, type = 'material', color = COLOR_WHITE} = {},
     input: {
       placeholder = '',
-      placeholderTextColor = '#fff',
+      placeholderTextColor = COLOR_WHITE,
       textContentType = 'none',
       secureTextEntry = false,
       width,
@@ -16,7 +17,7 @@ export const Input = ({inputConfig}) => {
       setSecurePassword,
       multiline = false,
       backgroundColor = 'rgba(0,0,0, 0.4)',
-      colorText = '#fff',
+      colorText = COLOR_WHITE,
       control,
       rules,
     },
@@ -78,14 +79,12 @@ export const Input = ({inputConfig}) => {
 const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
-    // backgroundColor: 'rgba(0,0,0, 0.4)',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
     marginVertical: 10,
   },
   input: {
-    // color: '#fff',
     flex: 1,
     marginLeft: 10,
   },

@@ -3,5 +3,5 @@ export const getIsAuth = state => state.auth.isAuth;
 export const getIsFetching = state => state.auth.isFetching;
 export const getErrorMessage = state => state.auth.errorMessage;
 export const getInitialized = state => state.auth.initialized;
-export const getIsOnPressedNotification = state =>
-  state.auth.isOnPressedNotification;
+export const getForumIdFromNotification = state =>
+  state.auth.forumIdFromNotification;

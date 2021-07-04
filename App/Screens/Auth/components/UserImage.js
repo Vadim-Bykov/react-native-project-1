@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, ToastAndroid, Platform} from 'react-native';
 import {Avatar, Icon} from 'react-native-elements';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch} from 'react-redux';
+import {COLOR_DARK_YELLOW, COLOR_WHITE} from '../../../consts/consts';
 import * as actions from '../../../store/auth/actions';
 
 export const UserImage = ({imageUri, setImageData}) => {
@@ -36,7 +37,7 @@ export const UserImage = ({imageUri, setImageData}) => {
       <Icon
         type="entypo"
         name="add-user"
-        color="#DDBA33"
+        color={COLOR_DARK_YELLOW}
         size={imageUri ? 25 : 75}
         onPress={addPhoto}
         containerStyle={imageUri ? styles.iconWithPhoto : styles.icon}
@@ -59,9 +60,10 @@ export const UserImage = ({imageUri, setImageData}) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    paddingTop: 10,
   },
   text: {
-    color: '#fff',
+    color: COLOR_WHITE,
   },
   icon: {
     marginBottom: 5,

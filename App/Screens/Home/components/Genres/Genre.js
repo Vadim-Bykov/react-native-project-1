@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {COLOR_BLACK} from '../../../../consts/consts';
 
 export const Genre = ({genre, onChangeGenre, currentGenreID, mode}) => {
   const isMarker = genre.id === currentGenreID && mode === 'genre';
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     height: 45,
   },
   title: {
-    color: '#000',
+    color: COLOR_BLACK,
   },
   activeTitle: {
     color: '#FC6283',

@@ -6,15 +6,10 @@ import React, {
   useState,
 } from 'react';
 import {useQuery} from 'react-query';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import * as api from '../../api/movieApiService';
-import * as firebaseService from '../../api/firebaseService';
-import firestore from '@react-native-firebase/firestore';
-import {configurePushNotification} from '../../notification/pushNotificationService';
 import * as actions from '../../store/auth/actions';
-import * as selectors from '../../store/auth/selectors';
 import {HomeScreenComponent} from './HomeScreenComponent';
-import {extractErrorMessage} from '../../utils/utils';
 
 export const MoviesContext = createContext();
 
@@ -31,7 +26,6 @@ export const HomeScreen = ({navigation}) => {
   const [mode, setMode] = useState('section');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const user = useSelector(selectors.getUser);
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
@@ -121,11 +115,16 @@ export const HomeScreen = ({navigation}) => {
     [currentGenreID, pagerRef],
   );
 
-  const onChangeSection = useCallback(name => {
-    setCurrentSection(name);
-    setCurrentPage(1);
-    setMode('section');
-  }, []);
+  const onChangeSection = useCallback(
+    name => {
+      if (mode === 'section' && name === currentSection) return;
+
+      setCurrentSection(name);
+      setCurrentPage(1);
+      setMode('section');
+    },
+    [currentSection, mode],
+  );
 
   const goToMovieDetails = useCallback(
     movieId => navigation.navigate('Details', {movieId}),

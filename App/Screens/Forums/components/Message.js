@@ -47,12 +47,12 @@ export const Message = React.memo(({item, messages, index, isOwner}) => {
     (index < messages.length - 1 &&
       item.userRef.path !== messages[index + 1].userRef.path);
 
-  const dateMessage = getLocalDate(item.creationTime);
+  const messageDate = getLocalDate(item.creationTime);
 
   const showDate =
     index === messages.length - 1 ||
     (index < messages.length - 1 &&
-      dateMessage !== getLocalDate(messages[index + 1].creationTime));
+      messageDate !== getLocalDate(messages[index + 1].creationTime));
 
   return (
     <>
@@ -75,7 +75,7 @@ export const Message = React.memo(({item, messages, index, isOwner}) => {
 
       {showDate && (
         <View style={styles.date}>
-          <Text>{today ? 'Today' : dateMessage}</Text>
+          <Text>{today ? 'Today' : messageDate}</Text>
         </View>
       )}
     </>

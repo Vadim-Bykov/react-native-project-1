@@ -180,8 +180,17 @@ export const addUserToken = (token, userId, dispatch) => {
     tokens: firestore.FieldValue.arrayUnion(token),
   };
 
-  updateDocument('users', userId, userTokens).catch(error => {
+  try {
+    getDocumentById('users', userId).then(document => {
+      if (document.exists) {
+        updateDocument('users', userId, userTokens).catch(error => {
+          console.error(error);
+          dispatch(actions.setError(extractErrorMessage(error)));
+        });
+      }
+    });
+  } catch (error) {
     console.error(error);
     dispatch(actions.setError(extractErrorMessage(error)));
-  });
+  }
 };

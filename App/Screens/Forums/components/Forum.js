@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import React, {useCallback} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {COLOR_BLACK} from '../../../consts/consts';
 import {OwnerInfo} from './OwnerInfo';
 
 export const Forum = React.memo(({forum}) => {
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#000',
+    color: COLOR_BLACK,
     fontStyle: 'italic',
   },
   creationTime: {

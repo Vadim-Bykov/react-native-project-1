@@ -31,36 +31,3 @@ export const forumsSubscriber = () => dispatch =>
         dispatch(setError(extractErrorMessage(error)));
       },
     );
-
-// export const messagesSubscriber = id => dispatch => {
-//   dispatch(actions.setMessages([]));
-
-//   return firestore()
-//     .collection('forums')
-//     .doc(id)
-//     .onSnapshot(
-//       forum => {
-//         if (forum.exists) {
-//           forum.data().messages
-//             ? dispatch(actions.setMessages(forum.data().messages))
-//             : dispatch(actions.setMessages([]));
-//         }
-//       },
-//       error => {
-//         if (error.code === 'firestore/permission-denied') return;
-//         console.error(error);
-//         dispatch(setError(extractErrorMessage(error)));
-//       },
-//     );
-// };
-
-// export const getDataByRef = (userRefPath, extractUser) => dispatch => {
-//   firestore()
-//     .doc(userRefPath)
-//     .get()
-//     .then(extractUser)
-//     .catch(error => {
-//       console.error(error);
-//       dispatch(setError(extractErrorMessage(error)));
-//     });
-// };

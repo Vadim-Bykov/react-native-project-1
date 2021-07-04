@@ -49,15 +49,4 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     maxWidth: '45%',
   },
-  badge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  ownerName: {
-    color: '#fff',
-    fontSize: 20,
-  },
 });

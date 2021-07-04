@@ -1,4 +1,5 @@
 import {COMMON_ERROR_MESSAGE} from '../consts/consts';
+import {Platform, ToastAndroid} from 'react-native';
 
 export const extractErrorMessage = error => {
   let errorMessage = '';
@@ -25,3 +26,6 @@ export const getLikeCount = (likes, isLikedMessage) => {
 
   return count;
 };
+
+export const showToast = text =>
+  Platform.OS === 'android' && ToastAndroid.show(text, ToastAndroid.SHORT);

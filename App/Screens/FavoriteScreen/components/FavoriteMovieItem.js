@@ -8,7 +8,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {BASE_IMAGE_URL} from '../../../consts/consts';
+import {
+  BASE_IMAGE_URL,
+  COLOR_BLACK,
+  COLOR_ROSE_RED,
+  COLOR_WHITE,
+  DEFAULT_MOVIE_IMAGE,
+} from '../../../consts/consts';
 
 const MONTHS_MAP = {
   '01': 'January',
@@ -51,7 +57,11 @@ export const FavoriteMovieItem = React.memo(
             width: width * 0.8,
             height: width * 1.05,
           }}
-          source={{uri: `${BASE_IMAGE_URL}w300${movie.poster_path}`}}>
+          source={{
+            uri: movie.poster_path
+              ? `${BASE_IMAGE_URL}w300${movie.poster_path}`
+              : DEFAULT_MOVIE_IMAGE,
+          }}>
           <View style={styles.topBlock}>
             <View style={styles.outline}>
               <View style={styles.infoCircle}>
@@ -62,7 +72,7 @@ export const FavoriteMovieItem = React.memo(
             <Icon
               type="antdesign"
               name="heart"
-              color="#FF005F"
+              color={COLOR_ROSE_RED}
               size={30}
               onPress={removeMovieFromSaved}
             />
@@ -71,10 +81,10 @@ export const FavoriteMovieItem = React.memo(
           <Text style={styles.title}>{movie.title}</Text>
 
           <View style={styles.extraInfo}>
-            <Text style={styles.extraInfoText}>
+            <Text style={styles.runtime}>
               {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}min
             </Text>
-            <Text style={styles.extraInfoText}>
+            <Text style={styles.releaseDate}>
               {day} {month}
             </Text>
           </View>
@@ -108,7 +118,7 @@ const styles = StyleSheet.create({
   outline: {
     width: 50,
     height: 50,
-    borderColor: '#fff',
+    borderColor: COLOR_WHITE,
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 25,
     padding: 5,
@@ -119,7 +129,7 @@ const styles = StyleSheet.create({
   infoCircle: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: COLOR_WHITE,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
@@ -132,11 +142,14 @@ const styles = StyleSheet.create({
   title: {
     alignSelf: 'center',
     width: '80%',
-    color: '#fff',
+    color: COLOR_WHITE,
     fontSize: 32,
     textAlign: 'center',
     fontWeight: '700',
     paddingVertical: 10,
+    textShadowColor: COLOR_BLACK,
+    textShadowOffset: {width: 0.5, height: 0.5},
+    textShadowRadius: 1,
   },
 
   extraInfo: {
@@ -146,7 +159,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  extraInfoText: {
-    color: '#fff',
+  runtime: {
+    color: COLOR_WHITE,
+    textShadowColor: COLOR_BLACK,
+    textShadowOffset: {width: 0.5, height: 0.5},
+    textShadowRadius: 1,
+  },
+
+  releaseDate: {
+    color: COLOR_WHITE,
+    textShadowColor: COLOR_BLACK,
+    textShadowOffset: {width: 0.5, height: 0.5},
+    textShadowRadius: 1,
+    marginLeft: 10,
   },
 });

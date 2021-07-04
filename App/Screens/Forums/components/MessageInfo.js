@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../../store/auth/selectors';
 import * as actions from '../../../store/auth/actions';
 import * as firebaseService from '../../../api/firebaseService';
-import {getLikeCount} from '../../../utils/utils';
+import * as utils from '../../../utils/utils';
 
 export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
   const {width} = useWindowDimensions();
@@ -33,7 +33,7 @@ export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
           collection,
           messageId,
           forumId,
-          count: getLikeCount(likesType, isLikedMessageType),
+          count: utils.getLikeCount(likesType, isLikedMessageType),
           userId: uid,
           action: isLikedMessageType ? 'remove' : 'add',
         };
@@ -57,9 +57,12 @@ export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
     [],
   );
 
+  const showToastAndroid = useCallback(likeType => {
+    utils.showToast(`You can't ${likeType} your own message`);
+  }, []);
+
   const updateLike = useCallback(() => {
-    if (isOwner)
-      return dispatch(actions.setError("You can't like your own message"));
+    if (isOwner) return showToastAndroid('like');
 
     if (isDisLikedMessage) updateDislike();
 
@@ -67,8 +70,7 @@ export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
   }, [likes, isLikedMessage, isDisLikedMessage, messageId]);
 
   const updateDislike = useCallback(() => {
-    if (isOwner)
-      return dispatch(actions.setError("You can't dislike your own message"));
+    if (isOwner) return showToastAndroid('dislike');
 
     if (isLikedMessage) updateLike();
 

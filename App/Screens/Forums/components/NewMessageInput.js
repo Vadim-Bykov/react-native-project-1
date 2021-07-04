@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as actions from '../../../store/auth/actions';
 import * as selectors from '../../../store/auth/selectors';
 import * as firebaseService from '../../../api/firebaseService';
+import {COLOR_BLACK, COLOR_PURPLE} from '../../../consts/consts';
 
 export const NewMessageInput = React.memo(({forumId}) => {
   const {width} = useWindowDimensions();
@@ -48,7 +49,7 @@ export const NewMessageInput = React.memo(({forumId}) => {
   return (
     <View style={styles.container}>
       <View style={[styles.inputContainer, {width: width * 0.86}]}>
-        <Icon name="message1" type="antdesign" color="#8B5AB1" />
+        <Icon name="message1" type="antdesign" color={COLOR_PURPLE} />
 
         <TextInput
           placeholder="Enter your message"
@@ -66,7 +67,7 @@ export const NewMessageInput = React.memo(({forumId}) => {
           <Icon
             type="ionicon"
             name="ios-send"
-            color={'#8B5AB1'}
+            color={COLOR_PURPLE}
             size={28}
             style={styles.sendIcon}
           />
@@ -75,7 +76,7 @@ export const NewMessageInput = React.memo(({forumId}) => {
         <Icon
           type="foundation"
           name="prohibited"
-          color={'#8B5AB1'}
+          color={COLOR_PURPLE}
           size={28}
           style={styles.sendIcon}
         />
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   input: {
-    color: '#000',
+    color: COLOR_BLACK,
     flex: 1,
     marginLeft: 10,
   },

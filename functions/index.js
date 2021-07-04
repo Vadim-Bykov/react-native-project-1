@@ -1,6 +1,4 @@
 const functions = require('firebase-functions');
-// import * as functions from 'firebase-functions';
-// import * as admin from 'firebase-admin';
 const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
@@ -9,7 +7,6 @@ exports.sendNotificationTopic = functions.firestore
   .document('forums/{forumId}')
   .onWrite(event => {
     try {
-      //  const docId = event.after.id;
       const tittle = event.after.get('title');
       const description = event.after.get('description');
       const message = {

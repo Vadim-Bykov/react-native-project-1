@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {COLOR_BLACK} from '../../../../consts/consts';
 
 export const Section = ({section, currentSection, onChangeSection, mode}) => {
   const isMarker = section.request === currentSection && mode === 'section';
@@ -37,5 +38,5 @@ const styles = StyleSheet.create({
     borderColor: '#FC6283',
   },
 
-  active: {color: '#000'},
+  active: {color: COLOR_BLACK},
 });

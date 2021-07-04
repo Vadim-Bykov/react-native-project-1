@@ -5,7 +5,6 @@ import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import {DEFAULT_AVATAR} from '../../../consts/consts';
 import * as actions from '../../../store/auth/actions';
-// import * as selectors from '../../../store/auth/selectors';
 
 export const OwnerMessage = React.memo(({item, messages, index}) => {
   const [user, setUser] = useState(null);

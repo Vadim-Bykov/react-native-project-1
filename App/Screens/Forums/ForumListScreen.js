@@ -1,5 +1,11 @@
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
+import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as selectors from '../../store/auth/selectors';
 import * as actions from '../../store/auth/actions';
@@ -9,6 +15,8 @@ import {Loader} from '../../common/Loader';
 import {Icon} from 'react-native-elements';
 import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
 import * as firebaseService from '../../api/firebaseService';
+import {COLOR_PURPLE} from '../../consts/consts';
+import {EmptyList} from '../../common/EmptyList';
 
 export const ForumListScreen = ({navigation}) => {
   const user = useSelector(selectors.getUser);
@@ -26,7 +34,7 @@ export const ForumListScreen = ({navigation}) => {
               type="feather"
               name="plus"
               size={32}
-              color="#8B5AB1"
+              color={COLOR_PURPLE}
               containerStyle={styles.forumListIcon}
             />
           </TouchableOpacity>
@@ -66,14 +74,23 @@ export const ForumListScreen = ({navigation}) => {
 
   const renderItem = useCallback(({item}) => <Forum forum={item} />, []);
 
-  const isOnPressedNotification = useSelector(
-    selectors.getIsOnPressedNotification,
+  const forumIdFromNotification = useSelector(
+    selectors.getForumIdFromNotification,
+  );
+
+  const forumFromNotification = useMemo(
+    () => forums.find(forum => forum.documentId === forumIdFromNotification),
+    [forumIdFromNotification, forums.length],
   );
 
   useEffect(() => {
-    isOnPressedNotification && navigation.navigate('Forum', {forum: forums[0]});
-    dispatch(actions.setIsOnPressedNotification(false));
-  }, [isOnPressedNotification, forums.length]);
+    forumIdFromNotification &&
+      forumFromNotification &&
+      navigation.navigate('Forum', {
+        forum: forumFromNotification,
+      });
+    dispatch(actions.setForumIdFromNotification(null));
+  }, [forumIdFromNotification]);
 
   return (
     <>
@@ -85,17 +102,16 @@ export const ForumListScreen = ({navigation}) => {
           setModalVisible={setModalVisible}
         />
       )}
-      {forums.length || isFetching ? (
-        <FlatList
-          data={forums}
-          renderItem={renderItem}
-          keyExtractor={item => item.creationTime}
-        />
-      ) : (
-        <View style={styles.emptyScreen}>
-          <Text>No forums. Please add the first one.</Text>
-        </View>
-      )}
+
+      <FlatList
+        data={forums}
+        renderItem={renderItem}
+        keyExtractor={item => item.creationTime}
+        ListEmptyComponent={
+          <EmptyList text="No forums. Please add the first one." />
+        }
+        contentContainerStyle={styles.flatListContainer}
+      />
     </>
   );
 };
@@ -104,9 +120,8 @@ const styles = StyleSheet.create({
   forumListIcon: {
     marginRight: 15,
   },
-  emptyScreen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+
+  flatListContainer: {
+    flexGrow: 1,
   },
 });

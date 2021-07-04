@@ -36,7 +36,7 @@ export const authReducer = (state = initialState, action) => {
     case actionTypes.AUTH_IS_ON_PRESSED_NOTIFICATION:
       return {
         ...state,
-        isOnPressedNotification: action.boolean,
+        forumIdFromNotification: action.boolean,
       };
 
     default:
