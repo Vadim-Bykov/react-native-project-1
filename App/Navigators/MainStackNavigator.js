@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, useWindowDimensions} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AuthStackNavigator} from './AuthStackNavigator';
 import {SplashScreen} from '../Screens/StartScreen/SplashScreen';
@@ -8,6 +8,7 @@ import * as selectors from '../store/auth/selectors';
 import * as thunks from '../store/auth/operations';
 import {DrawerNavigator} from './DrawerNavigator/DrawerNavigator';
 import {DEFAULT_BG_COLOR, STACK_SCREEN_OPTIONS} from '../consts/consts';
+import {ErrorBoundary} from '../common/ErrorBoundary';
 
 const Stack = createStackNavigator();
 
@@ -18,8 +19,10 @@ export const MainStackNavigator = () => {
 
   useEffect(() => dispatch(thunks.authFireBase()), []);
 
+  const {width, height} = useWindowDimensions();
+
   return (
-    <>
+    <ErrorBoundary width={width} height={height}>
       <StatusBar
         translucent={true}
         backgroundColor={isAuth ? DEFAULT_BG_COLOR : 'transparent'}
@@ -51,6 +54,6 @@ export const MainStackNavigator = () => {
           />
         )}
       </Stack.Navigator>
-    </>
+    </ErrorBoundary>
   );
 };
