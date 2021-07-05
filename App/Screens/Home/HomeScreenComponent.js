@@ -35,6 +35,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     zIndex: 0,
-    paddingTop: 50,
+    paddingTop: 70,
   },
 });

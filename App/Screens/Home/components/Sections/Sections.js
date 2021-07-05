@@ -13,7 +13,7 @@ export const Sections = () => {
       contentContainerStyle={styles.containerStyle}
       horizontal={true}
       showsHorizontalScrollIndicator={false}>
-      {MOVIE_SECTIONS.map((section, i) => (
+      {MOVIE_SECTIONS.map(section => (
         <Section
           key={section.title}
           section={section}

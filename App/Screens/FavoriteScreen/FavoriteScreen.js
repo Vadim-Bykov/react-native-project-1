@@ -1,24 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-  AsyncStorage,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-  FlatList,
-  Alert,
-} from 'react-native';
+import React, {useCallback, useLayoutEffect, useMemo, useState} from 'react';
+import {StyleSheet, useWindowDimensions, FlatList, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {Error} from '../../common/Error';
 import {Loader} from '../../common/Loader';
 import {COMMON_ERROR_MESSAGE} from '../../consts/consts';
 import {setError, setIsFetching} from '../../store/auth/actions';
 import * as selectors from '../../store/auth/selectors';
 import {FavoriteMovieItem} from './components/FavoriteMovieItem';
+import {EmptyList} from '../../common/EmptyList';
 
 export const FavoriteScreen = ({navigation}) => {
   const isFetching = useSelector(selectors.getIsFetching);
-  const error = useSelector(selectors.getErrorMessage);
 
   const dispatch = useDispatch();
 
@@ -26,12 +18,14 @@ export const FavoriteScreen = ({navigation}) => {
 
   const [favoriteMovies, setFavoriteMovies] = useState(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    dispatch(setIsFetching(true));
     AsyncStorage.getItem('favoriteMovies', (err, res) => {
       if (res) {
         setFavoriteMovies(JSON.parse(res));
-        dispatch(setIsFetching(false)); // in DrawerContent has been dispatched true
+        dispatch(setIsFetching(false));
       } else if (err) {
+        dispatch(setIsFetching(false));
         dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
         console.error(`AsyncStorage Error: ${err}`);
       }
@@ -56,10 +50,14 @@ export const FavoriteScreen = ({navigation}) => {
     });
   }, []);
 
-  const removeStorageItem = async id => {
+  const removeStorageItem = useCallback(async id => {
     try {
-      const restMovies = favoriteMovies.filter(movie => movie.id !== id);
-      await AsyncStorage.setItem(
+      const favoriteMovies = await AsyncStorage.getItem('favoriteMovies');
+
+      const restMovies = JSON.parse(favoriteMovies).filter(
+        movie => movie.id !== id,
+      );
+      AsyncStorage.setItem(
         'favoriteMovies',
         JSON.stringify(restMovies),
         getItem,
@@ -68,7 +66,7 @@ export const FavoriteScreen = ({navigation}) => {
       dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
       console.error(`AsyncStorage Error: ${err}`);
     }
-  };
+  }, []);
 
   const removeItem = useCallback(
     id => {
@@ -94,45 +92,39 @@ export const FavoriteScreen = ({navigation}) => {
     />
   );
 
+  const isSingleMoviePortrait = useMemo(
+    () => favoriteMovies && favoriteMovies.length === 1 && width < height,
+    [favoriteMovies],
+  );
+
   return (
     <>
-      {error && <Error />}
       {isFetching ? (
         <Loader />
-      ) : favoriteMovies && favoriteMovies.length ? (
+      ) : (
         <FlatList
           data={favoriteMovies}
           renderItem={renderItem}
           keyExtractor={item => item.id}
+          ListEmptyComponent={
+            <EmptyList
+              text="No favorite movies. Please, choose some films for your own favorite
+      list."
+            />
+          }
           windowSize={11}
           initialNumToRender={6}
           maxToRenderPerBatch={6}
-          style={
-            favoriteMovies.length === 1 &&
-            width < height && {marginTop: width * 0.2}
-          }
+          contentContainerStyle={styles.flatListContainer}
+          style={isSingleMoviePortrait && {marginTop: width * 0.2}}
         />
-      ) : (
-        <View style={styles.emptyScreen}>
-          <Text style={styles.text}>
-            No favorite movies. Please, choose some films for your own favorite
-            list.
-          </Text>
-        </View>
       )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  emptyScreen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-
-  text: {
-    textAlign: 'center',
+  flatListContainer: {
+    flexGrow: 1,
   },
 });

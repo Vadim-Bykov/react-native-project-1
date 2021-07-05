@@ -1,11 +1,15 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {STACK_SCREEN_OPTIONS} from '../consts/consts';
+import {
+  COLOR_PURPLE,
+  DEFAULT_BG_COLOR,
+  STACK_SCREEN_OPTIONS,
+} from '../consts/consts';
 import {Icon} from 'react-native-elements';
 import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {DetailsScreen} from '../Screens/Home/DetailsScreen';
-import {View} from 'react-native';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, StyleSheet, View} from 'react-native';
+import {showToast} from '../utils/utils';
 
 const Stack = createStackNavigator();
 
@@ -16,20 +20,23 @@ export const MoviesStackNavigator = ({navigation}) => {
         name="Movies"
         component={HomeScreen}
         options={{
-          headerBackground: () => (
-            <View style={{flex: 1, backgroundColor: '#F1F1F1'}} />
-          ),
+          headerBackground: () => <View style={styles.homeHeader} />,
           headerTitle: false,
           headerTransparent: true,
           headerLeftContainerStyle: {paddingLeft: 20},
           headerRightContainerStyle: {paddingRight: 20},
           headerLeft: () => (
             <TouchableOpacity onPress={navigation.openDrawer}>
-              <Icon name="menu" color="#8B5AB1" />
+              <Icon name="menu" color={COLOR_PURPLE} />
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <Icon type="antdesign" name="search1" color="#8B5AB1" />
+            <Icon
+              type="antdesign"
+              name="search1"
+              color={COLOR_PURPLE}
+              onPress={() => showToast("This feature hasn't implemented yet")}
+            />
           ),
         }}
       />
@@ -41,13 +48,17 @@ export const MoviesStackNavigator = ({navigation}) => {
           headerTitle: false,
           headerTransparent: true,
           headerBackImage: () => (
-            <Icon type="ionicon" name="chevron-back" color="#8B5AB1" />
+            <Icon type="ionicon" name="chevron-back" color={COLOR_PURPLE} />
           ),
-          headerLeftContainerStyle: {paddingLeft: 10},
-          headerStatusBarHeight: 0,
-          headerStyle: {height: 100},
         }}
       />
     </Stack.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  homeHeader: {
+    flex: 1,
+    backgroundColor: DEFAULT_BG_COLOR,
+  },
+});

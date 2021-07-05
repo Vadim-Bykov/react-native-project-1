@@ -21,7 +21,7 @@ export const configurePushNotification = (userId, dispatch) => {
 
     onNotification: notification => {
       notification.data.forumId &&
-        dispatch(actions.setIsOnPressedNotification(true));
+        dispatch(actions.setForumIdFromNotification(notification.data.forumId));
     },
 
     onRegistrationError: err => {

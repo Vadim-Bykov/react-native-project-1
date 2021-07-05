@@ -1,8 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {AsyncStorage, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Badge, Icon} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
-import {COMMON_ERROR_MESSAGE} from '../../../../consts/consts';
+import {
+  COLOR_BLACK,
+  COLOR_ROSE_RED,
+  COLOR_WHITE,
+  COMMON_ERROR_MESSAGE,
+} from '../../../../consts/consts';
 import {setError} from '../../../../store/auth/actions';
 
 export const StarBlock = ({data, width}) => {
@@ -73,9 +79,7 @@ export const StarBlock = ({data, width}) => {
   const changeMovieStorage = useCallback(async () => {
     try {
       if (favoriteMovies && favoriteMovies.length) {
-        isFavorite && removeItem(favoriteMovies);
-
-        !isFavorite && setItem(favoriteMovies);
+        isFavorite ? removeItem(favoriteMovies) : setItem(favoriteMovies);
       } else {
         await AsyncStorage.setItem(
           'favoriteMovies',
@@ -100,7 +104,7 @@ export const StarBlock = ({data, width}) => {
         <Icon
           type="antdesign"
           name={isFavorite ? 'star' : 'staro'}
-          color={isFavorite ? '#FF005F' : '#000'}
+          color={isFavorite ? COLOR_ROSE_RED : COLOR_BLACK}
           onPress={changeMovieStorage}
         />
         <Text>{isFavorite ? 'Saved' : 'Save to favorites'}</Text>
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingHorizontal: 30,
     marginTop: -50,
-    backgroundColor: '#fff',
+    backgroundColor: COLOR_WHITE,
     elevation: 10,
   },
   voteCount: {

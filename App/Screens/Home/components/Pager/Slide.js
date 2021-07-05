@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {BASE_IMAGE_URL} from '../../../../consts/consts';
+import {BASE_IMAGE_URL, DEFAULT_MOVIE_IMAGE} from '../../../../consts/consts';
 import {useMovieContext} from '../../HomeScreen';
 
 export const Slide = ({movie, width, goToMovieDetails, index, lastIndex}) => {
@@ -39,8 +39,8 @@ export const Slide = ({movie, width, goToMovieDetails, index, lastIndex}) => {
         <Image
           source={{
             uri: movie.poster_path
-              ? `${BASE_IMAGE_URL}w300/${movie.poster_path}`
-              : 'https://target.scene7.com/is/image/Target/GUEST_e684225b-5a68-49b2-8fc3-493e515ef4ca?wid=488&hei=488&fmt=pjpeg',
+              ? `${BASE_IMAGE_URL}w500/${movie.poster_path}`
+              : DEFAULT_MOVIE_IMAGE,
           }}
           style={{
             ...styles.image,

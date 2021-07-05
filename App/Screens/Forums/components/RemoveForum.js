@@ -4,6 +4,7 @@ import {Icon} from 'react-native-elements';
 import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
+import {COLOR_PURPLE} from '../../../consts/consts';
 import * as actions from '../../../store/auth/actions';
 
 export const RemoveForum = ({forumId, goBack}) => {
@@ -39,7 +40,7 @@ export const RemoveForum = ({forumId, goBack}) => {
             type="material-community"
             name="delete-sweep-outline"
             size={32}
-            color="#8B5AB1"
+            color={COLOR_PURPLE}
             onPress={showMenu}
           />
         </TouchableOpacity>

@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {COLOR_BLACK} from '../../../../consts/consts';
 
 export const GeneralInfo = ({data}) => (
   <>
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   genreName: {
-    color: '#000',
+    color: COLOR_BLACK,
   },
   summaryBlock: {
     paddingHorizontal: 32,

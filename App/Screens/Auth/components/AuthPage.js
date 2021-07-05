@@ -18,6 +18,7 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {Loader} from '../../../common/Loader';
 import {Error} from '../../../common/Error';
 import {UserImage} from './UserImage';
+import {COLOR_DARK_YELLOW, COLOR_WHITE} from '../../../consts/consts';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -45,7 +46,7 @@ export const AuthPage = ({configuration}) => {
   const password = useWatch({control, name: 'password', defaultValue: ''});
 
   const userNameInput = {
-    icon: {type: 'feather', iconName: 'user', color: '#DDBA33'},
+    icon: {type: 'feather', iconName: 'user', color: COLOR_DARK_YELLOW},
     input: {
       placeholder: 'user name',
       textContentType: 'name',
@@ -60,7 +61,7 @@ export const AuthPage = ({configuration}) => {
   };
 
   const emailInput = {
-    icon: {iconName: 'mail-outline', color: '#DDBA33'},
+    icon: {iconName: 'mail-outline', color: COLOR_DARK_YELLOW},
     input: {
       placeholder: 'E-mail address',
       textContentType: 'emailAddress',
@@ -75,7 +76,7 @@ export const AuthPage = ({configuration}) => {
   };
 
   const passwordInput = {
-    icon: {iconName: 'lock-outline', color: '#DDBA33'},
+    icon: {iconName: 'lock-outline', color: COLOR_DARK_YELLOW},
     input: {
       placeholder: 'Password',
       textContentType: 'password',
@@ -94,7 +95,7 @@ export const AuthPage = ({configuration}) => {
   };
 
   const confirmPasswordInput = {
-    icon: {iconName: 'lock-outline', color: '#DDBA33'},
+    icon: {iconName: 'lock-outline', color: COLOR_DARK_YELLOW},
     input: {
       placeholder: 'Confirm password',
       textContentType: 'password',
@@ -174,11 +175,11 @@ export const AuthPage = ({configuration}) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{...styles.btnGoogle, width: width * 0.6}}
+                style={{...styles.googleBtn, width: width * 0.6}}
                 activeOpacity={0.8}
                 onPress={() => dispatch(thunks.signInGoogle())}>
                 <Text style={styles.btnText}> {btnText} with </Text>
-                <Icon type="antdesign" name="google" color="#fff" />
+                <Icon type="antdesign" name="google" color={COLOR_WHITE} />
               </TouchableOpacity>
             </View>
 
@@ -233,25 +234,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btn: {
-    backgroundColor: '#DDBA33',
+    backgroundColor: COLOR_DARK_YELLOW,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
     marginTop: 20,
   },
-  btnGoogle: {
+  googleBtn: {
     flexDirection: 'row',
     justifyContent: 'center',
     height: 50,
     alignItems: 'center',
     borderRadius: 25,
     marginTop: 20,
-    borderColor: '#DDBA33',
+    borderColor: COLOR_DARK_YELLOW,
     borderWidth: 3,
   },
   btnText: {
-    color: '#fff',
+    color: COLOR_WHITE,
   },
   redirect: {
     justifyContent: 'flex-end',

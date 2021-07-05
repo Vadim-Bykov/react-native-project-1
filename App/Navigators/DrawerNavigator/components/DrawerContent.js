@@ -9,8 +9,12 @@ import {View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as thunks from '../../../store/auth/operations';
 import * as selectors from '../../../store/auth/selectors';
-import * as actions from '../../../store/auth/actions';
-import {DEFAULT_AVATAR} from '../../../consts/consts';
+import {
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_TRANSLUCENT_PURPLE,
+  DEFAULT_AVATAR,
+} from '../../../consts/consts';
 
 export const DrawerContent = props => {
   const {
@@ -22,10 +26,7 @@ export const DrawerContent = props => {
 
   const dispatch = useDispatch();
 
-  const goToFavoritePage = () => {
-    dispatch(actions.setIsFetching(true));
-    navigation.navigate('Favorite');
-  };
+  const goToFavoritePage = () => navigation.navigate('Favorite');
   const goToHomePage = () => navigation.navigate('Home');
   const goToForumList = () => navigation.navigate('Forums');
 
@@ -56,7 +57,7 @@ export const DrawerContent = props => {
 
             <Icon
               name="close"
-              color="#6A6A6A"
+              color={COLOR_GRAY}
               onPress={navigation.closeDrawer}
             />
           </View>
@@ -65,13 +66,13 @@ export const DrawerContent = props => {
             <DrawerItem
               label="Home"
               focused={routeNames[index] === 'Home' ? true : false}
-              activeTintColor="#5535E5"
-              activeBackgroundColor="#E9DCFB"
+              activeTintColor={COLOR_BLUE}
+              activeBackgroundColor={COLOR_TRANSLUCENT_PURPLE}
               icon={({focused}) => (
                 <Icon
                   type="font-awesome-5"
                   name="home"
-                  color={focused ? '#5535E5' : '#6A6A6A'}
+                  color={focused ? COLOR_BLUE : COLOR_GRAY}
                 />
               )}
               labelStyle={styles.labelStyle}
@@ -81,13 +82,13 @@ export const DrawerContent = props => {
             <DrawerItem
               label="Favorites"
               focused={routeNames[index] === 'Favorite' ? true : false}
-              activeTintColor="#5535E5"
-              activeBackgroundColor="#E9DCFB"
+              activeTintColor={COLOR_BLUE}
+              activeBackgroundColor={COLOR_TRANSLUCENT_PURPLE}
               icon={({focused}) => (
                 <Icon
                   type="antdesign"
                   name="heart"
-                  color={focused ? '#5535E5' : '#6A6A6A'}
+                  color={focused ? COLOR_BLUE : COLOR_GRAY}
                 />
               )}
               labelStyle={styles.labelStyle}
@@ -97,13 +98,13 @@ export const DrawerContent = props => {
             <DrawerItem
               label="Forums"
               focused={routeNames[index] === 'Forums' ? true : false}
-              activeTintColor="#5535E5"
-              activeBackgroundColor="#E9DCFB"
+              activeTintColor={COLOR_BLUE}
+              activeBackgroundColor={COLOR_TRANSLUCENT_PURPLE}
               icon={({focused}) => (
                 <Icon
                   type="antdesign"
                   name="wechat"
-                  color={focused ? '#5535E5' : '#6A6A6A'}
+                  color={focused ? COLOR_BLUE : COLOR_GRAY}
                 />
               )}
               labelStyle={styles.labelStyle}
@@ -117,7 +118,7 @@ export const DrawerContent = props => {
               <Icon
                 type="material-community"
                 name="logout-variant"
-                color="#6A6A6A"
+                color={COLOR_GRAY}
               />
             )}
             labelStyle={styles.labelStyle}
@@ -132,6 +133,7 @@ export const DrawerContent = props => {
 const styles = StyleSheet.create({
   header: {
     width: '100%',
+    marginTop: 20,
     marginBottom: 10,
     padding: 15,
     flexDirection: 'row',

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-  useLayoutEffect,
-} from 'react';
+import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import {NewMessageInput} from './components/NewMessageInput';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,6 +9,7 @@ import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
 import * as selectors from '../../store/auth/selectors';
 import {Loader} from '../../common/Loader';
 import {RemoveForum} from './components/RemoveForum';
+import {EmptyList} from '../../common/EmptyList';
 
 export const ForumScreen = ({navigation, route}) => {
   const {description, documentId, userRef} = route.params.forum;
@@ -24,11 +19,9 @@ export const ForumScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
 
-  const flatListRef = useRef(null);
-
   const goBack = useCallback(() => navigation.goBack(), []);
 
-  const isForumOwner = userRef.id === user._user.uid;
+  const isForumOwner = userRef.id === user.uid;
 
   useEffect(() => {
     navigation.setOptions({
@@ -83,7 +76,7 @@ export const ForumScreen = ({navigation, route}) => {
         item={item}
         messages={messages}
         index={index}
-        isOwner={item.userRef.id === user._user.uid}
+        isOwner={item.userRef.id === user.uid}
       />
     ),
     [messages],
@@ -91,27 +84,26 @@ export const ForumScreen = ({navigation, route}) => {
 
   return (
     <>
-      {isFetching && <Loader />}
+      {isFetching ? (
+        <Loader />
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.description}>{description}</Text>
 
-      <View style={styles.container}>
-        <Text style={styles.description}>{description}</Text>
-
-        {messages.length || isFetching ? (
           <FlatList
             data={messages}
             renderItem={renderItem}
             keyExtractor={item => item.creationTime}
-            ref={flatListRef}
-            inverted
+            ListEmptyComponent={
+              <EmptyList text="No messages. Please add the first one." />
+            }
+            inverted={messages.length ? true : false}
             contentContainerStyle={styles.flatListContainer}
           />
-        ) : (
-          <View style={styles.emptyScreen}>
-            <Text>No messages. Please add the first one.</Text>
-          </View>
-        )}
-        <NewMessageInput forumId={documentId} />
-      </View>
+
+          <NewMessageInput forumId={documentId} />
+        </View>
+      )}
     </>
   );
 };
@@ -130,12 +122,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'flex-end',
   },
-  emptyScreen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
   forumListIcon: {
     marginRight: 15,
   },

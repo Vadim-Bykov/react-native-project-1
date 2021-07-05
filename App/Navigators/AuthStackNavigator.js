@@ -2,7 +2,8 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {SignInScreen} from '../Screens/Auth/SignInScreen';
 import {SignUpScreen} from '../Screens/Auth/SignUpScreen';
-import {STACK_SCREEN_OPTIONS} from '../consts/consts';
+import {COLOR_WHITE, STACK_SCREEN_OPTIONS} from '../consts/consts';
+import {Icon} from 'react-native-elements';
 
 const Stack = createStackNavigator();
 
@@ -22,8 +23,10 @@ export const AuthStackNavigator = () => {
         component={SignUpScreen}
         options={{
           headerTitle: false,
-          headerTransparent: 1,
-          headerTintColor: '#fff',
+          headerTransparent: true,
+          headerBackImage: () => (
+            <Icon type="ionicon" name="chevron-back" color={COLOR_WHITE} />
+          ),
         }}
       />
     </Stack.Navigator>

@@ -18,10 +18,10 @@ export const getGenres = () =>
   instance.get(`genre/movie/list`).then(res => res.data);
 
 export const getDetails = movieId =>
-  instance.get(`/movie/${movieId}`).then(res => res.data);
+  instance.get(`movie/${movieId}`).then(res => res.data);
 
 export const getCastInfo = movieId =>
-  instance.get(`/movie/${movieId}/credits`).then(res => res.data);
+  instance.get(`movie/${movieId}/credits`).then(res => res.data);
 
 export const getMoviesByGenre = (genreId, page = 1) => {
   instance.defaults.params.page = page;

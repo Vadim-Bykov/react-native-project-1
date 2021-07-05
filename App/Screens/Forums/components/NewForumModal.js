@@ -8,7 +8,7 @@ import * as firebaseService from '../../../api/firebaseService';
 import {extractErrorMessage} from '../../../utils/utils';
 
 export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
-  const width = useWindowDimensions().width;
+  const {width} = useWindowDimensions();
   const {control, handleSubmit, reset, formState} = useForm();
   const dispatch = useDispatch();
 

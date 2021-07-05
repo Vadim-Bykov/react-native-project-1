@@ -1,7 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {STACK_SCREEN_OPTIONS} from '../consts/consts';
+import {
+  COLOR_PURPLE,
+  DEFAULT_BG_COLOR,
+  STACK_SCREEN_OPTIONS,
+} from '../consts/consts';
 import {ForumListScreen} from '../Screens/Forums/ForumListScreen';
 import {ForumScreen} from '../Screens/Forums/ForumScreen';
 import {StyleSheet} from 'react-native';
@@ -16,8 +20,8 @@ export const ForumStackNavigator = () => {
         component={ForumListScreen}
         options={{
           title: "Forums' list",
-          headerTintColor: '#8B5AB1',
-          detachPreviousScreen: true,
+          headerTintColor: COLOR_PURPLE,
+          headerStyle: styles.forumListHeader,
         }}
       />
 
@@ -28,9 +32,9 @@ export const ForumStackNavigator = () => {
           headerTitle: route.params.forum.title,
           headerStyle: styles.forumHeader,
           headerBackImage: () => (
-            <Icon type="ionicon" name="chevron-back" color="#8B5AB1" />
+            <Icon type="ionicon" name="chevron-back" color={COLOR_PURPLE} />
           ),
-          headerTintColor: '#8B5AB1',
+          headerTintColor: COLOR_PURPLE,
         })}
       />
     </Stack.Navigator>
@@ -39,7 +43,13 @@ export const ForumStackNavigator = () => {
 
 const styles = StyleSheet.create({
   forumHeader: {
-    backgroundColor: '#F1F1F1',
+    backgroundColor: DEFAULT_BG_COLOR,
+    elevation: 0,
+  },
+  forumListHeader: {
+    backgroundColor: DEFAULT_BG_COLOR,
+    borderBottomColor: 'gray',
+    borderBottomWidth: StyleSheet.hairlineWidth,
     elevation: 0,
   },
 });

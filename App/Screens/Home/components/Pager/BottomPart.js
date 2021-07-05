@@ -1,23 +1,9 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 
-const BottomPart = ({movie, isBottomPart, isScrollRight}) => {
+const BottomPart = ({movie, isBottomPart}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  // const fadeOut = value => {
-  //   console.log('fadeOut', Math.pow(value * 10, 2) / 150);
-  //   Animated.timing(fadeAnim, {
-  //     toValue: Math.pow(value * 10, 2) / 150,
-  //     duration: 0,
-  //     useNativeDriver: true,
-  //   }).start();
-  // };
-
-  // useEffect(() => {
-  //   if (isBottomPart === 0) return fadeIn();
-  //   isScrollRight ? fadeOut(isBottomPart) : fadeOut(1 - isBottomPart);
-  // }, [isBottomPart]);
 
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
