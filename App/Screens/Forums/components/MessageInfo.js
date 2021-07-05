@@ -13,7 +13,7 @@ export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
   const [dislikes, setDislikes] = useState(null);
   const [isLikedMessage, setIsLikedMessage] = useState(false);
   const [isDisLikedMessage, setIsDisLikedMessage] = useState(false);
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
   const {uid} = useSelector(selectors.getUser);
   const dispatch = useDispatch();
@@ -92,7 +92,8 @@ export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
       .catch(error => {
         console.error(error);
         dispatch(actions.setError(extractErrorMessage(error)));
-      });
+      })
+      .finally(() => setDisabled(false));
 
     firebaseService
       .getDocumentById('dislikes', messageId)
@@ -102,7 +103,8 @@ export const MessageInfo = ({creationTime, messageId, forumId, isOwner}) => {
       .catch(error => {
         console.error(error);
         dispatch(actions.setError(extractErrorMessage(error)));
-      });
+      })
+      .finally(() => setDisabled(false));
   }, [messageId]);
 
   useMemo(() => {
