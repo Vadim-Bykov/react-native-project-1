@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, StyleSheet, Image, ScrollView} from 'react-native';
+import {StyleSheet, Image, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {setError} from '../store/auth/actions';
 import {getErrorMessage} from '../store/auth/selectors';
@@ -18,7 +18,7 @@ class ErrorProtector extends Component {
 
   componentDidCatch(error, info) {
     this.props.setError(
-      "Some error occurred. We'll try to fix it as soon as possible",
+      'Some error occurred. We will try to fix it as soon as possible',
     );
   }
 
@@ -35,7 +35,6 @@ class ErrorProtector extends Component {
             style={[styles.image, {width: size, height: size}]}
             source={require('../assets/images/dogError.jpg')}
           />
-          <Text>Try to restart your app</Text>
         </ScrollView>
       );
     }
@@ -61,6 +60,5 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'cover',
-    marginBottom: 20,
   },
 });
