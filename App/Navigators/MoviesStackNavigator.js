@@ -8,51 +8,61 @@ import {
 import {Icon} from 'react-native-elements';
 import {HomeScreen} from '../Screens/Home/HomeScreen';
 import {DetailsScreen} from '../Screens/Home/DetailsScreen';
-import {TouchableOpacity, StyleSheet, View} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {showToast} from '../utils/utils';
+import {ErrorBoundary} from '../common/ErrorBoundary';
 
 const Stack = createStackNavigator();
 
 export const MoviesStackNavigator = ({navigation}) => {
-  return (
-    <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
-      <Stack.Screen
-        name="Movies"
-        component={HomeScreen}
-        options={{
-          headerBackground: () => <View style={styles.homeHeader} />,
-          headerTitle: false,
-          headerTransparent: true,
-          headerLeftContainerStyle: {paddingLeft: 20},
-          headerRightContainerStyle: {paddingRight: 20},
-          headerLeft: () => (
-            <TouchableOpacity onPress={navigation.openDrawer}>
-              <Icon name="menu" color={COLOR_PURPLE} />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <Icon
-              type="antdesign"
-              name="search1"
-              color={COLOR_PURPLE}
-              onPress={() => showToast("This feature hasn't implemented yet")}
-            />
-          ),
-        }}
-      />
+  const {width, height} = useWindowDimensions();
 
-      <Stack.Screen
-        name="Details"
-        component={DetailsScreen}
-        options={{
-          headerTitle: false,
-          headerTransparent: true,
-          headerBackImage: () => (
-            <Icon type="ionicon" name="chevron-back" color={COLOR_PURPLE} />
-          ),
-        }}
-      />
-    </Stack.Navigator>
+  return (
+    <ErrorBoundary width={width} height={height}>
+      <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
+        <Stack.Screen
+          name="Movies"
+          component={HomeScreen}
+          options={{
+            headerBackground: () => <View style={styles.homeHeader} />,
+            headerTitle: false,
+            headerTransparent: true,
+            headerLeftContainerStyle: {paddingLeft: 20},
+            headerRightContainerStyle: {paddingRight: 20},
+            headerLeft: () => (
+              <TouchableOpacity onPress={navigation.openDrawer}>
+                <Icon name="menu" color={COLOR_PURPLE} />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <Icon
+                type="antdesign"
+                name="search1"
+                color={COLOR_PURPLE}
+                onPress={() => showToast("This feature hasn't implemented yet")}
+              />
+            ),
+          }}
+        />
+
+        <Stack.Screen
+          name="Details"
+          component={DetailsScreen}
+          options={{
+            headerTitle: false,
+            headerTransparent: true,
+            headerBackImage: () => (
+              <Icon type="ionicon" name="chevron-back" color={COLOR_PURPLE} />
+            ),
+          }}
+        />
+      </Stack.Navigator>
+    </ErrorBoundary>
   );
 };
 

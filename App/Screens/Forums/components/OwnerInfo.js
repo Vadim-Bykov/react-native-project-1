@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-elements';
-import {COMMON_ERROR_MESSAGE, DEFAULT_AVATAR} from '../../../consts/consts';
+import {DEFAULT_AVATAR} from '../../../consts/consts';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
@@ -14,7 +14,7 @@ export const OwnerInfo = React.memo(({userRefPath}) => {
   const extractUser = useCallback(user => {
     if (user.exists) {
       setUser(user.data());
-    } else dispatch(actions.setError(COMMON_ERROR_MESSAGE));
+    }
   }, []);
 
   useEffect(() => {

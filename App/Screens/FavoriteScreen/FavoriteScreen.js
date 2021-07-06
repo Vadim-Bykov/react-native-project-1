@@ -8,6 +8,7 @@ import {setError, setIsFetching} from '../../store/auth/actions';
 import * as selectors from '../../store/auth/selectors';
 import {FavoriteMovieItem} from './components/FavoriteMovieItem';
 import {EmptyList} from '../../common/EmptyList';
+import {ErrorBoundary} from '../../common/ErrorBoundary';
 
 export const FavoriteScreen = ({navigation}) => {
   const isFetching = useSelector(selectors.getIsFetching);
@@ -98,7 +99,7 @@ export const FavoriteScreen = ({navigation}) => {
   );
 
   return (
-    <>
+    <ErrorBoundary width={width} height={height}>
       {isFetching ? (
         <Loader />
       ) : (
@@ -119,7 +120,7 @@ export const FavoriteScreen = ({navigation}) => {
           style={isSingleMoviePortrait && {marginTop: width * 0.2}}
         />
       )}
-    </>
+    </ErrorBoundary>
   );
 };
 

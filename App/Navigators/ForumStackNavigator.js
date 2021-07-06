@@ -8,36 +8,41 @@ import {
 } from '../consts/consts';
 import {ForumListScreen} from '../Screens/Forums/ForumListScreen';
 import {ForumScreen} from '../Screens/Forums/ForumScreen';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
+import {ErrorBoundary} from '../common/ErrorBoundary';
 
 const Stack = createStackNavigator();
 
 export const ForumStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
-      <Stack.Screen
-        name="ForumList"
-        component={ForumListScreen}
-        options={{
-          title: "Forums' list",
-          headerTintColor: COLOR_PURPLE,
-          headerStyle: styles.forumListHeader,
-        }}
-      />
+  const {width, height} = useWindowDimensions();
 
-      <Stack.Screen
-        name="Forum"
-        component={ForumScreen}
-        options={({route}) => ({
-          headerTitle: route.params.forum.title,
-          headerStyle: styles.forumHeader,
-          headerBackImage: () => (
-            <Icon type="ionicon" name="chevron-back" color={COLOR_PURPLE} />
-          ),
-          headerTintColor: COLOR_PURPLE,
-        })}
-      />
-    </Stack.Navigator>
+  return (
+    <ErrorBoundary width={width} height={height}>
+      <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">
+        <Stack.Screen
+          name="ForumList"
+          component={ForumListScreen}
+          options={{
+            title: "Forums' list",
+            headerTintColor: COLOR_PURPLE,
+            headerStyle: styles.forumListHeader,
+          }}
+        />
+
+        <Stack.Screen
+          name="Forum"
+          component={ForumScreen}
+          options={({route}) => ({
+            headerTitle: route.params.forum.title,
+            headerStyle: styles.forumHeader,
+            headerBackImage: () => (
+              <Icon type="ionicon" name="chevron-back" color={COLOR_PURPLE} />
+            ),
+            headerTintColor: COLOR_PURPLE,
+          })}
+        />
+      </Stack.Navigator>
+    </ErrorBoundary>
   );
 };
 
