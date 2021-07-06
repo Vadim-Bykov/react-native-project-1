@@ -57,6 +57,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#DDDDDD',
   },
   modalText: {
     flex: 1,
