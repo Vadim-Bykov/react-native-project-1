@@ -90,8 +90,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderTopColor: 'gray',
+    borderColor: 'gray',
     borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     marginTop: 5,
   },
   inputContainer: {

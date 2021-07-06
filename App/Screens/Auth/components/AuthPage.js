@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useForm, useWatch} from 'react-hook-form';
 import {
   StyleSheet,
@@ -31,7 +31,7 @@ export const AuthPage = ({configuration}) => {
   const dispatch = useDispatch();
   const isFetching = useSelector(selectors.getIsFetching);
   const error = useSelector(selectors.getErrorMessage);
-  const {width, height} = useWindowDimensions();
+  const {width} = useWindowDimensions();
   const [securePassword, setSecurePassword] = useState(true);
   const [secureConfirmPassword, setSecureConfirmPassword] = useState(true);
   const [imageData, setImageData] = useState(null);
@@ -183,17 +183,11 @@ export const AuthPage = ({configuration}) => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-              style={[
-                {...styles.redirect, marginTop: height * 0.05},
-                !isSignUpScreen &&
-                  width < height &&
-                  styles.redirectSignInScreen,
-              ]}
-              activeOpacity={0.8}
-              onPress={redirectTo}>
-              <Text style={styles.redirectText}>{redirectionText}</Text>
-            </TouchableOpacity>
+            <View style={styles.redirect}>
+              <TouchableOpacity activeOpacity={0.8} onPress={redirectTo}>
+                <Text style={styles.redirectText}>{redirectionText}</Text>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
       </ImageBackground>
@@ -218,12 +212,12 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     maxHeight: 200,
-    height: '100%',
     flexShrink: 1,
     flexGrow: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 20,
+    paddingTop: 10,
   },
   logo: {
     width: 100,
@@ -258,8 +252,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignSelf: 'center',
     marginBottom: 20,
-  },
-  redirectSignInScreen: {
+    marginTop: 30,
     flexGrow: 1,
   },
   redirectText: {
