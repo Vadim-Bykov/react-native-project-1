@@ -87,7 +87,10 @@ export const ForumListScreen = ({navigation}) => {
     forumIdFromNotification &&
       forumFromNotification &&
       navigation.navigate('Forum', {
-        forum: forumFromNotification,
+        forum: {
+          forumId: forumFromNotification.documentId,
+          title: forumFromNotification.title,
+        },
       });
     dispatch(actions.setForumIdFromNotification(null));
   }, [forumIdFromNotification]);

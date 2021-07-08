@@ -7,9 +7,16 @@ import {OwnerInfo} from './OwnerInfo';
 export const Forum = React.memo(({forum}) => {
   const navigation = useNavigation();
 
-  const goToForum = useCallback(() => navigation.navigate('Forum', {forum}), [
-    forum,
-  ]);
+  const goToForum = useCallback(
+    () =>
+      navigation.navigate('Forum', {
+        forum: {
+          forumId: forum.documentId,
+          title: forum.title,
+        },
+      }),
+    [forum],
+  );
 
   return (
     <TouchableOpacity

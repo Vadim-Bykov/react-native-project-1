@@ -12,31 +12,45 @@ import {RemoveForum} from './components/RemoveForum';
 import {EmptyList} from '../../common/EmptyList';
 
 export const ForumScreen = ({navigation, route}) => {
-  const {description, documentId, userRef} = route.params.forum;
+  // const {description, documentId, userRef} = route.params.forum;
+  // const forumId = route.params.forumId;
+  const {description, forumId} = route.params.forum;
   const isFetching = useSelector(selectors.getIsFetching);
-
   const user = useSelector(selectors.getUser);
   const dispatch = useDispatch();
+
+  const [userRef, setUserRef] = useState(null);
   const [messages, setMessages] = useState([]);
 
   const goBack = useCallback(() => navigation.goBack(), []);
 
-  const isForumOwner = userRef.id === user.uid;
+  useLayoutEffect(() => {
+    dispatch(actions.setIsFetching(true));
+  }, []);
+
+  const isForumOwner = userRef && userRef.id === user.uid;
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: isForumOwner
-        ? () => (
-            <RemoveForum
-              forumId={documentId}
-              goBack={goBack}
-              userRef={userRef}
-            />
-          )
-        : null,
-      headerRightContainerStyle: styles.forumListIcon,
+    firebaseService.getDocumentById('forums', forumId).then(document => {
+      if (document.exists) setUserRef(document.data().userRef);
     });
-  }, [navigation]);
+  }, []);
+
+  useEffect(() => {
+    userRef &&
+      navigation.setOptions({
+        headerRight: isForumOwner
+          ? () => (
+              <RemoveForum
+                forumId={forumId}
+                goBack={goBack}
+                userRef={userRef}
+              />
+            )
+          : null,
+        headerRightContainerStyle: styles.forumListIcon,
+      });
+  }, [isForumOwner, userRef]);
 
   const observer = useCallback(querySnapshot => {
     const messages = [];
@@ -56,15 +70,11 @@ export const ForumScreen = ({navigation, route}) => {
     dispatch(actions.setError(extractErrorMessage(error)));
   }, []);
 
-  useLayoutEffect(() => {
-    dispatch(actions.setIsFetching(true));
-  }, []);
-
   useEffect(() => {
     const unsubscribe = firebaseService.messagesSubscriber(
       observer,
       errorHandler,
-      documentId,
+      forumId,
     );
 
     return unsubscribe;
@@ -101,7 +111,7 @@ export const ForumScreen = ({navigation, route}) => {
             contentContainerStyle={styles.flatListContainer}
           />
 
-          <NewMessageInput forumId={documentId} />
+          <NewMessageInput forumId={forumId} />
         </View>
       )}
     </>
