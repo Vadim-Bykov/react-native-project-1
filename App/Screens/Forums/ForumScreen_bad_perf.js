@@ -4,8 +4,16 @@ import React, {
   useState,
   useLayoutEffect,
   useMemo,
+  useRef,
 } from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  KeyboardAvoidingView,
+  Keyboard,
+} from 'react-native';
 import {NewMessageInput} from './components/NewMessageInput';
 import {useDispatch, useSelector} from 'react-redux';
 import * as actions from '../../store/auth/actions';
@@ -25,6 +33,10 @@ export const ForumScreen = ({navigation, route}) => {
 
   const [userRef, setUserRef] = useState(null);
   const [messages, setMessages] = useState([]);
+
+  const flatListRef = useRef(null);
+  const [scroll, setScroll] = useState(false);
+  const [marginBottom, setMarginBottom] = useState(false);
 
   const goBack = useCallback(() => navigation.goBack(), []);
 
@@ -67,7 +79,7 @@ export const ForumScreen = ({navigation, route}) => {
       });
     }
 
-    setMessages(sortByCreationTime(messages));
+    setMessages(sortByCreationTime(messages).reverse());
     dispatch(actions.setIsFetching(false));
   }, []);
 
@@ -87,16 +99,44 @@ export const ForumScreen = ({navigation, route}) => {
   }, []);
 
   const renderItem = useCallback(
-    ({item, index}) => (
-      <Message
-        item={item}
-        messages={messages}
-        index={index}
-        isOwner={item.userRef.id === user.uid}
-      />
-    ),
-    [messages],
+    ({item, index}) => {
+      const margin = index === messages.length - 1 && marginBottom;
+
+      return (
+        <Message
+          item={item}
+          messages={messages}
+          index={index}
+          isOwner={item.userRef.id === user.uid}
+          marginBottom={margin}
+        />
+      );
+    },
+    [messages, marginBottom],
   );
+
+  const goToEnd = useCallback(() => {
+    if (flatListRef.current && messages.length) {
+      flatListRef.current.scrollToEnd({animated: scroll});
+      setScroll(true);
+    }
+  }, [flatListRef.current, messages.length]);
+
+  const addMargin = useCallback(() => setMarginBottom(prev => !prev), []);
+
+  const removeMargin = useCallback(() => setMarginBottom(prev => !prev), []);
+
+  useEffect(() => {
+    if (flatListRef.current && messages.length) {
+      Keyboard.addListener('keyboardDidShow', addMargin);
+      Keyboard.addListener('keyboardDidHide', removeMargin);
+    }
+
+    return () => {
+      Keyboard.removeListener('keyboardDidShow', addMargin);
+      Keyboard.removeListener('keyboardDidShow', removeMargin);
+    };
+  }, [flatListRef.current, messages.length]);
 
   return (
     <>
@@ -107,14 +147,16 @@ export const ForumScreen = ({navigation, route}) => {
           <Text style={styles.description}>{description}</Text>
 
           <FlatList
+            ref={flatListRef}
             data={messages}
             renderItem={renderItem}
             keyExtractor={item => item.creationTime}
             ListEmptyComponent={
               <EmptyList text="No messages. Please add the first one." />
             }
-            inverted={messages.length ? true : false}
+            onContentSizeChange={goToEnd}
             contentContainerStyle={styles.flatListContainer}
+            extraData={marginBottom}
           />
 
           <NewMessageInput forumId={forumId} />
