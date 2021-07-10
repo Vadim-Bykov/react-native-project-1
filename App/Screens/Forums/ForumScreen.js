@@ -32,9 +32,9 @@ export const ForumScreen = ({navigation, route}) => {
     dispatch(actions.setIsFetching(true));
   }, []);
 
-  const isForumOwner = useMemo(() => {
-    userRef && userRef.id === user.uid;
-  }, [userRef]);
+  const isForumOwner = useMemo(() => userRef && userRef.id === user.uid, [
+    userRef,
+  ]);
 
   useEffect(() => {
     firebaseService.getDocumentById('forums', forumId).then(document => {
