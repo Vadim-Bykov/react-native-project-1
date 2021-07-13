@@ -10,6 +10,7 @@ import {
   COMMON_ERROR_MESSAGE,
 } from '../../../../consts/consts';
 import {setError} from '../../../../store/auth/actions';
+import {SavedInList} from './SavedMovie';
 
 export const StarBlock = ({data, width}) => {
   const [favoriteMovies, setFavoriteMovies] = useState(null);
@@ -109,6 +110,8 @@ export const StarBlock = ({data, width}) => {
         />
         <Text>{isFavorite ? 'Saved' : 'Save to favorites'}</Text>
       </View>
+
+      <SavedInList movie={data} />
 
       <View>
         <Badge
