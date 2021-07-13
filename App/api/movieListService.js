@@ -25,11 +25,7 @@ export const getList = (page = 1) =>
   listInstance.get('', {params: {api_key, page}}).then(res => res.data);
 
 export const addMovie = movieId =>
-  listInstance
-    .post(`items`, getDataObject(movieId))
-    .catch(err => console.error(err));
+  listInstance.post(`items`, getDataObject(movieId));
 
 export const removeMovie = movieId =>
-  listInstance
-    .delete(`items`, {data: getDataObject(movieId)})
-    .catch(err => console.error(err));
+  listInstance.delete(`items`, {data: getDataObject(movieId)});

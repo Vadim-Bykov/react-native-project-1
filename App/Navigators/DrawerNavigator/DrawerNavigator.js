@@ -8,6 +8,13 @@ import {COLOR_PURPLE, DEFAULT_BG_COLOR} from '../../consts/consts';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {TouchableOpacity, StyleSheet, useWindowDimensions} from 'react-native';
 import {ErrorBoundary} from '../../common/ErrorBoundary';
+import {SavedMoviesScreen} from '../../Screens/SavedMovieList/SavedMoviesScreen';
+
+const HeaderMenu = ({navigation}) => (
+  <TouchableOpacity onPress={navigation.openDrawer}>
+    <Icon name="menu" color={COLOR_PURPLE} />
+  </TouchableOpacity>
+);
 
 const Drawer = createDrawerNavigator();
 
@@ -25,14 +32,22 @@ export const DrawerNavigator = () => {
           options={({navigation}) => ({
             headerShown: true,
             headerTitleStyle: styles.favoriteScreenTitle,
-            headerLeft: () => (
-              <TouchableOpacity onPress={navigation.openDrawer}>
-                <Icon name="menu" color={COLOR_PURPLE} />
-              </TouchableOpacity>
-            ),
-            headerTitle: 'Saved',
+            headerLeft: () => <HeaderMenu navigation={navigation} />,
+            headerTitle: 'Favorite',
             headerStyle: styles.favoriteScreenHeader,
             unmountOnBlur: true,
+          })}
+        />
+
+        <Drawer.Screen
+          name="Saved"
+          component={SavedMoviesScreen}
+          options={({navigation}) => ({
+            headerShown: true,
+            headerTitleStyle: styles.favoriteScreenTitle,
+            headerLeft: () => <HeaderMenu navigation={navigation} />,
+            headerTitle: 'Saved movies',
+            headerStyle: styles.favoriteScreenHeader,
           })}
         />
 

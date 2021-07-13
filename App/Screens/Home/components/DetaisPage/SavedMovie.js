@@ -6,8 +6,9 @@ import {COLOR_BLACK, COLOR_BLUE} from '../../../../consts/consts';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import * as movieListService from '../../../../api/movieListService';
 import * as actions from '../../../../store/auth/actions';
+import {extractErrorMessage} from '../../../../utils/utils';
 
-export const SavedInList = React.memo(({movie}) => {
+export const SavedInList = React.memo(({movieId}) => {
   const [isSaved, setIsSaved] = useState(false);
 
   const queryClient = useQueryClient();
@@ -19,27 +20,30 @@ export const SavedInList = React.memo(({movie}) => {
 
   useEffect(() => {
     if (data && data.results) {
-      const isContains = data.results.some(item => item.id === movie.id);
+      const isContains = data.results.some(item => item.id === movieId);
       setIsSaved(isContains);
     } else if (isError) {
       dispatch(actions.setError(error.message));
     }
   }, [isError, data, error]);
 
-  // console.log(data && data.results.length);
-
   const mutateStorage = useMutation(
-    () => {
-      console.log(isSaved);
+    () =>
       isSaved
-        ? movieListService.removeMovie(movie.id)
-        : movieListService.addMovie(movie.id);
-    },
+        ? movieListService.removeMovie(movieId)
+        : movieListService.addMovie(movieId),
+
     {
       onMutate: async () => {
-        await queryClient.cancelMutations('movieList');
+        await queryClient.cancelQueries('movieList');
+
+        const prevData = queryClient.getQueryData('movieList');
+        return prevData;
       },
-      onError: err => {
+      onError: (err, _, prevData) => {
+        queryClient.setQueryData('movieList', prevData);
+
+        dispatch(actions.setError(extractErrorMessage(err)));
         console.error(err);
       },
       onSettled: () => {

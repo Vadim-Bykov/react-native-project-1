@@ -29,6 +29,7 @@ export const DrawerContent = props => {
   const goToFavoritePage = () => navigation.navigate('Favorite');
   const goToHomePage = () => navigation.navigate('Home');
   const goToForumList = () => navigation.navigate('Forums');
+  const goToSavedMovies = () => navigation.navigate('Saved');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -93,6 +94,20 @@ export const DrawerContent = props => {
               )}
               labelStyle={styles.labelStyle}
               onPress={goToFavoritePage}
+            />
+
+            <DrawerItem
+              label="Saved movies"
+              focused={routeNames[index] === 'Saved'}
+              icon={({focused}) => (
+                <Icon
+                  type="antdesign"
+                  name="heart"
+                  color={focused ? COLOR_BLUE : COLOR_GRAY}
+                />
+              )}
+              labelStyle={styles.labelStyle}
+              onPress={goToSavedMovies}
             />
 
             <DrawerItem
