@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import {useController} from 'react-hook-form';
 import {StyleSheet, View, TextInput, Text} from 'react-native';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
-import {COLOR_WHITE} from '../consts/consts';
+import {BG_COLOR_TRANSPARENT_GRAY, COLOR_WHITE} from '../consts/consts';
 
 export const Input = ({inputConfig}) => {
   const {
@@ -16,7 +16,7 @@ export const Input = ({inputConfig}) => {
       name,
       setSecurePassword,
       multiline = false,
-      backgroundColor = 'rgba(0,0,0, 0.4)',
+      backgroundColor = BG_COLOR_TRANSPARENT_GRAY,
       colorText = COLOR_WHITE,
       control,
       rules,

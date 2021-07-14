@@ -99,10 +99,12 @@ export const DrawerContent = props => {
             <DrawerItem
               label="Saved movies"
               focused={routeNames[index] === 'Saved'}
+              activeTintColor={COLOR_BLUE}
+              activeBackgroundColor={COLOR_TRANSLUCENT_PURPLE}
               icon={({focused}) => (
                 <Icon
-                  type="antdesign"
-                  name="heart"
+                  type="ionicons"
+                  name="save"
                   color={focused ? COLOR_BLUE : COLOR_GRAY}
                 />
               )}

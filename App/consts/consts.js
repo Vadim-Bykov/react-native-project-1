@@ -40,3 +40,4 @@ export const COLOR_GRAY = '#6A6A6A';
 export const COLOR_TRANSLUCENT_PURPLE = '#E9DCFB';
 export const COLOR_ROSE_RED = '#FF005F';
 export const DEFAULT_BG_COLOR = '#F1F1F1';
+export const BG_COLOR_TRANSPARENT_GRAY = 'rgba(0,0,0, 0.4)';
