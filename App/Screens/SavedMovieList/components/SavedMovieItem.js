@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, Text, useWindowDimensions} from 'react-native';
-import {Card, Icon, Badge} from 'react-native-elements';
+import {StyleSheet, View} from 'react-native';
+import {Card, Icon} from 'react-native-elements';
 import {FAB} from 'react-native-elements/dist/buttons/FAB';
 import FastImage from 'react-native-fast-image';
 import {

@@ -1,12 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  useWindowDimensions,
-} from 'react-native';
+import {FlatList, StyleSheet, Alert, useWindowDimensions} from 'react-native';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import * as movieListService from '../../api/movieListService';
 import {Loader} from '../../common/Loader';
@@ -21,11 +14,9 @@ import {
   COLOR_DARK_YELLOW,
   COLOR_PURPLE,
   COLOR_ROSE_RED,
-  COLOR_WHITE,
 } from '../../consts/consts';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {Button, Chip, Icon} from 'react-native-elements';
-import {TouchableOpacity} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+import {ListButton} from './components/ListButton';
 
 export const SavedMoviesScreen = ({navigation}) => {
   const {width} = useWindowDimensions();
@@ -35,27 +26,20 @@ export const SavedMoviesScreen = ({navigation}) => {
 
   const queryClient = useQueryClient();
 
-  const {
-    data,
-    error,
-    isError,
-    isLoading,
-    isPreviousData,
-    isFetching,
-  } = useQuery(['movieList', page], () => movieListService.getList(page), {
-    keepPreviousData: true,
-    staleTime: 5000,
-  });
+  const {data, error, isError, isLoading, isFetching} = useQuery(
+    ['movieList', page],
+    () => movieListService.getList(page),
+    {
+      keepPreviousData: true,
+    },
+  );
 
   useEffect(() => {
-    // if (data?.hasMore)
     if (data?.total_pages > 1)
       queryClient.prefetchQuery(['movieList', page + 1], () =>
         movieListService.getList(page + 1),
       );
   }, [data, page, queryClient]);
-
-  // console.log(data && data.results.length);
 
   const mutation = useMutation(
     movieId => movieListService.removeMovie(movieId),
@@ -79,6 +63,10 @@ export const SavedMoviesScreen = ({navigation}) => {
       },
     },
   );
+
+  const onRefresh = useCallback(() => {
+    queryClient.invalidateQueries('movieList');
+  }, []);
 
   const goToDetails = useCallback(
     movieId => navigation.navigate('Details', {movieId}),
@@ -121,11 +109,8 @@ export const SavedMoviesScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   useMemo(() => {
-    !isFocused &&
-      flatListRef &&
-      flatListRef.current &&
-      flatListRef.current.scrollToIndex({index: 0, animated: false});
-  }, [flatListRef, isFocused]);
+    flatListRef?.current?.scrollToIndex({index: 0, animated: false});
+  }, [isFocused, flatListRef?.current, data?.page]);
 
   useEffect(() => {
     if (isError) {
@@ -133,7 +118,13 @@ export const SavedMoviesScreen = ({navigation}) => {
     }
   }, [isError]);
 
-  console.log(data);
+  const setPrevPage = useCallback(() => {
+    setPage(prev => Math.max(prev - 1, 1));
+  }, []);
+
+  const setNextPage = useCallback(() => {
+    setPage(prev => (data?.total_pages > page ? prev + 1 : prev));
+  }, [data?.total_pages, page]);
 
   return (
     <>
@@ -153,52 +144,26 @@ export const SavedMoviesScreen = ({navigation}) => {
           refreshControl={
             <RefreshControl
               colors={[COLOR_DARK_YELLOW, COLOR_ROSE_RED]}
-              refreshing={mutation.isLoading}
-              onRefresh={() => queryClient.invalidateQueries('movieList')}
+              refreshing={mutation.isLoading || isFetching}
+              onRefresh={onRefresh}
               progressBackgroundColor={COLOR_PURPLE}
             />
           }
           getItemLayout={getItemLayout}
           ListHeaderComponent={
-            <Button
-              title="Prev"
-              type="outline"
-              icon={
-                <Icon
-                  type="material-community"
-                  name="page-previous-outline"
-                  color={COLOR_DARK_YELLOW}
-                />
-              }
-              containerStyle={styles.btnContainer}
-              buttonStyle={styles.btn}
-              titleStyle={{color: COLOR_DARK_YELLOW}}
+            <ListButton
+              title="Previous"
+              name="page-previous-outline"
               disabled={page === 1}
-              onPress={() => setPage(prev => Math.max(prev - 1, 1))}
-              loading={isFetching}
+              setPage={setPrevPage}
             />
           }
           ListFooterComponent={
-            <Button
+            <ListButton
               title="Next"
-              type="outline"
-              icon={
-                <Icon
-                  type="material-community"
-                  name="page-next-outline"
-                  color={COLOR_DARK_YELLOW}
-                />
-              }
-              containerStyle={[styles.btnContainer, styles.extraMargin]}
-              buttonStyle={styles.btn}
-              titleStyle={{color: COLOR_DARK_YELLOW}}
+              name="page-next-outline"
               disabled={data?.total_pages === page}
-              // onPress={() => setPage(prev => (data?.hasMore ? prev + 1 : prev))}
-              onPress={() =>
-                setPage(prev => (data?.total_pages > page ? prev + 1 : prev))
-              }
-              // onPress={() => setPage(prev => prev + 1)}
-              loading={isFetching}
+              setPage={setNextPage}
             />
           }
         />
@@ -210,21 +175,5 @@ export const SavedMoviesScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   flatListContainer: {
     flexGrow: 1,
-  },
-
-  btnContainer: {
-    width: 150,
-    alignSelf: 'center',
-  },
-
-  extraMargin: {
-    marginVertical: 15,
-  },
-
-  btn: {
-    justifyContent: 'space-evenly',
-    borderWidth: 2,
-    borderColor: COLOR_DARK_YELLOW,
-    borderRadius: 25,
   },
 });
