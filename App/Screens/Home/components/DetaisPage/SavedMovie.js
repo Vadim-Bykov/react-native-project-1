@@ -3,16 +3,19 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 import {
+  BASE_IMAGE_URL,
   COLOR_BLACK,
   COLOR_BLUE,
   COLOR_TRANSLUCENT_PURPLE,
+  DEFAULT_MOVIE_IMAGE,
 } from '../../../../consts/consts';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import * as movieListService from '../../../../api/movieListService';
 import * as actions from '../../../../store/auth/actions';
 import {extractErrorMessage} from '../../../../utils/utils';
+import FastImage from 'react-native-fast-image';
 
-export const SavedInList = React.memo(({movieId}) => {
+export const SavedInList = React.memo(({movieId, posterPath}) => {
   const [isSaved, setIsSaved] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
@@ -33,12 +36,20 @@ export const SavedInList = React.memo(({movieId}) => {
       setDisabled(false);
     }
   }, [isError, data, error]);
+  console.log(`${BASE_IMAGE_URL}w500${posterPath}`);
 
   const mutateStorage = useMutation(
     () =>
       isSaved
         ? movieListService.removeMovie(movieId)
-        : movieListService.addMovie(movieId),
+        : (movieListService.addMovie(movieId),
+          FastImage.preload([
+            {
+              uri: posterPath
+                ? `${BASE_IMAGE_URL}w500/${posterPath}`
+                : DEFAULT_MOVIE_IMAGE,
+            },
+          ])),
 
     {
       onMutate: async () => {

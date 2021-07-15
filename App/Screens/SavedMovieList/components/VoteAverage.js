@@ -1,12 +1,18 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {COLOR_DARK_YELLOW, COLOR_WHITE} from '../../../consts/consts';
 
 export const VoteAverage = ({voteAverage}) => {
+  const isLongText = useMemo(() => voteAverage.toString().length > 4, []);
+
+  const fontWeightStyle = useMemo(() => {
+    return isLongText ? {fontSize: 11} : null;
+  }, []);
+
   return (
     <View style={styles.outline}>
       <View style={styles.infoCircle}>
-        <Text style={styles.voteAverage}>{voteAverage}</Text>
+        <Text style={[styles.voteAverage, fontWeightStyle]}>{voteAverage}</Text>
       </View>
     </View>
   );

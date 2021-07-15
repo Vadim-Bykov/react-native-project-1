@@ -22,7 +22,9 @@ const getDataObject = movieId => ({
 });
 
 export const getList = (page = 1) =>
-  listInstance.get('', {params: {api_key, page}}).then(res => res.data);
+  listInstance
+    .get('', {params: {api_key, page, sort_by: 'original_order.desc'}})
+    .then(res => res.data);
 
 export const addMovie = movieId =>
   listInstance.post(`items`, getDataObject(movieId));

@@ -111,7 +111,7 @@ export const StarBlock = ({data, width}) => {
         <Text>{isFavorite ? 'Saved' : 'Save to favorites'}</Text>
       </View>
 
-      <SavedInList movieId={data.id} />
+      <SavedInList movieId={data.id} posterPath={data.poster_path} />
 
       <View>
         <Badge
