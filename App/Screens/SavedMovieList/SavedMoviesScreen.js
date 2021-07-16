@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {FlatList, StyleSheet, Alert, useWindowDimensions} from 'react-native';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import * as movieListService from '../../api/movieListService';
@@ -98,7 +105,7 @@ export const SavedMoviesScreen = ({navigation}) => {
     [width],
   );
 
-  const ITEM_HEIGHT = useMemo(() => Math.ceil(width * 1.05) + 82, [width]);
+  const ITEM_HEIGHT = useMemo(() => Math.ceil(width * 1.05) + 82 + 15, [width]);
 
   const getItemLayout = (_, index) => ({
     length: ITEM_HEIGHT,
@@ -108,8 +115,9 @@ export const SavedMoviesScreen = ({navigation}) => {
 
   const isFocused = useIsFocused();
 
-  useMemo(() => {
-    flatListRef?.current?.scrollToIndex({index: 0, animated: false});
+  useLayoutEffect(() => {
+    !isFocused &&
+      flatListRef?.current?.scrollToIndex({index: 0, animated: false});
   }, [isFocused, flatListRef?.current, data?.page]);
 
   useEffect(() => {
@@ -126,6 +134,14 @@ export const SavedMoviesScreen = ({navigation}) => {
     setPage(prev => (data?.total_pages > page ? prev + 1 : prev));
   }, [data?.total_pages, page]);
 
+  // const [index, setIndex] = useState(0);
+
+  // const onScrollNextSlide = useCallback(() => {
+  //   index === 19 ? setIndex(0) : setIndex(prev => prev + 1);
+  //   flatListRef?.current.scrollToIndex({index, viewPosition: 0});
+  // }, [index]);
+  // console.log(index);
+
   return (
     <>
       {isLoading && <Loader />}
@@ -136,11 +152,16 @@ export const SavedMoviesScreen = ({navigation}) => {
           ref={flatListRef}
           data={data.results}
           keyExtractor={item => item.id}
+          renderItem={renderItem}
+          initialNumToRender={5}
+          contentContainerStyle={styles.flatListContainer}
+          // onScrollEndDrag={onScrollNextSlide}
+          snapToInterval={ITEM_HEIGHT}
+          decelerationRate="fast"
+          // contentOffset={{x: 100, y: 100}}
           ListEmptyComponent={
             <EmptyList text="No saved movies. Please, choose some films." />
           }
-          renderItem={renderItem}
-          contentContainerStyle={styles.flatListContainer}
           refreshControl={
             <RefreshControl
               colors={[COLOR_DARK_YELLOW, COLOR_ROSE_RED]}
