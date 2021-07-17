@@ -17,7 +17,11 @@ export const SavedMovieItem = React.memo(
 
     return (
       <Card>
-        <Card.Title>{movie.title}</Card.Title>
+        <Card.Title>
+          {movie.title.length > 25
+            ? `${movie.title.slice(0, 25)}...`
+            : movie.title}
+        </Card.Title>
 
         <Card.Divider />
 

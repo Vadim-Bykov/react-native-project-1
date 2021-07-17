@@ -34,9 +34,7 @@ export const getInfinityList = ({pageParam = 1}) => {
     .then(res => ({
       data: res.data,
       next:
-        res.next === null
-          ? undefined
-          : res.data.total_pages <= pageParam || pageParam === false
+        res.data.total_pages <= pageParam || pageParam === false
           ? false
           : pageParam + 1,
     }));

@@ -27,13 +27,14 @@ import {
   COLOR_ROSE_RED,
 } from '../../consts/consts';
 import {useIsFocused} from '@react-navigation/native';
-import {ListButton} from '../SavedMovieList/components/ListButton';
-import {MovieItem} from './components/MovieItem';
+import {SavedMovieItem} from '../SavedMovieList/components/SavedMovieItem';
+// import {ListButton} from '../SavedMovieList/components/ListButton';
 
 export const InfinityMoviesScreen = ({navigation}) => {
   const {width, height} = useWindowDimensions();
   const dispatch = useDispatch();
   const flatListRef = useRef(null);
+  const [movies, setMovies] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -58,12 +59,11 @@ export const InfinityMoviesScreen = ({navigation}) => {
     getNextPageParam: lastPage => lastPage.next,
   });
 
-  const [movies, setMovies] = useState([]);
-
   useEffect(() => {
     setMovies([]);
     data?.pages.forEach((page, i) => {
       page.data.results.forEach((movie, j) => {
+        // fix the problem with displaying duplicates after deleting last item on the page
         i > 0 &&
         data.pages[i].data.results[j].id ===
           data.pages[i - 1].data.results[j].id
@@ -123,13 +123,11 @@ export const InfinityMoviesScreen = ({navigation}) => {
       flatListRef?.current?.scrollToIndex({index: 0, animated: false});
   }, [isFocused]);
 
-  const setNextPage = useCallback(() => {
-    fetchNextPage();
-  }, [fetchNextPage]);
+  const setNextPage = useCallback(() => fetchNextPage(), [fetchNextPage]);
 
   const renderItem = useCallback(
     ({item}) => (
-      <MovieItem
+      <SavedMovieItem
         movie={item}
         goToDetails={goToDetails}
         removeMovie={removeMovie}
@@ -175,14 +173,15 @@ export const InfinityMoviesScreen = ({navigation}) => {
             />
           }
           getItemLayout={getItemLayout}
-          ListFooterComponent={
-            <ListButton
-              title="Next"
-              name="page-next-outline"
-              disabled={!hasNextPage}
-              setPage={setNextPage}
-            />
-          }
+          onEndReached={hasNextPage && setNextPage}
+          // ListFooterComponent={
+          //   <ListButton
+          //     title="Next"
+          //     name="page-next-outline"
+          //     disabled={!hasNextPage}
+          //     setPage={setNextPage}
+          //   />
+          // }
         />
       ) : null}
     </>
@@ -193,6 +192,6 @@ const styles = (height, ITEM_HEIGHT) =>
   StyleSheet.create({
     flatListContainer: {
       flexGrow: 1,
-      paddingTop: (height - ITEM_HEIGHT - 82 - 15) / 2,
+      paddingVertical: (height - ITEM_HEIGHT - 82 - 15) / 2,
     },
   });
