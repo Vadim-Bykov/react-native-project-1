@@ -30,6 +30,7 @@ export const DrawerContent = props => {
   const goToHomePage = () => navigation.navigate('Home');
   const goToForumList = () => navigation.navigate('Forums');
   const goToSavedMovies = () => navigation.navigate('Saved');
+  const goToInfinityList = () => navigation.navigate('Infinity');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -110,6 +111,22 @@ export const DrawerContent = props => {
               )}
               labelStyle={styles.labelStyle}
               onPress={goToSavedMovies}
+            />
+
+            <DrawerItem
+              label="Infinity list"
+              focused={routeNames[index] === 'Infinity'}
+              activeTintColor={COLOR_BLUE}
+              activeBackgroundColor={COLOR_TRANSLUCENT_PURPLE}
+              icon={({focused}) => (
+                <Icon
+                  type="font-awesome-5"
+                  name="infinity"
+                  color={focused ? COLOR_BLUE : COLOR_GRAY}
+                />
+              )}
+              labelStyle={styles.labelStyle}
+              onPress={goToInfinityList}
             />
 
             <DrawerItem

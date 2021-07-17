@@ -26,6 +26,22 @@ export const getList = (page = 1) =>
     .get('', {params: {api_key, page, sort_by: 'original_order.desc'}})
     .then(res => res.data);
 
+export const getInfinityList = ({pageParam = 1}) => {
+  return listInstance
+    .get('', {
+      params: {api_key, page: pageParam, sort_by: 'original_order.desc'},
+    })
+    .then(res => ({
+      data: res.data,
+      next:
+        res.next === null
+          ? undefined
+          : res.data.total_pages <= pageParam || pageParam === false
+          ? false
+          : pageParam + 1,
+    }));
+};
+
 export const addMovie = movieId =>
   listInstance.post(`items`, getDataObject(movieId));
 

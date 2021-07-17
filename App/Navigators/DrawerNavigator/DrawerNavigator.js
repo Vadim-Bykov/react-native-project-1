@@ -9,6 +9,7 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {TouchableOpacity, StyleSheet, useWindowDimensions} from 'react-native';
 import {ErrorBoundary} from '../../common/ErrorBoundary';
 import {SavedMoviesScreen} from '../../Screens/SavedMovieList/SavedMoviesScreen';
+import {InfinityMoviesScreen} from '../../Screens/InfinityList/InfinityMoviesScreen';
 
 const HeaderMenu = ({navigation}) => (
   <TouchableOpacity onPress={navigation.openDrawer}>
@@ -47,6 +48,18 @@ export const DrawerNavigator = () => {
             headerTitleStyle: styles.favoriteScreenTitle,
             headerLeft: () => <HeaderMenu navigation={navigation} />,
             headerTitle: 'Saved movies',
+            headerStyle: styles.favoriteScreenHeader,
+          })}
+        />
+
+        <Drawer.Screen
+          name="Infinity"
+          component={InfinityMoviesScreen}
+          options={({navigation}) => ({
+            headerShown: true,
+            headerTitleStyle: styles.favoriteScreenTitle,
+            headerLeft: () => <HeaderMenu navigation={navigation} />,
+            headerTitle: 'Infinity list',
             headerStyle: styles.favoriteScreenHeader,
           })}
         />

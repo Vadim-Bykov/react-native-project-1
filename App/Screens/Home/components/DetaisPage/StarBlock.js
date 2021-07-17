@@ -10,7 +10,7 @@ import {
   COMMON_ERROR_MESSAGE,
 } from '../../../../consts/consts';
 import {setError} from '../../../../store/auth/actions';
-import {SavedInList} from './SavedMovie';
+import {SavedInList} from './SavedInList';
 
 export const StarBlock = ({data, width}) => {
   const [favoriteMovies, setFavoriteMovies] = useState(null);

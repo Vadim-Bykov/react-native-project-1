@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
@@ -18,31 +18,48 @@ import FastImage from 'react-native-fast-image';
 export const SavedInList = React.memo(({movieId, posterPath}) => {
   const [isSaved, setIsSaved] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [page, setPage] = useState(1);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const {isError, data, error} = useQuery(
-    ['movieList'],
-    movieListService.getList,
+  const {isError, data, error} = useQuery(['movieList', page], () =>
+    movieListService.getList(page),
   );
 
   useEffect(() => {
+    if (isUpdating) return;
+
     if (data && data.results) {
       const isContains = data.results.some(item => item.id === movieId);
+
+      if (!isContains && data.total_pages > page) setPage(prev => prev + 1);
+
       setIsSaved(isContains);
       setDisabled(false);
     } else if (isError) {
       dispatch(actions.setError(error.message));
       setDisabled(false);
     }
-  }, [isError, data, error]);
-  console.log(`${BASE_IMAGE_URL}w500${posterPath}`);
+  }, [isError, data?.results, error]);
+
+  const updateStatusIsSaved = useCallback((success, action) => {
+    if (success) {
+      setIsSaved(action === 'added' ? true : false);
+      setIsUpdating(true);
+      setDisabled(false);
+    }
+  }, []);
 
   const mutateStorage = useMutation(
     () =>
       isSaved
-        ? movieListService.removeMovie(movieId)
-        : (movieListService.addMovie(movieId),
+        ? movieListService
+            .removeMovie(movieId)
+            .then(res => updateStatusIsSaved(res.data.success, 'removed'))
+        : (movieListService
+            .addMovie(movieId)
+            .then(res => updateStatusIsSaved(res.data.success, 'added')),
           FastImage.preload([
             {
               uri: posterPath

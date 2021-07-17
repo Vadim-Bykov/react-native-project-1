@@ -7,12 +7,16 @@ import React, {
   useState,
 } from 'react';
 import {FlatList, StyleSheet, Alert, useWindowDimensions} from 'react-native';
-import {useMutation, useQuery, useQueryClient} from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import * as movieListService from '../../api/movieListService';
 import {Loader} from '../../common/Loader';
 import {Error} from '../../common/Error';
 import {EmptyList} from '../../common/EmptyList';
-import {SavedMovieItem} from './components/SavedMovieItem';
 import {useDispatch} from 'react-redux';
 import * as actions from '../../store/auth/actions';
 import {extractErrorMessage} from '../../utils/utils';
@@ -23,13 +27,13 @@ import {
   COLOR_ROSE_RED,
 } from '../../consts/consts';
 import {useIsFocused} from '@react-navigation/native';
-import {ListButton} from './components/ListButton';
+import {ListButton} from '../SavedMovieList/components/ListButton';
+import {MovieItem} from './components/MovieItem';
 
-export const SavedMoviesScreen = ({navigation}) => {
-  const {width} = useWindowDimensions();
+export const InfinityMoviesScreen = ({navigation}) => {
+  const {width, height} = useWindowDimensions();
   const dispatch = useDispatch();
   const flatListRef = useRef(null);
-  const [page, setPage] = useState(1);
 
   const queryClient = useQueryClient();
 
@@ -42,26 +46,39 @@ export const SavedMoviesScreen = ({navigation}) => {
     [],
   );
 
-  const {data, error, isError, isLoading, isFetching} = useQuery(
-    ['movieList', page],
-    () => movieListService.getList(page),
-    {
-      keepPreviousData: true,
-    },
-  );
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isLoading,
+    isError,
+  } = useInfiniteQuery('movieList', movieListService.getInfinityList, {
+    getNextPageParam: lastPage => lastPage.next,
+  });
+
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    setMovies([]);
+    data?.pages.forEach((page, i) => {
+      page.data.results.forEach((movie, j) => {
+        i > 0 &&
+        data.pages[i].data.results[j].id ===
+          data.pages[i - 1].data.results[j].id
+          ? setMovies(prev => [...prev])
+          : setMovies(prev => [...prev, movie]);
+      });
+    });
+  }, [data?.pages]);
 
   useEffect(() => {
     if (isError) {
       dispatch(actions.setError(error.message));
+      console.error(error);
     }
   }, [isError]);
-
-  useEffect(() => {
-    if (data?.total_pages > 1)
-      queryClient.prefetchQuery(['movieList', page + 1], () =>
-        movieListService.getList(page + 1),
-      );
-  }, [data, page, queryClient]);
 
   const mutation = useMutation(
     movieId => movieListService.removeMovie(movieId),
@@ -102,28 +119,17 @@ export const SavedMoviesScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   useLayoutEffect(() => {
-    data?.results.length &&
+    movies.length &&
       flatListRef?.current?.scrollToIndex({index: 0, animated: false});
-  }, [isFocused, flatListRef?.current, data?.page]);
-
-  const setPrevPage = useCallback(() => {
-    setPage(prev => Math.max(prev - 1, 1));
-  }, []);
+  }, [isFocused]);
 
   const setNextPage = useCallback(() => {
-    setPage(prev => (data?.total_pages > page ? prev + 1 : prev));
-  }, [data?.total_pages, page]);
-
-  //go to previous page after deleting last item on the page
-  useEffect(() => {
-    if (data?.results.length === 0 && page > 1) {
-      setPage(prev => prev - 1);
-    }
-  }, [data?.results.length]);
+    fetchNextPage();
+  }, [fetchNextPage]);
 
   const renderItem = useCallback(
     ({item}) => (
-      <SavedMovieItem
+      <MovieItem
         movie={item}
         goToDetails={goToDetails}
         removeMovie={removeMovie}
@@ -146,14 +152,14 @@ export const SavedMoviesScreen = ({navigation}) => {
       {isLoading && <Loader />}
       {isError && <Error />}
 
-      {data && data.results ? (
+      {movies.length ? (
         <FlatList
           ref={flatListRef}
-          data={data.results}
+          data={movies}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           initialNumToRender={5}
-          contentContainerStyle={styles.flatListContainer}
+          contentContainerStyle={styles(height, ITEM_HEIGHT).flatListContainer}
           snapToInterval={ITEM_HEIGHT}
           disableIntervalMomentum
           decelerationRate="fast"
@@ -169,19 +175,11 @@ export const SavedMoviesScreen = ({navigation}) => {
             />
           }
           getItemLayout={getItemLayout}
-          ListHeaderComponent={
-            <ListButton
-              title="Previous"
-              name="page-previous-outline"
-              disabled={page === 1}
-              setPage={setPrevPage}
-            />
-          }
           ListFooterComponent={
             <ListButton
               title="Next"
               name="page-next-outline"
-              disabled={data?.total_pages === page}
+              disabled={!hasNextPage}
               setPage={setNextPage}
             />
           }
@@ -191,8 +189,10 @@ export const SavedMoviesScreen = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  flatListContainer: {
-    flexGrow: 1,
-  },
-});
+const styles = (height, ITEM_HEIGHT) =>
+  StyleSheet.create({
+    flatListContainer: {
+      flexGrow: 1,
+      paddingTop: (height - ITEM_HEIGHT - 82 - 15) / 2,
+    },
+  });

@@ -15,7 +15,10 @@ export const ListButton = React.memo(({title, name, disabled, setPage}) => {
           color={disabled ? '#9F9F9F' : COLOR_DARK_YELLOW}
         />
       }
-      containerStyle={[styles.btnContainer, styles.extraMargin]}
+      containerStyle={[
+        styles.btnContainer,
+        title === 'Next' && styles.extraMargin,
+      ]}
       buttonStyle={styles.btn}
       titleStyle={{color: COLOR_DARK_YELLOW}}
       disabled={disabled}
