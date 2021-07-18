@@ -23,6 +23,15 @@ export const SavedInList = React.memo(({movieId, posterPath}) => {
 
   const queryClient = useQueryClient();
 
+  // Fix the problem with invalidate (cashable) data after save  movie and go back to the DetailsPage earlier then 5 min
+  useEffect(() => {
+    setTimeout(() => {
+      setIsUpdating(true);
+      setPage(1);
+      queryClient.invalidateQueries('movieList', 1);
+    });
+  }, []);
+
   const {isError, data, error} = useQuery(['movieList', page], () =>
     movieListService.getList(page),
   );
@@ -30,13 +39,12 @@ export const SavedInList = React.memo(({movieId, posterPath}) => {
   useEffect(() => {
     if (isUpdating) return;
 
-    if (data && data.results) {
+    if (data?.results) {
       const isContains = data.results.some(item => item.id === movieId);
 
-      if (!isContains && data.total_pages > page) setPage(prev => prev + 1);
-
-      setIsSaved(isContains);
-      setDisabled(false);
+      !isContains && data.total_pages > page
+        ? setPage(prev => prev + 1)
+        : (setIsSaved(isContains), setDisabled(false));
     } else if (isError) {
       dispatch(actions.setError(error.message));
       setDisabled(false);

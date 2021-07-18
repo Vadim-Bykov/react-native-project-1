@@ -60,15 +60,15 @@ export const InfinityMoviesScreen = ({navigation}) => {
   });
 
   useEffect(() => {
+    const movieSet = new Set();
     setMovies([]);
     data?.pages.forEach((page, i) => {
       page.data.results.forEach((movie, j) => {
         // fix the problem with displaying duplicates after deleting last item on the page
-        i > 0 &&
-        data.pages[i].data.results[j].id ===
-          data.pages[i - 1].data.results[j].id
-          ? setMovies(prev => [...prev])
-          : setMovies(prev => [...prev, movie]);
+        if (!movieSet.has(movie.id)) {
+          movieSet.add(movie.id);
+          setMovies(prev => [...prev, movie]);
+        }
       });
     });
   }, [data?.pages]);
@@ -160,7 +160,7 @@ export const InfinityMoviesScreen = ({navigation}) => {
           contentContainerStyle={styles(height, ITEM_HEIGHT).flatListContainer}
           snapToInterval={ITEM_HEIGHT}
           disableIntervalMomentum
-          decelerationRate="fast"
+          decelerationRate="normal"
           ListEmptyComponent={
             <EmptyList text="No saved movies. Please, choose some films." />
           }
