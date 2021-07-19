@@ -6,6 +6,7 @@ import {Input} from '../../../common/Input';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import {extractErrorMessage} from '../../../utils/utils';
+import {ModalInput} from './ModalInput';
 
 export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
   const {width} = useWindowDimensions();
@@ -13,6 +14,7 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
   const dispatch = useDispatch();
 
   const TitleInput = {
+    icon: {iconName: 'forum-outline', type: 'material-community'},
     input: {
       placeholder: 'Forum name',
       textContentType: 'name',
@@ -25,10 +27,12 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
         minLength: {value: 6, message: 'Not achieved min length 6'},
         maxLength: {value: 30, message: 'Exceeded max length 30'},
       },
+      label: 'Name',
     },
   };
 
   const DescriptionInput = {
+    icon: {iconName: 'description', type: 'material'},
     input: {
       placeholder: 'Description',
       textContentType: 'name',
@@ -41,6 +45,7 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
         minLength: {value: 6, message: 'Not achieved min length 6'},
       },
       multiline: true,
+      label: 'Description',
     },
   };
 
@@ -76,8 +81,8 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
         <View style={[styles.modalView, {width: 0.9 * width}]}>
           <View style={styles.content}>
             <Text style={styles.header}>Create a new forum</Text>
-            <Input inputConfig={TitleInput} />
-            <Input inputConfig={DescriptionInput} />
+            <ModalInput inputConfig={TitleInput} />
+            <ModalInput inputConfig={DescriptionInput} />
           </View>
 
           <View style={styles.buttonContainer}>
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
   modalView: {
     justifyContent: 'center',
     margin: 20,
-    backgroundColor: '#C7C7C7',
+    backgroundColor: '#E4E4E4',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,
