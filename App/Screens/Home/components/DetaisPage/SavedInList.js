@@ -26,7 +26,6 @@ export const SavedInList = React.memo(({movieId, posterPath}) => {
   // Fix the problem with invalidate (cashable) data after save  movie and go back to the DetailsPage earlier then 5 min
   useEffect(() => {
     setTimeout(() => {
-      setIsUpdating(true);
       setPage(1);
       queryClient.invalidateQueries('movieList', 1);
     });
