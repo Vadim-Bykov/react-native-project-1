@@ -18,7 +18,11 @@ import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {Loader} from '../../../common/Loader';
 import {Error} from '../../../common/Error';
 import {UserImage} from './UserImage';
-import {COLOR_DARK_YELLOW, COLOR_WHITE} from '../../../consts/consts';
+import {
+  BG_COLOR_TRANSPARENT_GRAY,
+  COLOR_DARK_YELLOW,
+  COLOR_WHITE,
+} from '../../../consts/consts';
 
 export const AuthPage = ({configuration}) => {
   const {
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0, 0.4)',
+    backgroundColor: BG_COLOR_TRANSPARENT_GRAY,
     justifyContent: 'space-between',
   },
   container: {

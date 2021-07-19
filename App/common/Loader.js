@@ -1,5 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {BG_COLOR_TRANSPARENT_GRAY} from '../consts/consts';
 
 export const Loader = () => {
   return (
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0, 0.4)',
+    backgroundColor: BG_COLOR_TRANSPARENT_GRAY,
     zIndex: 1000,
   },
 });
