@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Avatar} from 'react-native-elements';
-import {DEFAULT_AVATAR} from '../../../consts/consts';
+import {Avatar, Tooltip, Icon} from 'react-native-elements';
+import {COLOR_PURPLE, DEFAULT_AVATAR} from '../../../consts/consts';
 import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
@@ -30,17 +30,33 @@ export const OwnerInfo = React.memo(({userRefPath}) => {
   if (!user) return null;
 
   return (
-    <View style={styles.ownerInfo}>
+    <Tooltip
+      popover={
+        <>
+          <Text>Author: {user.name}</Text>
+          <Text>Email: {user.email}</Text>
+        </>
+      }
+      style={styles.ownerInfo}
+      backgroundColor="#CDE6FF"
+      width={200}
+      height={50}>
       <Avatar
         rounded
         size="medium"
         source={{
           uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
-        }}
-      />
+        }}>
+        <Icon
+          name="touch-app"
+          color={COLOR_PURPLE}
+          size={20}
+          containerStyle={styles.icon}
+        />
+      </Avatar>
 
-      <Text>Author: {user.name}</Text>
-    </View>
+      {/* <Text>Author: {user.name}</Text> */}
+    </Tooltip>
   );
 });
 
@@ -48,5 +64,12 @@ const styles = StyleSheet.create({
   ownerInfo: {
     alignItems: 'flex-end',
     maxWidth: '45%',
+  },
+
+  icon: {
+    position: 'absolute',
+    right: -8,
+    bottom: -8,
+    transform: [{rotate: '-30deg'}],
   },
 });

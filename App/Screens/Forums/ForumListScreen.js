@@ -17,6 +17,7 @@ import {extractErrorMessage, sortByCreationTime} from '../../utils/utils';
 import * as firebaseService from '../../api/firebaseService';
 import {COLOR_PURPLE} from '../../consts/consts';
 import {EmptyList} from '../../common/EmptyList';
+import {ForumNativeElement} from './components/ForumNativeElement';
 
 export const ForumListScreen = ({navigation}) => {
   const user = useSelector(selectors.getUser);
@@ -72,7 +73,10 @@ export const ForumListScreen = ({navigation}) => {
     return unsubscribe;
   }, []);
 
-  const renderItem = useCallback(({item}) => <Forum forum={item} />, []);
+  const renderItem = useCallback(
+    ({item}) => <ForumNativeElement forum={item} />,
+    [],
+  );
 
   const forumIdFromNotification = useSelector(
     selectors.getForumIdFromNotification,
