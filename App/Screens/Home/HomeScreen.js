@@ -3,14 +3,11 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useState,
 } from 'react';
-import {StyleSheet, TextInput} from 'react-native';
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
 import * as api from '../../api/movieApiService';
-import {COLOR_PURPLE} from '../../consts/consts';
 import * as actions from '../../store/auth/actions';
 import {HomeScreenComponent} from './HomeScreenComponent';
 
@@ -29,6 +26,8 @@ export const HomeScreen = ({navigation}) => {
   const [mode, setMode] = useState('section');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [inputText, setInputText] = useState(null);
+  const [moviesInstance, setMoviesInstance] = useState(null);
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
@@ -41,6 +40,7 @@ export const HomeScreen = ({navigation}) => {
   useEffect(() => {
     if (movies.data) {
       setShownMovies(movies.data.results);
+      setMoviesInstance(movies.data.results);
       setTotalPages(movies.data.total_pages);
     }
   }, [movies.data]);
@@ -55,11 +55,13 @@ export const HomeScreen = ({navigation}) => {
   useEffect(() => {
     mode === 'section' &&
       movies.refetch().then(movies => {
-        movies.data && setShownMovies(movies.data.results);
+        if (movies.data) {
+          setShownMovies(movies.data.results);
+          setMoviesInstance(movies.data.results);
+          setInputText('');
+        }
         setActiveIndex(0);
-        pagerRef &&
-          pagerRef.current &&
-          pagerRef.current.setPageWithoutAnimation(0);
+        pagerRef?.current?.setPageWithoutAnimation(0);
       });
   }, [currentSection, mode, currentPage]);
 
@@ -84,6 +86,7 @@ export const HomeScreen = ({navigation}) => {
       setCurrentGenreID(genreId);
       setCurrentPage(1);
       setMode('genre');
+      // setInputText('');
     },
     [currentGenreID, mode],
   );
@@ -100,8 +103,10 @@ export const HomeScreen = ({navigation}) => {
 
         if (shownMovies) {
           setShownMovies(shownMovies.results);
+          setMoviesInstance(shownMovies.results);
           setTotalPages(shownMovies.total_pages);
           setActiveIndex(0);
+          setInputText('');
         }
 
         if (pagerRef && pagerRef.current)
@@ -125,6 +130,7 @@ export const HomeScreen = ({navigation}) => {
       setCurrentSection(name);
       setCurrentPage(1);
       setMode('section');
+      setInputText('');
     },
     [currentSection, mode],
   );
@@ -153,7 +159,6 @@ export const HomeScreen = ({navigation}) => {
         movies,
         shownMovies,
         setShownMovies,
-        moviesForSearch: movies?.data?.results,
         currentSection,
         onChangeSection,
         genresApi,
@@ -173,22 +178,11 @@ export const HomeScreen = ({navigation}) => {
         onNextPage,
         onPrevPage,
         pagerRef,
+        inputText,
+        setInputText,
+        moviesInstance,
       }}>
       <HomeScreenComponent />
     </MoviesContext.Provider>
   );
 };
-
-// const styles = StyleSheet.create({
-//   inputContainer: {
-//     borderBottomColor: COLOR_PURPLE,
-//     height: 30,
-//   },
-
-//   input: {
-//     color: COLOR_PURPLE,
-//     borderBottomColor: COLOR_PURPLE,
-//     borderBottomWidth: StyleSheet.hairlineWidth,
-//     // height: 30,
-//   },
-// });

@@ -1,85 +1,62 @@
-import React, {useState} from 'react';
-import {TextInput, StyleSheet} from 'react-native';
-import {Header} from 'react-native-elements';
-import {COLOR_PURPLE} from '../../../../consts/consts';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback} from 'react';
+import {StyleSheet, ToastAndroid} from 'react-native';
+import {Header, Input} from 'react-native-elements';
+import {COLOR_PURPLE, DEFAULT_BG_COLOR} from '../../../../consts/consts';
 import {useMovieContext} from '../../HomeScreen';
 
-export const MoviesHeader = () => {
-  const [searchText, setSearchText] = useState(null);
+export const MoviesHeader = React.memo(() => {
+  const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerTitle: () => {
-  //       // console.log(shownMovies);
+  const {
+    moviesInstance,
+    setShownMovies,
+    pagerRef,
+    inputText,
+    setInputText,
+    setActiveIndex,
+  } = useMovieContext();
 
-  //       const onchange = value => {
-  //         setSearchText(value);
-  //         const filteredMovies = movies?.data?.results.filter(movie =>
-  //           movie.title.toUpperCase().includes(value.toUpperCase()),
-  //         );
-  //         setShownMovies(filteredMovies);
-  //         filteredMovies.length &&
-  //           pagerRef?.current?.setPageWithoutAnimation(0);
-  //       };
+  const onSearchMovie = useCallback(() => {
+    if (!inputText.trim()) {
+      setActiveIndex(0);
+      setShownMovies(moviesInstance);
+      pagerRef?.current?.setPageWithoutAnimation(0);
+      return;
+    }
 
-  //       return (
-  //         <TextInput
-  //           placeholder="Search movie"
-  //           // renderErrorMessage={false}
-  //           // inputContainerStyle={styles.inputContainer}
-  //           style={styles.input}
-  //           value={searchText}
-  //           onChangeText={onchange}
-  //         />
-  //       );
-  //     },
-  // headerRight: () => {
-  //   return (
-  //     <Icon
-  //       type="antdesign"
-  //       name="search1"
-  //       color={COLOR_PURPLE}
-  //       onPress={onSearchMovie}
-  //     />
-  //   );
-  // },
-  //   });
-  // }, [movies?.data?.results, searchText]);
+    const filteredMovies = moviesInstance?.filter(movie =>
+      movie.title.toUpperCase().includes(inputText.toUpperCase()),
+    );
 
-  const {moviesForSearch, setShownMovies, pagerRef} = useMovieContext();
-  const onSearchMovie = () => {
-    const filteredMovies =
-      moviesForSearch &&
-      moviesForSearch.filter(movie =>
-        movie.title.toUpperCase().includes(value.toUpperCase()),
+    if (filteredMovies.length) {
+      pagerRef?.current?.setPageWithoutAnimation(0);
+      setShownMovies(filteredMovies);
+      setActiveIndex(0);
+    } else {
+      ToastAndroid.show(
+        'No movies according to your request',
+        ToastAndroid.SHORT,
       );
-    setShownMovies(filteredMovies);
-    filteredMovies.length && pagerRef?.current?.setPageWithoutAnimation(0);
-  };
-
-  const onChange = value => {
-    setSearchText(value);
-    //  const filteredMovies =
-    //    moviesForSearch &&
-    //    moviesForSearch.filter(movie =>
-    //      movie.title.toUpperCase().includes(value.toUpperCase()),
-    //    );
-    //  setShownMovies(filteredMovies);
-    //  filteredMovies.length && pagerRef?.current?.setPageWithoutAnimation(0);
-  };
+    }
+  }, [inputText, moviesInstance]);
 
   return (
     <Header
-      // placement="left"
-      leftComponent={{icon: 'menu', color: COLOR_PURPLE}}
+      placement="left"
+      leftComponent={{
+        icon: 'menu',
+        color: COLOR_PURPLE,
+        onPress: navigation.openDrawer,
+      }}
       centerComponent={
-        <TextInput
+        <Input
           placeholder="Search movie"
-          //   renderErrorMessage={false}
-          //   inputContainerStyle={styles.inputContainer}
-          style={styles.input}
-          value={searchText}
-          onChangeText={onChange}
+          renderErrorMessage={false}
+          inputContainerStyle={styles.inputContainer}
+          inputStyle={styles.input}
+          value={inputText}
+          onChangeText={setInputText}
         />
       }
       rightComponent={{
@@ -92,21 +69,19 @@ export const MoviesHeader = () => {
       statusBarProps={{backgroundColor: 'transparent'}}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent',
+    backgroundColor: DEFAULT_BG_COLOR,
+    paddingBottom: 5,
   },
-  // inputContainer: {
-  //    borderBottomColor: COLOR_PURPLE,
-  //    height: 30,
-  //  },
+  inputContainer: {
+    borderBottomColor: COLOR_PURPLE,
+    height: 30,
+  },
 
   input: {
     color: COLOR_PURPLE,
-    borderBottomColor: COLOR_PURPLE,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    // height: 30,
   },
 });
