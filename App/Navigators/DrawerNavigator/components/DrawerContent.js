@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {Icon, Avatar} from 'react-native-elements';
+import {Icon, Avatar, Badge} from 'react-native-elements';
 import {View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as thunks from '../../../store/auth/operations';
@@ -13,8 +13,11 @@ import {
   COLOR_BLUE,
   COLOR_GRAY,
   COLOR_TRANSLUCENT_PURPLE,
+  COLOR_WHITE,
   DEFAULT_AVATAR,
 } from '../../../consts/consts';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '@react-navigation/native';
 
 export const DrawerContent = props => {
   const {
@@ -23,8 +26,13 @@ export const DrawerContent = props => {
   } = props;
 
   const user = useSelector(selectors.getUser);
-
   const dispatch = useDispatch();
+
+  const {colors, dark} = useTheme();
+  console.log(dark);
+  console.log(colors);
+
+  const {isConnected} = useNetInfo();
 
   const goToFavoritePage = () => navigation.navigate('Favorite');
   const goToHomePage = () => navigation.navigate('Home');
@@ -48,8 +56,27 @@ export const DrawerContent = props => {
                 size="medium"
                 source={{
                   uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
-                }}
-              />
+                }}>
+                <Badge
+                  value={
+                    isConnected ? (
+                      <Icon
+                        name="wifi-tethering"
+                        size={10}
+                        color={COLOR_WHITE}
+                      />
+                    ) : (
+                      <Icon
+                        name="portable-wifi-off"
+                        size={10}
+                        color={COLOR_WHITE}
+                      />
+                    )
+                  }
+                  status={isConnected ? 'success' : 'error'}
+                  containerStyle={styles.isConnected}
+                />
+              </Avatar>
 
               <View style={styles.usernameBlock}>
                 <Text style={styles.headerTitle}>Username</Text>
@@ -176,6 +203,10 @@ const styles = StyleSheet.create({
   userData: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  isConnected: {
+    position: 'absolute',
+    right: 0,
   },
   usernameBlock: {
     paddingBottom: 3,

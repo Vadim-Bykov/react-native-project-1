@@ -15,6 +15,7 @@ export const Slide = ({movie, width, goToMovieDetails, index, lastIndex}) => {
   } = useMovieContext();
 
   const focused = shownMovies[activeIndex].id === movie.id;
+  console.log(movie);
 
   return (
     <>

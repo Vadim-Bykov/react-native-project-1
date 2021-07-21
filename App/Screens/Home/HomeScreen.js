@@ -26,6 +26,8 @@ export const HomeScreen = ({navigation}) => {
   const [mode, setMode] = useState('section');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [inputText, setInputText] = useState(null);
+  const [moviesInstance, setMoviesInstance] = useState(null);
   const dispatch = useDispatch();
 
   const genres = useQuery('genres', api.getGenres);
@@ -38,6 +40,7 @@ export const HomeScreen = ({navigation}) => {
   useEffect(() => {
     if (movies.data) {
       setShownMovies(movies.data.results);
+      setMoviesInstance(movies.data.results);
       setTotalPages(movies.data.total_pages);
     }
   }, [movies.data]);
@@ -52,11 +55,13 @@ export const HomeScreen = ({navigation}) => {
   useEffect(() => {
     mode === 'section' &&
       movies.refetch().then(movies => {
-        movies.data && setShownMovies(movies.data.results);
+        if (movies.data) {
+          setShownMovies(movies.data.results);
+          setMoviesInstance(movies.data.results);
+          setInputText('');
+        }
         setActiveIndex(0);
-        pagerRef &&
-          pagerRef.current &&
-          pagerRef.current.setPageWithoutAnimation(0);
+        pagerRef?.current?.setPageWithoutAnimation(0);
       });
   }, [currentSection, mode, currentPage]);
 
@@ -81,6 +86,7 @@ export const HomeScreen = ({navigation}) => {
       setCurrentGenreID(genreId);
       setCurrentPage(1);
       setMode('genre');
+      // setInputText('');
     },
     [currentGenreID, mode],
   );
@@ -97,8 +103,10 @@ export const HomeScreen = ({navigation}) => {
 
         if (shownMovies) {
           setShownMovies(shownMovies.results);
+          setMoviesInstance(shownMovies.results);
           setTotalPages(shownMovies.total_pages);
           setActiveIndex(0);
+          setInputText('');
         }
 
         if (pagerRef && pagerRef.current)
@@ -122,6 +130,7 @@ export const HomeScreen = ({navigation}) => {
       setCurrentSection(name);
       setCurrentPage(1);
       setMode('section');
+      setInputText('');
     },
     [currentSection, mode],
   );
@@ -149,6 +158,7 @@ export const HomeScreen = ({navigation}) => {
         genres,
         movies,
         shownMovies,
+        setShownMovies,
         currentSection,
         onChangeSection,
         genresApi,
@@ -167,6 +177,10 @@ export const HomeScreen = ({navigation}) => {
         totalPages,
         onNextPage,
         onPrevPage,
+        pagerRef,
+        inputText,
+        setInputText,
+        moviesInstance,
       }}>
       <HomeScreenComponent />
     </MoviesContext.Provider>

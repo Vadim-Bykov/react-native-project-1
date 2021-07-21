@@ -8,6 +8,7 @@ import {MoviePager} from './components/Pager/Pager';
 import {Sections} from './components/Sections/Sections';
 import {useMovieContext} from './HomeScreen';
 import {Error} from '../../common/Error';
+import {MoviesHeader} from './components/Header/Header';
 
 export const HomeScreenComponent = () => {
   const error = useSelector(selectors.getErrorMessage);
@@ -22,7 +23,10 @@ export const HomeScreenComponent = () => {
         <Loader />
       )}
 
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        stickyHeaderIndices={[0]}>
+        <MoviesHeader />
         <Sections />
         <Genres />
         {shownMovies && <MoviePager />}
@@ -35,6 +39,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     zIndex: 0,
-    paddingTop: 70,
+    // paddingTop: 70,
   },
 });

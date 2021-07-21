@@ -4,12 +4,13 @@ import {FavoriteScreen} from '../../Screens/FavoriteScreen/FavoriteScreen';
 import {MoviesStackNavigator} from '../MoviesStackNavigator';
 import {DrawerContent} from './components/DrawerContent';
 import {ForumStackNavigator} from '../ForumStackNavigator';
-import {COLOR_PURPLE, DEFAULT_BG_COLOR} from '../../consts/consts';
+import {COLOR_PURPLE, COLOR_WHITE, DEFAULT_BG_COLOR} from '../../consts/consts';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 import {TouchableOpacity, StyleSheet, useWindowDimensions} from 'react-native';
 import {ErrorBoundary} from '../../common/ErrorBoundary';
 import {SavedMoviesScreen} from '../../Screens/SavedMovieList/SavedMoviesScreen';
 import {InfinityMoviesScreen} from '../../Screens/InfinityList/InfinityMoviesScreen';
+import {Header} from 'react-native-elements';
 
 const HeaderMenu = ({navigation}) => (
   <TouchableOpacity onPress={navigation.openDrawer}>
@@ -32,11 +33,32 @@ export const DrawerNavigator = () => {
           component={FavoriteScreen}
           options={({navigation}) => ({
             headerShown: true,
-            headerTitleStyle: styles.favoriteScreenTitle,
-            headerLeft: () => <HeaderMenu navigation={navigation} />,
-            headerTitle: 'Favorite',
-            headerStyle: styles.favoriteScreenHeader,
             unmountOnBlur: true,
+            // headerTitleStyle: styles.favoriteScreenTitle,
+            // headerLeft: () => <HeaderMenu navigation={navigation} />,
+            // headerTitle: 'Favorite',
+            // headerStyle: styles.favoriteScreenHeader,
+            header: () => (
+              <Header
+                placement="left"
+                leftComponent={{
+                  icon: 'menu',
+                  color: COLOR_WHITE,
+                  onPress: navigation.openDrawer,
+                }}
+                centerComponent={{
+                  text: 'Favorite',
+                  style: {color: COLOR_WHITE},
+                }}
+                centerContainerStyle={{
+                  justifyContent: 'center',
+                }}
+                backgroundColor="transparent"
+                backgroundImage={{
+                  uri: 'http://beeimg.com/images/m76498322992.jpg',
+                }}
+              />
+            ),
           })}
         />
 

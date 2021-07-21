@@ -29,24 +29,25 @@ export const MoviesStackNavigator = ({navigation}) => {
           name="Movies"
           component={HomeScreen}
           options={{
-            headerBackground: () => <View style={styles.homeHeader} />,
-            headerTitle: false,
-            headerTransparent: true,
-            headerLeftContainerStyle: {paddingLeft: 20},
-            headerRightContainerStyle: {paddingRight: 20},
-            headerLeft: () => (
-              <TouchableOpacity onPress={navigation.openDrawer}>
-                <Icon name="menu" color={COLOR_PURPLE} />
-              </TouchableOpacity>
-            ),
-            headerRight: () => (
-              <Icon
-                type="antdesign"
-                name="search1"
-                color={COLOR_PURPLE}
-                onPress={() => showToast("This feature hasn't implemented yet")}
-              />
-            ),
+            headerShown: false,
+            // headerBackground: () => <View style={styles.homeHeader} />,
+            // // headerTitle: false,
+            // headerTransparent: true,
+            // headerLeftContainerStyle: {paddingLeft: 20},
+            // headerRightContainerStyle: {paddingRight: 20},
+            // headerLeft: () => (
+            //   <TouchableOpacity onPress={navigation.openDrawer}>
+            //     <Icon name="menu" color={COLOR_PURPLE} />
+            //   </TouchableOpacity>
+            // ),
+            // headerRight: () => (
+            //   <Icon
+            //     type="antdesign"
+            //     name="search1"
+            //     color={COLOR_PURPLE}
+            //     onPress={() => showToast("This feature hasn't implemented yet")}
+            //   />
+            // ),
           }}
         />
 
