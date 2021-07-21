@@ -3,11 +3,14 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
 } from 'react';
+import {StyleSheet, TextInput} from 'react-native';
 import {useQuery} from 'react-query';
 import {useDispatch} from 'react-redux';
 import * as api from '../../api/movieApiService';
+import {COLOR_PURPLE} from '../../consts/consts';
 import * as actions from '../../store/auth/actions';
 import {HomeScreenComponent} from './HomeScreenComponent';
 
@@ -149,6 +152,8 @@ export const HomeScreen = ({navigation}) => {
         genres,
         movies,
         shownMovies,
+        setShownMovies,
+        moviesForSearch: movies?.data?.results,
         currentSection,
         onChangeSection,
         genresApi,
@@ -167,8 +172,23 @@ export const HomeScreen = ({navigation}) => {
         totalPages,
         onNextPage,
         onPrevPage,
+        pagerRef,
       }}>
       <HomeScreenComponent />
     </MoviesContext.Provider>
   );
 };
+
+// const styles = StyleSheet.create({
+//   inputContainer: {
+//     borderBottomColor: COLOR_PURPLE,
+//     height: 30,
+//   },
+
+//   input: {
+//     color: COLOR_PURPLE,
+//     borderBottomColor: COLOR_PURPLE,
+//     borderBottomWidth: StyleSheet.hairlineWidth,
+//     // height: 30,
+//   },
+// });

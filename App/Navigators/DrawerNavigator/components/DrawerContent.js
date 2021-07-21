@@ -17,6 +17,7 @@ import {
   DEFAULT_AVATAR,
 } from '../../../consts/consts';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '@react-navigation/native';
 
 export const DrawerContent = props => {
   const {
@@ -26,6 +27,10 @@ export const DrawerContent = props => {
 
   const user = useSelector(selectors.getUser);
   const dispatch = useDispatch();
+
+  const {colors, dark} = useTheme();
+  console.log(dark);
+  console.log(colors);
 
   const {isConnected} = useNetInfo();
 

@@ -14,7 +14,8 @@ export const Slide = ({movie, width, goToMovieDetails, index, lastIndex}) => {
     onPrevPage,
   } = useMovieContext();
 
-  const focused = shownMovies[activeIndex].id === movie.id;
+  const focused =
+    shownMovies.length && shownMovies[activeIndex].id === movie.id;
 
   return (
     <>
