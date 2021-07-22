@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {
   Image,
@@ -14,6 +15,7 @@ import {StarBlock} from './StarBlock';
 
 export const DetailsPage = ({data, castInfo, castInfoIsError}) => {
   const {width} = useWindowDimensions();
+  const {dark, colors} = useTheme();
 
   return (
     <ScrollView>
@@ -26,8 +28,8 @@ export const DetailsPage = ({data, castInfo, castInfoIsError}) => {
         style={{...styles.image, width, height: width * 0.9}}
       />
       <View style={styles.container}>
-        <StarBlock data={data} width={width} />
-        <GeneralInfo data={data} />
+        <StarBlock data={data} width={width} dark={dark} />
+        <GeneralInfo data={data} colorText={colors.text} dark={dark} />
         {castInfoIsError ? <Error /> : <CastInfo castInfo={castInfo} />}
       </View>
     </ScrollView>

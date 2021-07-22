@@ -32,7 +32,6 @@ export const CastInfo = ({castInfo}) => {
         renderItem={renderCast}
         keyExtractor={item => item.id}
         horizontal={true}
-        initialNumToRender={6}
         showsHorizontalScrollIndicator={false}
       />
     </View>

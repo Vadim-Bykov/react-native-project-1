@@ -5,20 +5,17 @@ import {Badge, Icon} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 import {
   COLOR_BLACK,
-  COLOR_GRAY,
   COLOR_ROSE_RED,
   COLOR_WHITE,
   COMMON_ERROR_MESSAGE,
 } from '../../../../consts/consts';
 import {setError} from '../../../../store/auth/actions';
 import {SavedInList} from './SavedInList';
-import {useTheme} from '@react-navigation/native';
 
-export const StarBlock = ({data, width}) => {
+export const StarBlock = ({data, width, dark}) => {
   const [favoriteMovies, setFavoriteMovies] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const {dark} = useTheme();
   const dispatch = useDispatch();
 
   useEffect(() => {

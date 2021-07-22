@@ -86,5 +86,6 @@ const styles = backgroundColor =>
 
     input: {
       color: COLOR_PURPLE,
+      paddingTop: 5,
     },
   });
