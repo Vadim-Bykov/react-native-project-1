@@ -11,6 +11,7 @@ import {ErrorBoundary} from '../../common/ErrorBoundary';
 import {SavedMoviesScreen} from '../../Screens/SavedMovieList/SavedMoviesScreen';
 import {InfinityMoviesScreen} from '../../Screens/InfinityList/InfinityMoviesScreen';
 import {Header} from 'react-native-elements';
+import {useTheme} from '@react-navigation/native';
 
 const HeaderMenu = ({navigation}) => (
   <TouchableOpacity onPress={navigation.openDrawer}>
@@ -22,6 +23,7 @@ const Drawer = createDrawerNavigator();
 
 export const DrawerNavigator = () => {
   const {width, height} = useWindowDimensions();
+  const {colors} = useTheme();
 
   return (
     <ErrorBoundary width={width} height={height}>
@@ -34,10 +36,10 @@ export const DrawerNavigator = () => {
           options={({navigation}) => ({
             headerShown: true,
             unmountOnBlur: true,
-            // headerTitleStyle: styles.favoriteScreenTitle,
+            // headerTitleStyle: styles().favoriteScreenTitle,
             // headerLeft: () => <HeaderMenu navigation={navigation} />,
             // headerTitle: 'Favorite',
-            // headerStyle: styles.favoriteScreenHeader,
+            // headerStyle: styles().favoriteScreenHeader,
             header: () => (
               <Header
                 placement="left"
@@ -67,10 +69,10 @@ export const DrawerNavigator = () => {
           component={SavedMoviesScreen}
           options={({navigation}) => ({
             headerShown: true,
-            headerTitleStyle: styles.favoriteScreenTitle,
+            headerTitleStyle: styles().favoriteScreenTitle,
             headerLeft: () => <HeaderMenu navigation={navigation} />,
             headerTitle: 'Saved movies',
-            headerStyle: styles.favoriteScreenHeader,
+            headerStyle: styles(colors.background).favoriteScreenHeader,
           })}
         />
 
@@ -79,10 +81,10 @@ export const DrawerNavigator = () => {
           component={InfinityMoviesScreen}
           options={({navigation}) => ({
             headerShown: true,
-            headerTitleStyle: styles.favoriteScreenTitle,
+            headerTitleStyle: styles().favoriteScreenTitle,
             headerLeft: () => <HeaderMenu navigation={navigation} />,
             headerTitle: 'Infinity list',
-            headerStyle: styles.favoriteScreenHeader,
+            headerStyle: styles(colors.background).favoriteScreenHeader,
           })}
         />
 
@@ -92,14 +94,15 @@ export const DrawerNavigator = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  favoriteScreenHeader: {
-    backgroundColor: DEFAULT_BG_COLOR,
-    elevation: 0,
-    paddingLeft: 20,
-  },
-  favoriteScreenTitle: {
-    color: COLOR_PURPLE,
-    marginLeft: -20,
-  },
-});
+const styles = backgroundColor =>
+  StyleSheet.create({
+    favoriteScreenHeader: {
+      backgroundColor,
+      elevation: 0,
+      paddingLeft: 20,
+    },
+    favoriteScreenTitle: {
+      color: COLOR_PURPLE,
+      marginLeft: -20,
+    },
+  });

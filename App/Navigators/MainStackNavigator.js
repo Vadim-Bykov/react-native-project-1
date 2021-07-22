@@ -9,6 +9,7 @@ import * as thunks from '../store/auth/operations';
 import {DrawerNavigator} from './DrawerNavigator/DrawerNavigator';
 import {DEFAULT_BG_COLOR, STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {ErrorBoundary} from '../common/ErrorBoundary';
+import {useTheme} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
@@ -20,13 +21,14 @@ export const MainStackNavigator = () => {
   useEffect(() => dispatch(thunks.authFireBase()), []);
 
   const {width, height} = useWindowDimensions();
+  const {dark, colors} = useTheme();
 
   return (
     <ErrorBoundary width={width} height={height}>
       <StatusBar
         translucent={true}
-        backgroundColor={isAuth ? DEFAULT_BG_COLOR : 'transparent'}
-        barStyle={isAuth ? 'dark-content' : 'default'}
+        backgroundColor={!isAuth ? 'transparent' : colors.background}
+        barStyle={!isAuth || dark ? 'default' : 'dark-content'}
       />
 
       <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS} mode="modal">

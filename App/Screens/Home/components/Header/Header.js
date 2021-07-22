@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {StyleSheet, ToastAndroid} from 'react-native';
 import {Header, Input} from 'react-native-elements';
@@ -7,6 +7,7 @@ import {useMovieContext} from '../../HomeScreen';
 
 export const MoviesHeader = React.memo(() => {
   const navigation = useNavigation();
+  const {colors} = useTheme();
 
   const {
     moviesInstance,
@@ -53,8 +54,8 @@ export const MoviesHeader = React.memo(() => {
         <Input
           placeholder="Search movie"
           renderErrorMessage={false}
-          inputContainerStyle={styles.inputContainer}
-          inputStyle={styles.input}
+          inputContainerStyle={styles().inputContainer}
+          inputStyle={styles().input}
           value={inputText}
           onChangeText={setInputText}
         />
@@ -65,23 +66,25 @@ export const MoviesHeader = React.memo(() => {
         color: COLOR_PURPLE,
         onPress: onSearchMovie,
       }}
-      containerStyle={styles.container}
+      containerStyle={styles(colors.background).container}
       statusBarProps={{backgroundColor: 'transparent'}}
     />
   );
 });
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: DEFAULT_BG_COLOR,
-    paddingBottom: 5,
-  },
-  inputContainer: {
-    borderBottomColor: COLOR_PURPLE,
-    height: 30,
-  },
+const styles = backgroundColor =>
+  StyleSheet.create({
+    container: {
+      backgroundColor,
+      paddingBottom: 5,
+      borderBottomWidth: 0,
+    },
+    inputContainer: {
+      borderBottomColor: COLOR_PURPLE,
+      height: 30,
+    },
 
-  input: {
-    color: COLOR_PURPLE,
-  },
-});
+    input: {
+      color: COLOR_PURPLE,
+    },
+  });
