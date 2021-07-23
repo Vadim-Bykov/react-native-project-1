@@ -1,23 +1,22 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {Icon} from 'react-native-elements';
-import {View, Text, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {useDispatch} from 'react-redux';
 import * as thunks from '../../../store/auth/operations';
 import {
   COLOR_BLUE,
-  COLOR_DARK_YELLOW,
   COLOR_GRAY,
   COLOR_TRANSLUCENT_PURPLE,
 } from '../../../consts/consts';
 import {useTheme} from '@react-navigation/native';
-import {Switch} from 'react-native';
 import {Header} from './Header';
-import {ToastAndroid} from 'react-native';
+import {SwitchModeItem} from './SwitchModeItem';
+import {ToggleFullScreenItem} from './ToggleFullScreenItem';
 
 export const DrawerContent = props => {
   const {
@@ -27,16 +26,7 @@ export const DrawerContent = props => {
 
   const dispatch = useDispatch();
 
-  const {dark, colors, setTheme} = useTheme();
-  console.log('useTheme', dark, colors);
-
-  const toggleTheme = useCallback(() => {
-    setTheme(dark ? 'light' : 'dark');
-    ToastAndroid.show(
-      'The theme will be changed to default after closing app. If you want to change the theme permanently, please set it in settings device',
-      ToastAndroid.LONG,
-    );
-  }, [dark]);
+  const {dark, colors, setTheme, isFullScreen, setIsFullScreen} = useTheme();
 
   const colorText = useMemo(() => (dark ? colors.text : COLOR_GRAY), [dark]);
 
@@ -69,7 +59,7 @@ export const DrawerContent = props => {
               color={focused ? COLOR_BLUE : colorText}
             />
           )}
-          labelStyle={styles().labelStyle}
+          labelStyle={styles.labelStyle}
           onPress={goToHomePage}
         />
 
@@ -86,7 +76,7 @@ export const DrawerContent = props => {
               color={focused ? COLOR_BLUE : colorText}
             />
           )}
-          labelStyle={styles().labelStyle}
+          labelStyle={styles.labelStyle}
           onPress={goToFavoritePage}
         />
 
@@ -103,7 +93,7 @@ export const DrawerContent = props => {
               color={focused ? COLOR_BLUE : colorText}
             />
           )}
-          labelStyle={styles().labelStyle}
+          labelStyle={styles.labelStyle}
           onPress={goToSavedMovies}
         />
 
@@ -120,7 +110,7 @@ export const DrawerContent = props => {
               color={focused ? COLOR_BLUE : colorText}
             />
           )}
-          labelStyle={styles().labelStyle}
+          labelStyle={styles.labelStyle}
           onPress={goToInfinityList}
         />
 
@@ -137,27 +127,17 @@ export const DrawerContent = props => {
               color={focused ? COLOR_BLUE : colorText}
             />
           )}
-          labelStyle={styles().labelStyle}
+          labelStyle={styles.labelStyle}
           onPress={goToForumList}
         />
 
-        <View style={styles().modeItemContainer}>
-          <Icon
-            name={dark ? 'nights-stay' : 'wb-sunny'}
-            color={COLOR_DARK_YELLOW}
-          />
+        <SwitchModeItem dark={dark} colorText={colorText} setTheme={setTheme} />
 
-          <Text style={[styles().labelStyle, styles(colorText).modeText]}>
-            {dark ? 'Dark' : 'Light'} mode
-          </Text>
-
-          <Switch
-            trackColor={{false: '#FFEE82', true: '#81b0ff'}}
-            thumbColor={COLOR_DARK_YELLOW}
-            value={dark}
-            onValueChange={toggleTheme}
-          />
-        </View>
+        <ToggleFullScreenItem
+          colorText={colorText}
+          isFullScreen={isFullScreen}
+          setIsFullScreen={setIsFullScreen}
+        />
       </DrawerContentScrollView>
 
       <DrawerItem
@@ -170,26 +150,16 @@ export const DrawerContent = props => {
             color={colorText}
           />
         )}
-        labelStyle={styles().labelStyle}
+        labelStyle={styles.labelStyle}
         onPress={logout}
       />
     </>
   );
 };
 
-const styles = color =>
-  StyleSheet.create({
-    labelStyle: {
-      fontWeight: 'bold',
-      letterSpacing: 0.65,
-    },
-    modeItemContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingLeft: 20,
-    },
-    modeText: {
-      color,
-      marginLeft: 30,
-    },
-  });
+const styles = StyleSheet.create({
+  labelStyle: {
+    fontWeight: 'bold',
+    letterSpacing: 0.65,
+  },
+});

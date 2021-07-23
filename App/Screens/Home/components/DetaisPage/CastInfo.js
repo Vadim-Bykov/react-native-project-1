@@ -3,10 +3,10 @@ import {StyleSheet, Text, View, FlatList} from 'react-native';
 import {Avatar} from 'react-native-elements/dist/avatar/Avatar';
 import {BASE_IMAGE_URL, DEFAULT_AVATAR} from '../../../../consts/consts';
 
-export const CastInfo = ({castInfo}) => {
+export const CastInfo = ({castInfo, colorText}) => {
   const renderCast = useCallback(
     ({item}) => (
-      <View style={styles.profile}>
+      <View style={styles().profile}>
         <Avatar
           rounded
           source={{
@@ -17,16 +17,16 @@ export const CastInfo = ({castInfo}) => {
           size={60}
           containerStyle={{marginBottom: 12}}
         />
-        <Text>{item.name}</Text>
-        <Text style={styles.character}>{item.character}</Text>
+        <Text style={styles(colorText).name}>{item.name}</Text>
+        <Text style={styles().character}>{item.character}</Text>
       </View>
     ),
     [castInfo.cast],
   );
 
   return (
-    <View style={styles.castBlock}>
-      <Text style={styles.castTitle}>Cast & Crew</Text>
+    <View style={styles().castBlock}>
+      <Text style={styles(colorText).castTitle}>Cast & Crew</Text>
       <FlatList
         data={castInfo.cast}
         renderItem={renderCast}
@@ -38,20 +38,25 @@ export const CastInfo = ({castInfo}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  castBlock: {
-    paddingHorizontal: 32,
-    marginBottom: 24,
-  },
-  castTitle: {
-    fontSize: 24,
-    marginBottom: 14,
-  },
-  profile: {
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  character: {
-    color: '#9A9BB3',
-  },
-});
+const styles = color =>
+  StyleSheet.create({
+    castBlock: {
+      paddingHorizontal: 32,
+      marginBottom: 24,
+    },
+    castTitle: {
+      color,
+      fontSize: 24,
+      marginBottom: 14,
+    },
+    profile: {
+      alignItems: 'center',
+      marginRight: 16,
+    },
+    character: {
+      color: '#9A9BB3',
+    },
+    name: {
+      color,
+    },
+  });

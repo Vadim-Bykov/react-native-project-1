@@ -30,7 +30,11 @@ export const DetailsPage = ({data, castInfo, castInfoIsError}) => {
       <View style={styles.container}>
         <StarBlock data={data} width={width} dark={dark} />
         <GeneralInfo data={data} colorText={colors.text} dark={dark} />
-        {castInfoIsError ? <Error /> : <CastInfo castInfo={castInfo} />}
+        {castInfoIsError ? (
+          <Error />
+        ) : (
+          <CastInfo castInfo={castInfo} colorText={colors.text} />
+        )}
       </View>
     </ScrollView>
   );

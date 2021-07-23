@@ -31,13 +31,14 @@ export const MOVIE_SECTIONS = [
 export const COMMON_ERROR_MESSAGE =
   'An error occurred, please try again later!';
 
-export const COLOR_WHITE = '#fff';
-export const COLOR_BLACK = '#000';
+export const COLOR_WHITE = '#ffffff';
+export const COLOR_BLACK = '#000000';
 export const COLOR_DARK_YELLOW = '#DDBA33';
 export const COLOR_PURPLE = '#8B5AB1';
 export const COLOR_BLUE = '#5535E5';
 export const COLOR_GRAY = '#6A6A6A';
 export const COLOR_TRANSLUCENT_PURPLE = '#E9DCFB';
 export const COLOR_ROSE_RED = '#FF005F';
+export const COLOR_GREEN = '#3AD900';
 export const DEFAULT_BG_COLOR = '#F1F1F1';
 export const BG_COLOR_TRANSPARENT_GRAY = 'rgba(0,0,0, 0.4)';

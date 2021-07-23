@@ -24,13 +24,11 @@ export const FavoriteScreen = ({navigation}) => {
     AsyncStorage.getItem('favoriteMovies', (err, res) => {
       if (res) {
         setFavoriteMovies(JSON.parse(res));
-        dispatch(setIsFetching(false));
       } else if (err) {
-        dispatch(setIsFetching(false));
         dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
         console.error(`AsyncStorage Error: ${err}`);
       }
-    });
+    }).finally(() => dispatch(setIsFetching(false)));
   }, []);
 
   const getItem = useCallback(err => {
