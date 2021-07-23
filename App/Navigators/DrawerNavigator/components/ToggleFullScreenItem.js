@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useCallback, useLayoutEffect} from 'react';
-import {StyleSheet, Text, View, Switch} from 'react-native';
+import React, {useCallback, useEffect, useLayoutEffect} from 'react';
+import {StyleSheet, Keyboard, Text, View, Switch} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {
   hideNavigationBar,
@@ -19,8 +19,18 @@ export const ToggleFullScreenItem = React.memo(
   ({colorText, isFullScreen, setIsFullScreen}) => {
     const dispatch = useDispatch();
 
-    useLayoutEffect(() => {
+    const hideNavBar = useCallback(() => {
       isFullScreen && hideNavigationBar();
+    }, [isFullScreen]);
+
+    useLayoutEffect(hideNavBar, [isFullScreen]);
+
+    useEffect(() => {
+      Keyboard.addListener('keyboardDidHide', hideNavBar);
+
+      return () => {
+        Keyboard.removeListener('keyboardDidHide', hideNavBar);
+      };
     }, [isFullScreen]);
 
     const changeIsFullScreen = useCallback(() => {
