@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useCallback, useEffect, useLayoutEffect} from 'react';
-import {StyleSheet, Keyboard, Text, View, Switch} from 'react-native';
+import {StyleSheet, Keyboard, AppState, Text, View, Switch} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {
   hideNavigationBar,
@@ -23,13 +23,19 @@ export const ToggleFullScreenItem = React.memo(
       isFullScreen && hideNavigationBar();
     }, [isFullScreen]);
 
+    const showNavBar = useCallback(() => {
+      isFullScreen && showNavigationBar();
+    }, [isFullScreen]);
+
     useLayoutEffect(hideNavBar, [isFullScreen]);
 
     useEffect(() => {
       Keyboard.addListener('keyboardDidHide', hideNavBar);
+      Keyboard.addListener('keyboardDidShow', showNavBar);
 
       return () => {
         Keyboard.removeListener('keyboardDidHide', hideNavBar);
+        Keyboard.removeListener('keyboardDidShow', showNavBar);
       };
     }, [isFullScreen]);
 
@@ -44,6 +50,21 @@ export const ToggleFullScreenItem = React.memo(
         dispatch(setError(`AsyncStorage Error: ${COMMON_ERROR_MESSAGE}`));
         console.error(`AsyncStorage Error: ${error}`);
       }
+    }, [isFullScreen]);
+
+    const handleAppState = useCallback(
+      nextAppState => {
+        if (isFullScreen && nextAppState === 'active') hideNavigationBar();
+      },
+      [isFullScreen],
+    );
+
+    useEffect(() => {
+      AppState.addEventListener('change', handleAppState);
+
+      return () => {
+        AppState.removeEventListener('change', handleAppState);
+      };
     }, [isFullScreen]);
 
     return (

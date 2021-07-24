@@ -9,6 +9,8 @@ import * as selectors from '../../store/auth/selectors';
 import {FavoriteMovieItem} from './components/FavoriteMovieItem';
 import {EmptyList} from '../../common/EmptyList';
 import {ErrorBoundary} from '../../common/ErrorBoundary';
+import {hideNavigationBar} from 'react-native-navigation-bar-color';
+import {useTheme} from '@react-navigation/native';
 
 export const FavoriteScreen = ({navigation}) => {
   const isFetching = useSelector(selectors.getIsFetching);
@@ -16,6 +18,7 @@ export const FavoriteScreen = ({navigation}) => {
   const dispatch = useDispatch();
 
   const {width, height} = useWindowDimensions();
+  const {isFullScreen} = useTheme();
 
   const [favoriteMovies, setFavoriteMovies] = useState(null);
 
@@ -72,10 +75,24 @@ export const FavoriteScreen = ({navigation}) => {
       Alert.alert(
         'Remove movie',
         'Are sure? Do you want to remove a movie from your favorites?',
-        [{text: 'Cancel'}, {text: 'Yes', onPress: () => removeStorageItem(id)}],
+        [
+          {
+            text: 'Cancel',
+            onPress: () => {
+              isFullScreen && hideNavigationBar();
+            },
+          },
+          {
+            text: 'Yes',
+            onPress: () => {
+              removeStorageItem(id);
+              isFullScreen && hideNavigationBar();
+            },
+          },
+        ],
       );
     },
-    [favoriteMovies],
+    [favoriteMovies, isFullScreen],
   );
 
   const goToDetailsPage = useCallback(
