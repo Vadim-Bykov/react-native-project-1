@@ -6,7 +6,7 @@ import * as firebaseService from '../../../api/firebaseService';
 import * as actions from '../../../store/auth/actions';
 import {MessageInfo} from './MessageInfo';
 
-export const MessageContent = ({item, isOwner, showPhoto}) => {
+export const MessageContent = ({item, isOwner, showPhoto, colors}) => {
   const menu = useRef();
   const hideMenu = () => menu.current.hide();
   const showMenu = () => menu.current.show();
@@ -32,9 +32,11 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
         <TouchableOpacity activeOpacity={0.6} onLongPress={showMenu}>
           <View
             style={[
-              isOwner ? styles.ownerWithPhoto : styles.withPhoto,
+              isOwner
+                ? styles(colors.backgroundBlue).ownerWithPhoto
+                : styles(colors.backgroundGray).withPhoto,
               !showPhoto &&
-                (isOwner ? styles.ownerWithoutPhoto : styles.withoutPhoto),
+                (isOwner ? styles().ownerWithoutPhoto : styles().withoutPhoto),
             ]}>
             <Text>{message}</Text>
 
@@ -50,7 +52,7 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
       <MenuItem>Delete message ?</MenuItem>
       <MenuDivider />
       <MenuItem>
-        <View style={styles.menuItem}>
+        <View style={styles().menuItem}>
           <Icon
             type="material-community"
             name="delete-off"
@@ -69,36 +71,37 @@ export const MessageContent = ({item, isOwner, showPhoto}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  menuItem: {
-    width: 110,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  withPhoto: {
-    backgroundColor: '#EBEBEB',
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    padding: 10,
-    marginLeft: 5,
-  },
-  ownerWithPhoto: {
-    backgroundColor: '#CDE6FF',
-    borderTopLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    padding: 10,
-    marginRight: 5,
-  },
-  withoutPhoto: {
-    borderTopLeftRadius: 10,
-    marginLeft: 40,
-  },
-  ownerWithoutPhoto: {
-    borderTopRightRadius: 10,
-    marginRight: 40,
-  },
-});
+const styles = backgroundColor =>
+  StyleSheet.create({
+    menuItem: {
+      width: 110,
+      alignSelf: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    withPhoto: {
+      backgroundColor,
+      borderTopRightRadius: 10,
+      borderBottomRightRadius: 10,
+      borderBottomLeftRadius: 10,
+      padding: 10,
+      marginLeft: 5,
+    },
+    ownerWithPhoto: {
+      backgroundColor,
+      borderTopLeftRadius: 10,
+      borderBottomRightRadius: 10,
+      borderBottomLeftRadius: 10,
+      padding: 10,
+      marginRight: 5,
+    },
+    withoutPhoto: {
+      borderTopLeftRadius: 10,
+      marginLeft: 40,
+    },
+    ownerWithoutPhoto: {
+      borderTopRightRadius: 10,
+      marginRight: 40,
+    },
+  });

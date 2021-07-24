@@ -36,13 +36,14 @@ export const DrawerNavigator = () => {
           options={({navigation}) => ({
             headerShown: true,
             unmountOnBlur: true,
-            // headerTitleStyle: styles().favoriteScreenTitle,
+            // headerTitleStyle: styles().savedScreenTitle,
             // headerLeft: () => <HeaderMenu navigation={navigation} />,
             // headerTitle: 'Favorite',
-            // headerStyle: styles().favoriteScreenHeader,
+            // headerStyle: styles().savedScreenHeader,
             header: () => (
               <Header
                 placement="left"
+                containerStyle={styles().favoriteScreenHeader}
                 leftComponent={{
                   icon: 'menu',
                   color: COLOR_WHITE,
@@ -69,10 +70,10 @@ export const DrawerNavigator = () => {
           component={SavedMoviesScreen}
           options={({navigation}) => ({
             headerShown: true,
-            headerTitleStyle: styles().favoriteScreenTitle,
+            headerTitleStyle: styles().savedScreenTitle,
             headerLeft: () => <HeaderMenu navigation={navigation} />,
             headerTitle: 'Saved movies',
-            headerStyle: styles(colors.background).favoriteScreenHeader,
+            headerStyle: styles(colors.background).savedScreenHeader,
           })}
         />
 
@@ -81,10 +82,10 @@ export const DrawerNavigator = () => {
           component={InfinityMoviesScreen}
           options={({navigation}) => ({
             headerShown: true,
-            headerTitleStyle: styles().favoriteScreenTitle,
+            headerTitleStyle: styles().savedScreenTitle,
             headerLeft: () => <HeaderMenu navigation={navigation} />,
             headerTitle: 'Infinity list',
-            headerStyle: styles(colors.background).favoriteScreenHeader,
+            headerStyle: styles(colors.background).savedScreenHeader,
           })}
         />
 
@@ -97,11 +98,15 @@ export const DrawerNavigator = () => {
 const styles = backgroundColor =>
   StyleSheet.create({
     favoriteScreenHeader: {
+      paddingTop: 15,
+      paddingHorizontal: 20,
+    },
+    savedScreenHeader: {
       backgroundColor,
       elevation: 0,
       paddingLeft: 20,
     },
-    favoriteScreenTitle: {
+    savedScreenTitle: {
       color: COLOR_PURPLE,
       marginLeft: -20,
     },

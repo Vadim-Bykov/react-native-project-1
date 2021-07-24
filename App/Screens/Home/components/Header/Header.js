@@ -76,7 +76,9 @@ const styles = backgroundColor =>
   StyleSheet.create({
     container: {
       backgroundColor,
+      paddingTop: 16,
       paddingBottom: 5,
+      paddingHorizontal: 20,
       borderBottomWidth: 0,
     },
     inputContainer: {

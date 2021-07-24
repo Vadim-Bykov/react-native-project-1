@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Icon} from 'react-native-elements';
@@ -15,15 +16,25 @@ export const SavedMovieItem = React.memo(
     const goToDetailsPage = useCallback(() => goToDetails(movie.id), []);
     const removeMovieFromStorage = useCallback(() => removeMovie(movie.id), []);
 
+    const {colors, dark} = useTheme();
+
     return (
-      <Card>
-        <Card.Title>
+      <Card
+        containerStyle={
+          cardContainerStyles({
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+          }).cardContainer
+        }>
+        <Card.Title style={titleStyles({color: colors.text}).divider}>
           {movie.title.length > 25
             ? `${movie.title.slice(0, 25)}...`
             : movie.title}
         </Card.Title>
 
-        <Card.Divider />
+        <Card.Divider
+          style={dividerStyles({backgroundColor: colors.border}).divider}
+        />
 
         <FastImage
           source={{
@@ -67,6 +78,28 @@ export const SavedMovieItem = React.memo(
     );
   },
 );
+
+const cardContainerStyles = ({backgroundColor, borderColor}) =>
+  StyleSheet.create({
+    cardContainer: {
+      backgroundColor,
+      borderColor,
+    },
+  });
+
+const dividerStyles = ({backgroundColor}) =>
+  StyleSheet.create({
+    divider: {
+      backgroundColor,
+    },
+  });
+
+const titleStyles = ({color}) =>
+  StyleSheet.create({
+    divider: {
+      color,
+    },
+  });
 
 const styles = StyleSheet.create({
   image: {

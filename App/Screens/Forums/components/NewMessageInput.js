@@ -14,76 +14,80 @@ import * as selectors from '../../../store/auth/selectors';
 import * as firebaseService from '../../../api/firebaseService';
 import {COLOR_BLACK, COLOR_PURPLE} from '../../../consts/consts';
 
-export const NewMessageInput = React.memo(({forumId}) => {
-  const {width} = useWindowDimensions();
-  const {uid} = useSelector(selectors.getUser);
-  const dispatch = useDispatch();
+export const NewMessageInput = React.memo(
+  ({forumId, colorText, colorTextGray}) => {
+    const {width} = useWindowDimensions();
+    const {uid} = useSelector(selectors.getUser);
+    const dispatch = useDispatch();
 
-  const {control, handleSubmit, reset} = useForm();
+    const {control, handleSubmit, reset} = useForm();
 
-  const {field, fieldState} = useController({
-    control,
-    name: 'message',
-    defaultValue: '',
-    rules: {
-      required: true,
-      validate: value => !!value.trim(),
-    },
-  });
-
-  const [fieldValue, setFieldValue] = useState('');
-
-  useEffect(() => {
-    setFieldValue(field.value);
-  }, [field.value]);
-
-  const onSubmit = useCallback(({message}) => {
-    firebaseService.addMessage(forumId, message, uid).catch(error => {
-      console.error(error);
-      dispatch(actions.setError(extractErrorMessage(error)));
+    const {field, fieldState} = useController({
+      control,
+      name: 'message',
+      defaultValue: '',
+      rules: {
+        required: true,
+        validate: value => !!value.trim(),
+      },
     });
 
-    reset();
-  }, []);
+    const [fieldValue, setFieldValue] = useState('');
 
-  return (
-    <View style={styles.container}>
-      <View style={[styles.inputContainer, {width: width * 0.86}]}>
-        <Icon name="message1" type="antdesign" color={COLOR_PURPLE} />
+    useEffect(() => {
+      setFieldValue(field.value);
+    }, [field.value]);
 
-        <TextInput
-          placeholder="Enter your message"
-          placeholderTextColor="#696A6C"
-          textContentType="name"
-          value={field.value}
-          onChangeText={field.onChange}
-          multiline={true}
-          style={styles.input}
-        />
-      </View>
+    const onSubmit = useCallback(({message}) => {
+      firebaseService.addMessage(forumId, message, uid).catch(error => {
+        console.error(error);
+        dispatch(actions.setError(extractErrorMessage(error)));
+      });
 
-      {fieldValue && fieldValue.trim() && !fieldState.error ? (
-        <TouchableOpacity onPress={handleSubmit(onSubmit)} activeOpacity={0.6}>
+      reset();
+    }, []);
+
+    return (
+      <View style={styles.container}>
+        <View style={[styles.inputContainer, {width: width * 0.86}]}>
+          <Icon name="message1" type="antdesign" color={COLOR_PURPLE} />
+
+          <TextInput
+            placeholder="Enter your message"
+            placeholderTextColor={colorTextGray}
+            textContentType="name"
+            value={field.value}
+            onChangeText={field.onChange}
+            multiline={true}
+            style={[styles.input, {color: colorText}]}
+          />
+        </View>
+
+        {fieldValue && fieldValue.trim() && !fieldState.error ? (
+          <TouchableOpacity
+            onPress={handleSubmit(onSubmit)}
+            activeOpacity={0.6}>
+            <Icon
+              type="ionicon"
+              name="ios-send"
+              color={COLOR_PURPLE}
+              size={28}
+              style={styles.sendIcon}
+            />
+          </TouchableOpacity>
+        ) : (
           <Icon
-            type="ionicon"
-            name="ios-send"
+            type="foundation"
+            name="prohibited"
             color={COLOR_PURPLE}
             size={28}
             style={styles.sendIcon}
           />
-        </TouchableOpacity>
-      ) : (
-        <Icon
-          type="foundation"
-          name="prohibited"
-          color={COLOR_PURPLE}
-          size={28}
-          style={styles.sendIcon}
-        />
-      )}
-    </View>
-  );
-});
+        )}
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -102,7 +106,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   input: {
-    color: COLOR_BLACK,
     flex: 1,
     marginLeft: 10,
   },

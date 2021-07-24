@@ -23,7 +23,8 @@ export const ForumStackNavigator = () => {
           options={{
             title: "Forums' list",
             headerTintColor: COLOR_PURPLE,
-            headerStyle: styles(colors.background).forumListHeader,
+            headerStyle: styles(colors.background, colors.textGray)
+              .forumListHeader,
           }}
         />
 
@@ -44,7 +45,7 @@ export const ForumStackNavigator = () => {
   );
 };
 
-const styles = backgroundColor =>
+const styles = (backgroundColor, borderColor) =>
   StyleSheet.create({
     forumHeader: {
       backgroundColor,
@@ -52,7 +53,7 @@ const styles = backgroundColor =>
     },
     forumListHeader: {
       backgroundColor,
-      borderBottomColor: COLOR_GRAY,
+      borderBottomColor: borderColor,
       borderBottomWidth: StyleSheet.hairlineWidth,
       elevation: 0,
     },

@@ -6,7 +6,6 @@ import {
   BASE_IMAGE_URL,
   COLOR_BLACK,
   COLOR_BLUE,
-  COLOR_TRANSLUCENT_PURPLE,
   DEFAULT_MOVIE_IMAGE,
 } from '../../../../consts/consts';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
@@ -116,6 +115,5 @@ const styles = StyleSheet.create({
   },
   disabledIcon: {
     zIndex: 1,
-    backgroundColor: COLOR_TRANSLUCENT_PURPLE,
   },
 });

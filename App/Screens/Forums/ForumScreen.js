@@ -16,6 +16,7 @@ import * as selectors from '../../store/auth/selectors';
 import {Loader} from '../../common/Loader';
 import {RemoveForum} from './components/RemoveForum';
 import {EmptyList} from '../../common/EmptyList';
+import {useTheme} from '@react-navigation/native';
 
 export const ForumScreen = ({navigation, route}) => {
   const {description, forumId} = route.params.forum;
@@ -86,6 +87,8 @@ export const ForumScreen = ({navigation, route}) => {
     return unsubscribe;
   }, []);
 
+  const {colors} = useTheme();
+
   const renderItem = useCallback(
     ({item, index}) => (
       <Message
@@ -93,6 +96,7 @@ export const ForumScreen = ({navigation, route}) => {
         messages={messages}
         index={index}
         isOwner={item.userRef.id === user.uid}
+        colors={colors}
       />
     ),
     [messages],
@@ -117,7 +121,11 @@ export const ForumScreen = ({navigation, route}) => {
             contentContainerStyle={styles.flatListContainer}
           />
 
-          <NewMessageInput forumId={forumId} />
+          <NewMessageInput
+            colorText={colors.text}
+            colorTextGray={colors.textGray}
+            forumId={forumId}
+          />
         </View>
       )}
     </>

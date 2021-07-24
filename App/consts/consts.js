@@ -42,3 +42,27 @@ export const COLOR_ROSE_RED = '#FF005F';
 export const COLOR_GREEN = '#3AD900';
 export const DEFAULT_BG_COLOR = '#F1F1F1';
 export const BG_COLOR_TRANSPARENT_GRAY = 'rgba(0,0,0, 0.4)';
+
+export const COLORS_LIGHT_THEME = {
+  background: 'rgb(242, 242, 242)',
+  backgroundBlue: '#CDE6FF',
+  backgroundGray: '#EBEBEB',
+  border: 'rgb(216, 216, 216)',
+  card: 'rgb(255, 255, 255)',
+  notification: 'rgb(255, 59, 48)',
+  primary: 'rgb(0, 122, 255)',
+  text: 'rgb(28, 28, 30)',
+  textGray: '#6A6A6A',
+};
+
+export const COLORS_DARK_THEME = {
+  background: 'rgb(1, 1, 1)',
+  backgroundBlue: '#ABD2FF',
+  backgroundGray: '#BFBFBF',
+  border: 'rgb(39, 39, 41)',
+  card: 'rgb(18, 18, 18)',
+  notification: 'rgb(255, 69, 58)',
+  primary: 'rgb(10, 132, 255)',
+  text: 'rgb(229, 229, 231)',
+  textGray: '#A1A1A1',
+};
