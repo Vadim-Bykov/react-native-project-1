@@ -26,7 +26,7 @@ export const MainStackNavigator = () => {
   return (
     <ErrorBoundary width={width} height={height}>
       <StatusBar
-        hidden={isFullScreen}
+        // hidden={isFullScreen}
         translucent={true}
         backgroundColor={!isAuth ? 'transparent' : colors.background}
         barStyle={!isAuth || dark ? 'default' : 'dark-content'}

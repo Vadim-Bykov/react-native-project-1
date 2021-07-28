@@ -20,8 +20,12 @@ import {useTheme} from '@react-navigation/native';
 
 export const ForumScreen = ({navigation, route}) => {
   const {description, forumId} = route.params.forum;
+
   const isFetching = useSelector(selectors.getIsFetching);
   const user = useSelector(selectors.getUser);
+
+  const {colors, isFullScreen} = useTheme();
+
   const dispatch = useDispatch();
 
   const [userRef, setUserRef] = useState(null);
@@ -87,8 +91,6 @@ export const ForumScreen = ({navigation, route}) => {
     return unsubscribe;
   }, []);
 
-  const {colors} = useTheme();
-
   const renderItem = useCallback(
     ({item, index}) => (
       <Message
@@ -125,6 +127,7 @@ export const ForumScreen = ({navigation, route}) => {
             colorText={colors.text}
             colorTextGray={colors.textGray}
             forumId={forumId}
+            isFullScreen={isFullScreen}
           />
         </View>
       )}

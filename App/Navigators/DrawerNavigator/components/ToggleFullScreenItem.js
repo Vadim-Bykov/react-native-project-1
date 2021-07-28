@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useCallback, useEffect, useLayoutEffect} from 'react';
+import {StatusBar} from 'react-native';
 import {StyleSheet, Keyboard, AppState, Text, View, Switch} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {
@@ -16,15 +17,23 @@ import {
 import {setError} from '../../../store/auth/actions';
 
 export const ToggleFullScreenItem = React.memo(
-  ({colorText, isFullScreen, setIsFullScreen}) => {
+  ({dark, colorText, isFullScreen, setIsFullScreen}) => {
     const dispatch = useDispatch();
 
     const hideNavBar = useCallback(() => {
-      isFullScreen && hideNavigationBar();
+      if (isFullScreen) {
+        hideNavigationBar();
+        //Refresh BarStyle after displaying keyboard
+        StatusBar.setBarStyle(dark ? 'default' : 'dark-content');
+      }
     }, [isFullScreen]);
 
     const showNavBar = useCallback(() => {
-      isFullScreen && showNavigationBar();
+      if (isFullScreen) {
+        showNavigationBar();
+        //Refresh BarStyle after displaying keyboard
+        StatusBar.setBarStyle(dark ? 'default' : 'dark-content');
+      }
     }, [isFullScreen]);
 
     useLayoutEffect(hideNavBar, [isFullScreen]);
@@ -54,9 +63,13 @@ export const ToggleFullScreenItem = React.memo(
 
     const handleAppState = useCallback(
       nextAppState => {
-        if (isFullScreen && nextAppState === 'active') hideNavigationBar();
+        if (isFullScreen && nextAppState === 'active') {
+          hideNavigationBar();
+          //Refresh BarStyle after background app
+          StatusBar.setBarStyle(dark ? 'default' : 'dark-content');
+        }
       },
-      [isFullScreen],
+      [isFullScreen, dark],
     );
 
     useEffect(() => {
@@ -65,7 +78,7 @@ export const ToggleFullScreenItem = React.memo(
       return () => {
         AppState.removeEventListener('change', handleAppState);
       };
-    }, [isFullScreen]);
+    }, [isFullScreen, dark]);
 
     return (
       <View style={styles().modeItemContainer}>

@@ -134,6 +134,7 @@ export const DrawerContent = props => {
         <SwitchModeItem dark={dark} colorText={colorText} setTheme={setTheme} />
 
         <ToggleFullScreenItem
+          dark={dark}
           colorText={colorText}
           isFullScreen={isFullScreen}
           setIsFullScreen={setIsFullScreen}
