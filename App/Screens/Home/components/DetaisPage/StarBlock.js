@@ -12,7 +12,7 @@ import {
 import {setError} from '../../../../store/auth/actions';
 import {SavedInList} from './SavedInList';
 
-export const StarBlock = ({data, width}) => {
+export const StarBlock = ({data, width, dark}) => {
   const [favoriteMovies, setFavoriteMovies] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -95,7 +95,7 @@ export const StarBlock = ({data, width}) => {
   }, [favoriteMovies, isFavorite]);
 
   return (
-    <View style={{...styles.container, width: width * 0.9}}>
+    <View style={{...styles(dark, width).container}}>
       <View>
         <Icon type="antdesign" name="star" color="#FFDD00" />
         <Text>{data.vote_average}/10</Text>
@@ -117,7 +117,7 @@ export const StarBlock = ({data, width}) => {
         <Badge
           status="success"
           value={data.vote_count}
-          textStyle={styles.voteCount}
+          textStyle={styles().voteCount}
           containerStyle={{height: 24, marginTop: 5}}
         />
         <Text>Vote count</Text>
@@ -126,24 +126,26 @@ export const StarBlock = ({data, width}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    height: 100,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderTopLeftRadius: 50,
-    borderBottomLeftRadius: 50,
-    alignSelf: 'flex-end',
-    paddingHorizontal: 30,
-    marginTop: -50,
-    backgroundColor: COLOR_WHITE,
-    elevation: 10,
-  },
-  voteCount: {
-    borderRadius: 3,
-    backgroundColor: '#51C51B',
-    height: 24,
-    paddingTop: 3,
-  },
-});
+const styles = (dark, width) =>
+  StyleSheet.create({
+    container: {
+      width: width * 0.9,
+      height: 100,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderTopLeftRadius: 50,
+      borderBottomLeftRadius: 50,
+      alignSelf: 'flex-end',
+      paddingHorizontal: 30,
+      marginTop: -50,
+      backgroundColor: dark ? '#B4B4B4' : COLOR_WHITE,
+      elevation: 10,
+    },
+    voteCount: {
+      borderRadius: 3,
+      backgroundColor: '#51C51B',
+      height: 24,
+      paddingTop: 3,
+    },
+  });

@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 import * as firebaseService from '../../../api/firebaseService';
 import {extractErrorMessage} from '../../../utils/utils';
 import {ModalInput} from './ModalInput';
+import {COLOR_GREEN} from '../../../consts/consts';
 
 export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
   const {width} = useWindowDimensions();
@@ -96,7 +97,7 @@ export const NewForumModal = ({userId, modalVisible, setModalVisible}) => {
             <Icon
               name="push-outline"
               type="ionicon"
-              color="#3AD900"
+              color={COLOR_GREEN}
               size={28}
               onPress={handleSubmit(onSubmit)}
             />
