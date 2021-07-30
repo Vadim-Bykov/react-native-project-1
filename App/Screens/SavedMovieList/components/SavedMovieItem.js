@@ -1,6 +1,6 @@
 import {useTheme} from '@react-navigation/native';
-import React, {useCallback} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {StyleSheet, View, Animated} from 'react-native';
 import {Card, Icon} from 'react-native-elements';
 import {FAB} from 'react-native-elements/dist/buttons/FAB';
 import FastImage from 'react-native-fast-image';
@@ -9,21 +9,46 @@ import {
   COLOR_DARK_YELLOW,
   DEFAULT_MOVIE_IMAGE,
 } from '../../../consts/consts';
+import {useAnimateStyle} from '../useAnimateStyle';
 import {VoteAverage} from './VoteAverage';
 
 export const SavedMovieItem = React.memo(
-  ({movie, goToDetails, removeMovie, width}) => {
+  ({movie, goToDetails, removeMovie, width, isActive}) => {
     const goToDetailsPage = useCallback(() => goToDetails(movie.id), []);
     const removeMovieFromStorage = useCallback(() => removeMovie(movie.id), []);
 
     const {colors, dark} = useTheme();
 
+    const {
+      backgroundColor,
+      borderColor,
+      textColor,
+      scale,
+      onAnimateColors,
+      onAnimateScale,
+    } = useAnimateStyle(dark);
+
+    useMemo(() => {
+      // onAnimateColors(isActive);
+      onAnimateScale(isActive);
+    }, [isActive]);
+
     return (
-      <Card
-        containerStyle={
+      // <Card
+      //   containerStyle={
+      //     // {backgroundColor: 'transparent'}
+      //     cardContainerStyles({
+      //       backgroundColor: colors.card,
+      //       borderColor: colors.border,
+      //     }).cardContainer
+      //   }>
+      <Animated.View
+        style={
           cardContainerStyles({
             backgroundColor: colors.card,
+            // backgroundColor: backgroundColor,
             borderColor: colors.border,
+            scale,
           }).cardContainer
         }>
         <Card.Title style={titleStyles({color: colors.text}).divider}>
@@ -74,16 +99,22 @@ export const SavedMovieItem = React.memo(
             />
           </View>
         </FastImage>
-      </Card>
+      </Animated.View>
+      // </Card>
     );
   },
 );
 
-const cardContainerStyles = ({backgroundColor, borderColor}) =>
+const cardContainerStyles = ({backgroundColor, borderColor, scale}) =>
   StyleSheet.create({
     cardContainer: {
       backgroundColor,
       borderColor,
+      borderWidth: 1,
+      marginHorizontal: 20,
+      marginTop: 25,
+      padding: 10,
+      transform: [{scale}],
     },
   });
 

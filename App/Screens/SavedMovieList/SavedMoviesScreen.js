@@ -24,12 +24,14 @@ import {
 } from '../../consts/consts';
 import {useIsFocused} from '@react-navigation/native';
 import {ListButton} from './components/ListButton';
+import {ErrorBoundary} from '../../common/ErrorBoundary';
 
 export const SavedMoviesScreen = ({navigation}) => {
-  const {width} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
   const dispatch = useDispatch();
   const flatListRef = useRef(null);
   const [page, setPage] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const queryClient = useQueryClient();
 
@@ -122,15 +124,16 @@ export const SavedMoviesScreen = ({navigation}) => {
   }, [data?.results.length]);
 
   const renderItem = useCallback(
-    ({item}) => (
+    ({item, index}) => (
       <SavedMovieItem
         movie={item}
         goToDetails={goToDetails}
         removeMovie={removeMovie}
         width={width}
+        isActive={activeIndex === index}
       />
     ),
-    [width],
+    [width, activeIndex],
   );
 
   const ITEM_HEIGHT = useMemo(() => Math.ceil(width * 1.05) + 82 + 15, [width]);
@@ -141,8 +144,17 @@ export const SavedMoviesScreen = ({navigation}) => {
     index,
   });
 
+  const onViewableItemsChanged = useCallback(({viewableItems, changed}) => {
+    const index = viewableItems.length ? viewableItems[0].index : -1;
+    setActiveIndex(index);
+  }, []);
+
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 100,
+  };
+
   return (
-    <>
+    <ErrorBoundary width={width} height={height}>
       {isLoading && <Loader />}
       {isError && <Error />}
 
@@ -185,9 +197,12 @@ export const SavedMoviesScreen = ({navigation}) => {
               setPage={setNextPage}
             />
           }
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          extraData={activeIndex}
         />
       ) : null}
-    </>
+    </ErrorBoundary>
   );
 };
 

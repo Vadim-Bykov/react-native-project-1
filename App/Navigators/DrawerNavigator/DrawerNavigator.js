@@ -74,6 +74,7 @@ export const DrawerNavigator = () => {
             headerLeft: () => <HeaderMenu navigation={navigation} />,
             headerTitle: 'Saved movies',
             headerStyle: styles(colors.background).savedScreenHeader,
+            unmountOnBlur: true,
           })}
         />
 
