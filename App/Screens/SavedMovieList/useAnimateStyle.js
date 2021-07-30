@@ -58,7 +58,7 @@ export const useAnimateStyle = dark => {
     ],
   });
 
-  const scale = scaleValue.interpolate({inputRange, outputRange: [1, 1.1]});
+  const scale = scaleValue.interpolate({inputRange, outputRange: [1, 1.05]});
 
   return {
     backgroundColor,

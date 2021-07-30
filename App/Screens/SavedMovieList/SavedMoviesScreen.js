@@ -150,7 +150,7 @@ export const SavedMoviesScreen = ({navigation}) => {
   }, []);
 
   const viewabilityConfig = {
-    itemVisiblePercentThreshold: 100,
+    itemVisiblePercentThreshold: 50,
   };
 
   return (
@@ -197,6 +197,7 @@ export const SavedMoviesScreen = ({navigation}) => {
               setPage={setNextPage}
             />
           }
+          ListFooterComponentStyle={styles.listFooterComponent}
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           extraData={activeIndex}
@@ -209,5 +210,8 @@ export const SavedMoviesScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   flatListContainer: {
     flexGrow: 1,
+  },
+  listFooterComponent: {
+    marginTop: 10,
   },
 });
