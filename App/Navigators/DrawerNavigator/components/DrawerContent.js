@@ -35,6 +35,7 @@ export const DrawerContent = props => {
   const goToForumList = () => navigation.navigate('Forums');
   const goToSavedMovies = () => navigation.navigate('Saved');
   const goToInfinityList = () => navigation.navigate('Infinity');
+  const goToPanResponder = () => navigation.navigate('PanResponder');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -129,6 +130,23 @@ export const DrawerContent = props => {
           )}
           labelStyle={styles.labelStyle}
           onPress={goToForumList}
+        />
+
+        <DrawerItem
+          label="PanResponder"
+          focused={routeNames[index] === 'PanResponder' ? true : false}
+          activeTintColor={COLOR_BLUE}
+          inactiveTintColor={colorText}
+          activeBackgroundColor={COLOR_TRANSLUCENT_PURPLE}
+          icon={({focused}) => (
+            <Icon
+              type="antdesign"
+              name="wechat"
+              color={focused ? COLOR_BLUE : colorText}
+            />
+          )}
+          labelStyle={styles.labelStyle}
+          onPress={goToPanResponder}
         />
 
         <SwitchModeItem dark={dark} colorText={colorText} setTheme={setTheme} />

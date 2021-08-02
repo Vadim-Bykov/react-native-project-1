@@ -12,6 +12,9 @@ import {SavedMoviesScreen} from '../../Screens/SavedMovieList/SavedMoviesScreen'
 import {InfinityMoviesScreen} from '../../Screens/InfinityList/InfinityMoviesScreen';
 import {Header} from 'react-native-elements';
 import {useTheme} from '@react-navigation/native';
+import {PanResponderComponent} from '../../Screens/PanResponder/PanResponder';
+import {PanResponderAnimated} from '../../Screens/PanResponder/PanResponderAnimated';
+import {AnimatedScrollView} from '../../Screens/PanResponder/AnimatedScrollView';
 
 const HeaderMenu = ({navigation}) => (
   <TouchableOpacity onPress={navigation.openDrawer}>
@@ -91,6 +94,20 @@ export const DrawerNavigator = () => {
         />
 
         <Drawer.Screen name="Forums" component={ForumStackNavigator} />
+
+        <Drawer.Screen
+          name="PanResponder"
+          component={AnimatedScrollView}
+          // component={PanResponderAnimated}
+          // component={PanResponderComponent}
+          options={({navigation}) => ({
+            headerShown: true,
+            headerTitle: 'PanResponder',
+            headerTitleStyle: styles().savedScreenTitle,
+            headerLeft: () => <HeaderMenu navigation={navigation} />,
+            headerStyle: styles(colors.background).savedScreenHeader,
+          })}
+        />
       </Drawer.Navigator>
     </ErrorBoundary>
   );
