@@ -13,8 +13,11 @@ import {InfinityMoviesScreen} from '../../Screens/InfinityList/InfinityMoviesScr
 import {Header} from 'react-native-elements';
 import {useTheme} from '@react-navigation/native';
 import {PanResponderComponent} from '../../Screens/PanResponder/PanResponder';
-import {PanResponderAnimated} from '../../Screens/PanResponder/PanResponderAnimated';
+import {AnimatedComplex} from '../../Screens/PanResponder/Animated';
 import {AnimatedScrollView} from '../../Screens/PanResponder/AnimatedScrollView';
+import {Gestures} from '../../Screens/PanResponder/Gestures';
+import {GesturesPanResponder} from '../../Screens/PanResponder/GesturesPanResponder';
+import {MessageList} from '../../Screens/PanResponder/MessageList';
 
 const HeaderMenu = ({navigation}) => (
   <TouchableOpacity onPress={navigation.openDrawer}>
@@ -97,9 +100,12 @@ export const DrawerNavigator = () => {
 
         <Drawer.Screen
           name="PanResponder"
-          component={AnimatedScrollView}
-          // component={PanResponderAnimated}
+          component={MessageList}
+          // component={GesturesPanResponder}
           // component={PanResponderComponent}
+          // component={Gestures}
+          // component={AnimatedScrollView}
+          // component={AnimatedComplex}
           options={({navigation}) => ({
             headerShown: true,
             headerTitle: 'PanResponder',

@@ -8,7 +8,7 @@ import {
   Easing,
 } from 'react-native';
 
-export const PanResponderAnimated = () => {
+export const AnimatedComplex = () => {
   const val = useRef(new Animated.Value(0)).current;
   const opacityParallel = useRef(new Animated.Value(0)).current;
   const translateParallel = useRef(new Animated.Value(0)).current;
