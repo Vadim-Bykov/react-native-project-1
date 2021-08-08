@@ -102,6 +102,7 @@ export const PanResponderComponent = () => {
         style={[
           styles.circle,
           //   pan.getLayout(),
+          // pan.getTranslateTransform()
           {opacity, transform: [{translateY: pan.y}, {translateX: pan.x}]},
         ]}
         {...panResponder.panHandlers}

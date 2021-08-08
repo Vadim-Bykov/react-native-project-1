@@ -28,10 +28,10 @@ export const GesturesPanResponder = () => {
         setInitialDistance(distance);
       }
 
-      //  pan.setOffset({
-      //    x: pan.x._value,
-      //    y: pan.y._value,
-      //  });
+      // pan.setOffset({
+      //   x: pan.x._value,
+      //   y: pan.y._value,
+      // });
     },
 
     onPanResponderMove: (e, gestureState) => {
@@ -58,8 +58,12 @@ export const GesturesPanResponder = () => {
     },
 
     onPanResponderRelease: (e, gestureState) => {
+      // console.log({...pan.x});
       // pan.flattenOffset();
+      // console.log({...pan.x});
+
       setInitialDistance(0);
+
       Animated.parallel(
         [
           Animated.spring(pan, {
