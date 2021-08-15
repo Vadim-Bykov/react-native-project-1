@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import {Image, useWindowDimensions, Animated, PanResponder} from 'react-native';
+import React, {useRef} from 'react';
+import {useWindowDimensions, Animated, PanResponder} from 'react-native';
 
 const PHOTO = '../../assets/images/city.jpg';
 
@@ -11,61 +11,59 @@ export const GesturesPanResponder = () => {
 
   const pan = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const scale = useRef(new Animated.Value(1)).current;
-  const [initialDistance, setInitialDistance] = useState(0);
 
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
 
-    onPanResponderGrant: (e, gestureState) => {
-      const touches = e.nativeEvent.changedTouches;
-
-      if (touches.length >= 2) {
-        const distance = getDistance(
-          [touches[0].pageX, touches[0].pageY],
-          [touches[1].pageX, touches[1].pageY],
-        );
-
-        setInitialDistance(distance);
-      }
-
-      // pan.setOffset({
-      //   x: pan.x._value,
-      //   y: pan.y._value,
-      // });
-    },
-
-    onPanResponderMove: (e, gestureState) => {
-      const activeTouches = e.nativeEvent.changedTouches.length;
-
-      // console.log(gestureState);
-      // console.log(initialDistance); // 0 because of touching not two fingers on the screen at once (the first finger then the second one)
-      if (activeTouches === 1) {
-        pan.setValue({
-          x: gestureState.dx,
-          y: gestureState.dy,
-        });
-      } else if (activeTouches >= 2) {
+      onPanResponderGrant: (e, gestureState) => {
         const touches = e.nativeEvent.changedTouches;
-        const distance = getDistance(
-          [touches[0].pageX, touches[0].pageY],
-          [touches[1].pageX, touches[1].pageY],
-        );
 
-        const screenMovedPercents = (distance - initialDistance) / width;
+        if (touches.length >= 2) {
+          const distance = getDistance(
+            [touches[0].pageX, touches[0].pageY],
+            [touches[1].pageX, touches[1].pageY],
+          );
 
-        scale.setValue(1 + screenMovedPercents);
-      }
-    },
+          gestureState.initialDistance = distance;
+        }
 
-    onPanResponderRelease: (e, gestureState) => {
-      // console.log({...pan.x});
-      // pan.flattenOffset();
-      // console.log({...pan.x});
+        // pan.setOffset({
+        //   x: pan.x._value,
+        //   y: pan.y._value,
+        // });
+      },
 
-      setInitialDistance(0);
+      onPanResponderMove: (e, gestureState) => {
+        const activeTouches = e.nativeEvent.changedTouches.length;
 
-      Animated.parallel(
-        [
+        // console.log(gestureState);
+        // console.log(initialDistance); // 0 because of touching not two fingers on the screen at once (the first finger then the second one)
+        if (activeTouches === 1) {
+          pan.setValue({
+            x: gestureState.dx,
+            y: gestureState.dy,
+          });
+        } else if (activeTouches >= 2) {
+          const touches = e.nativeEvent.changedTouches;
+          const distance = getDistance(
+            [touches[0].pageX, touches[0].pageY],
+            [touches[1].pageX, touches[1].pageY],
+          );
+
+          const screenMovedPercents =
+            (distance - gestureState.initialDistance) / width;
+
+          scale.setValue(1 + screenMovedPercents);
+        }
+      },
+
+      onPanResponderRelease: (e, gestureState) => {
+        // console.log({...pan.x});
+        // pan.flattenOffset();
+        // console.log({...pan.x});
+
+        Animated.parallel([
           Animated.spring(pan, {
             toValue: {x: 0, y: 0},
             useNativeDriver: true,
@@ -74,11 +72,10 @@ export const GesturesPanResponder = () => {
             toValue: 1,
             useNativeDriver: true,
           }),
-        ],
-        //  { useNativeDriver: true }
-      ).start();
-    },
-  });
+        ]).start();
+      },
+    }),
+  ).current;
 
   return (
     <Animated.Image

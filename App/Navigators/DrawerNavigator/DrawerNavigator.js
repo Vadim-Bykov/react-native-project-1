@@ -106,8 +106,8 @@ export const DrawerNavigator = () => {
           name="PanResponder"
           // component={DragList}
           // component={ReanimatedBottomSheet}
-          // component={MessageList}
-          component={GesturesPanResponder}
+          component={MessageList}
+          // component={GesturesPanResponder}
           // component={PanResponderComponent}
           // component={Gestures}
           // component={AnimatedScrollView}

@@ -69,7 +69,7 @@ export const MessageList = () => {
 
       <Button
         title="Add message"
-        onPress={() => setList(list => [...list, `Message ${list.length}`])}
+        onPress={() => setList(list => [...list, `Message ${list.length + 1}`])}
       />
     </>
   );

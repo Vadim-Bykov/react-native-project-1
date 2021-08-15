@@ -47,7 +47,6 @@ export const ReanimatedBottomSheet = () => {
     },
   });
 
-  console.log(styleTop);
   return (
     <>
       <View style={styles.container}>

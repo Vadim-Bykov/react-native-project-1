@@ -13,7 +13,7 @@ import {
 
 const useMount = func => useEffect(() => func(), []);
 
-const useFadeIn = (duration = 1500) => {
+const useFadeIn = (duration = 3500) => {
   const [opacity] = useState(new Animated.Value(0));
 
   useMount(() => {

@@ -63,7 +63,7 @@ export const AnimatedComplex = () => {
       useNativeDriver: false,
     }).start();
 
-    //  setIsActive(prev => !prev);
+    setIsActive(prev => !prev);
   }, [isActive]);
 
   const opacity = val.interpolate({

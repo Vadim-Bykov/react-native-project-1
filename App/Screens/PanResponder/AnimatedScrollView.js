@@ -7,8 +7,8 @@ export const AnimatedScrollView = () => {
   //   const translation = useRef(new Animated.Value(-100)).current;
   const scrolling = useRef(new Animated.Value(0)).current;
   const translation = scrolling.interpolate({
-    inputRange: [100, 130],
-    outputRange: [-100, 0],
+    inputRange: [100, 180],
+    outputRange: [-80, 0],
     extrapolate: 'clamp',
   });
 

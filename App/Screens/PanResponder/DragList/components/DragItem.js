@@ -70,11 +70,13 @@ export const DragItem = ({
   );
 
   const gestureHandler = useAnimatedGestureHandler({
-    onStart() {
+    onStart(_, gestureState) {
       runOnJS(setMoving)(true);
+      // gestureState.startTop = top.value;
     },
-    onActive(event) {
+    onActive(event, gestureState) {
       const positionY = event.absoluteY + scrollY.value - 50;
+      // const positionY = gestureState.startTop + event.translationY + ITEM_HEIGHT;
 
       if (positionY <= scrollY.value + ITEM_HEIGHT) {
         // scroll up
