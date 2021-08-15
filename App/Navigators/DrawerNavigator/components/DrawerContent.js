@@ -17,6 +17,7 @@ import {useTheme} from '@react-navigation/native';
 import {Header} from './Header';
 import {SwitchModeItem} from './SwitchModeItem';
 import {ToggleFullScreenItem} from './ToggleFullScreenItem';
+import {Drawer} from 'react-native-paper';
 
 export const DrawerContent = props => {
   const {
@@ -36,6 +37,7 @@ export const DrawerContent = props => {
   const goToSavedMovies = () => navigation.navigate('Saved');
   const goToInfinityList = () => navigation.navigate('Infinity');
   const goToPanResponder = () => navigation.navigate('PanResponder');
+  const goToProfile = () => navigation.navigate('Profile');
 
   const logout = () => {
     navigation.closeDrawer();
@@ -62,6 +64,23 @@ export const DrawerContent = props => {
           )}
           labelStyle={styles.labelStyle}
           onPress={goToHomePage}
+        />
+
+        <DrawerItem
+          label="Profile"
+          focused={routeNames[index] === 'Profile' ? true : false}
+          activeTintColor={COLOR_BLUE}
+          inactiveTintColor={colorText}
+          activeBackgroundColor={COLOR_TRANSLUCENT_PURPLE}
+          icon={({focused}) => (
+            <Icon
+              type="font-awesome"
+              name="user-circle-o"
+              color={focused ? COLOR_BLUE : colorText}
+            />
+          )}
+          labelStyle={styles.labelStyle}
+          onPress={goToProfile}
         />
 
         <DrawerItem

@@ -20,6 +20,8 @@ import {GesturesPanResponder} from '../../Screens/PanResponder/GesturesPanRespon
 import {MessageList} from '../../Screens/PanResponder/MessageList';
 import {ReanimatedBottomSheet} from '../../Screens/PanResponder/ReanimatedBottomSheet';
 import {DragList} from '../../Screens/PanResponder/DragList/DragList';
+import {ProfileScreen} from '../../Screens/Profile/ProfileScreen';
+import {ProfileScreenReanimated} from '../../Screens/Profile/ProfileScreenReanimated';
 
 const HeaderMenu = ({navigation}) => (
   <TouchableOpacity onPress={navigation.openDrawer}>
@@ -102,10 +104,10 @@ export const DrawerNavigator = () => {
 
         <Drawer.Screen
           name="PanResponder"
-          component={DragList}
+          // component={DragList}
           // component={ReanimatedBottomSheet}
           // component={MessageList}
-          // component={GesturesPanResponder}
+          component={GesturesPanResponder}
           // component={PanResponderComponent}
           // component={Gestures}
           // component={AnimatedScrollView}
@@ -117,6 +119,15 @@ export const DrawerNavigator = () => {
             headerLeft: () => <HeaderMenu navigation={navigation} />,
             headerStyle: styles(colors.background).savedScreenHeader,
           })}
+        />
+
+        <Drawer.Screen
+          name="Profile"
+          component={ProfileScreen}
+          // component={ProfileScreenReanimated}
+          options={{
+            headerShown: false,
+          }}
         />
       </Drawer.Navigator>
     </ErrorBoundary>
