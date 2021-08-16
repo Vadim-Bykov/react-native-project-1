@@ -28,6 +28,7 @@ import {
 } from '../../consts/consts';
 import {useIsFocused} from '@react-navigation/native';
 import {SavedMovieItem} from '../SavedMovieList/components/SavedMovieItem';
+// import {AnimatedLayout} from 'react-native-reanimated';
 // import {ListButton} from '../SavedMovieList/components/ListButton';
 
 export const InfinityMoviesScreen = ({navigation}) => {
@@ -151,6 +152,7 @@ export const InfinityMoviesScreen = ({navigation}) => {
       {isError && <Error />}
 
       {movies.length ? (
+        // <AnimatedLayout style={{flex: 1}}>
         <FlatList
           ref={flatListRef}
           data={movies}
@@ -183,7 +185,8 @@ export const InfinityMoviesScreen = ({navigation}) => {
           //   />
           // }
         />
-      ) : null}
+      ) : // </AnimatedLayout>
+      null}
     </>
   );
 };

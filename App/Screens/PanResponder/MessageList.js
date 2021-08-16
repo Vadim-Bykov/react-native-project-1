@@ -1,43 +1,89 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {View, Text, Button, Animated, Easing} from 'react-native';
+import {View, Text, Button, StyleSheet, Easing} from 'react-native';
+import Animated, {
+  AnimatedLayout,
+  Extrapolate,
+  FlipInYRight,
+  FlipOutYRight,
+  interpolate,
+  Layout,
+  runOnJS,
+  SlideInLeft,
+  SlideOutLeft,
+  SlideOutRight,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import {FlipOutEasyY} from 'react-native-reanimated';
 
 const Message = React.memo(({text, removeMessage}) => {
-  const opacity = useRef(new Animated.Value(0)).current;
+  // const opacity = useRef(new Animated.Value(0)).current;
+
+  const opacity = useSharedValue(0);
+
+  // useEffect(() => {
+  //   Animated.sequence([
+  //     Animated.timing(opacity, {
+  //       toValue: 1,
+  //       duration: 500,
+  //       useNativeDriver: true,
+  //     }),
+  //     Animated.delay(5000),
+  //     Animated.timing(opacity, {
+  //       toValue: 0,
+  //       duration: 500,
+  //       useNativeDriver: true,
+  //     }),
+  //   ]).start(removeMessage);
+  // }, []);
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      Animated.delay(5000),
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-    ]).start(removeMessage);
+    // opacity.value = withSequence(
+    //   withTiming(1, {duration: 500}),
+    //   withDelay(
+    //     5000,
+    //     withTiming(1, undefined, () => {
+    //       runOnJS(removeMessage)();
+    //     }),
+    //   ),
+    // );
+    setTimeout(removeMessage, 5000);
   }, []);
 
-  const translateY = opacity.interpolate({
-    inputRange: [0, 1],
-    outputRange: [-20, 0],
+  // const translateY = opacity.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [-20, 0],
+  // });
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
   });
+
+  // const animatedTranslateY = useAnimatedStyle(() => {
+  //   const translateY = interpolate(
+  //     opacity.value,
+  //     [0, 1],
+  //     [-50, 0],
+  //     Extrapolate.CLAMP,
+  //   );
+
+  //   return {
+  //     transform: [{translateY: translateY}],
+  //   };
+  // });
 
   return (
     <Animated.View
-      style={{
-        borderWidth: 1,
-        borderColor: '#000000',
-        borderRadius: 5,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 10,
-        opacity,
-        transform: [{translateY}],
-      }}>
+      entering={FlipInYRight}
+      exiting={FlipOutYRight}
+      layout={Layout.springify()}
+      style={[styles.messageContainer]}>
       <Text>{text}</Text>
     </Animated.View>
   );
@@ -57,7 +103,7 @@ export const MessageList = () => {
 
   return (
     <>
-      <View style={{flex: 1}}>
+      <AnimatedLayout style={{flex: 1}}>
         {list.map(message => (
           <Message
             key={message}
@@ -65,7 +111,7 @@ export const MessageList = () => {
             removeMessage={() => onHideMessage(message)}
           />
         ))}
-      </View>
+      </AnimatedLayout>
 
       <Button
         title="Add message"
@@ -74,3 +120,17 @@ export const MessageList = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  messageContainer: {
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 5,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+    // opacity,
+    // transform: [{translateY}],
+  },
+});
