@@ -52,7 +52,9 @@ export const AnimatedScrollView = () => {
           {useNativeDriver: true},
         )}>
         <View style={{flex: 1, height: 1000}}>
-          <Text>Hello</Text>
+          {new Array(30).fill(1).map((_, index) => (
+            <Text key={index}>Hello {index + 1}</Text>
+          ))}
         </View>
       </Animated.ScrollView>
     </>

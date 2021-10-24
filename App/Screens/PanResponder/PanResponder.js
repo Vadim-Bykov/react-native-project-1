@@ -20,8 +20,8 @@ const useFadeIn = (duration = 3500) => {
     Animated.timing(opacity, {
       toValue: 1,
       duration,
-      // useNativeDriver: true, //without delay
-      useNativeDriver: false,
+      useNativeDriver: true, //without delay
+      // useNativeDriver: false,
     }).start();
   });
 

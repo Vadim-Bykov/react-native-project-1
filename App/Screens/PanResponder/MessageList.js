@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View, Text, Button, StyleSheet, Easing} from 'react-native';
 import Animated, {
-  AnimatedLayout,
   Extrapolate,
   FlipInYRight,
   FlipOutYRight,
@@ -18,7 +17,6 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import {FlipOutEasyY} from 'react-native-reanimated';
 
 const Message = React.memo(({text, removeMessage}) => {
   // const opacity = useRef(new Animated.Value(0)).current;
@@ -103,7 +101,7 @@ export const MessageList = () => {
 
   return (
     <>
-      <AnimatedLayout style={{flex: 1}}>
+      <Animated.View style={{flex: 1}}>
         {list.map(message => (
           <Message
             key={message}
@@ -111,7 +109,7 @@ export const MessageList = () => {
             removeMessage={() => onHideMessage(message)}
           />
         ))}
-      </AnimatedLayout>
+      </Animated.View>
 
       <Button
         title="Add message"

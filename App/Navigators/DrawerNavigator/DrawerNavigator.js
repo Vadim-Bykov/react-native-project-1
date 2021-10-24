@@ -22,6 +22,7 @@ import {ReanimatedBottomSheet} from '../../Screens/PanResponder/ReanimatedBottom
 import {DragList} from '../../Screens/PanResponder/DragList/DragList';
 import {ProfileScreen} from '../../Screens/Profile/ProfileScreen';
 import {ProfileScreenReanimated} from '../../Screens/Profile/ProfileScreenReanimated';
+import {AnimatedHeader} from '../../Screens/PanResponder/AnimatedHeader/AnimatedHeader';
 
 const HeaderMenu = ({navigation}) => (
   <TouchableOpacity onPress={navigation.openDrawer}>
@@ -105,13 +106,14 @@ export const DrawerNavigator = () => {
         <Drawer.Screen
           name="PanResponder"
           // component={DragList}
-          // component={ReanimatedBottomSheet}
-          component={MessageList}
+          component={ReanimatedBottomSheet}
+          // component={MessageList}
           // component={GesturesPanResponder}
           // component={PanResponderComponent}
           // component={Gestures}
           // component={AnimatedScrollView}
           // component={AnimatedComplex}
+          component={AnimatedHeader}
           options={({navigation}) => ({
             headerShown: true,
             headerTitle: 'PanResponder',
