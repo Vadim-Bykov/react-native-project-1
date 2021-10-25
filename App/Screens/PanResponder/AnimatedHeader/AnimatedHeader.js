@@ -2,10 +2,11 @@ import React, {useLayoutEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View, Animated, TouchableOpacity} from 'react-native';
 import {Header} from './components/Header';
 
-export const HEADER_HEIGHT = 160;
-export const TOP_PART_HEIGHT = HEADER_HEIGHT / 2;
+export const HEADER_HEIGHT = 300;
+export const TOP_PART_HEIGHT = (HEADER_HEIGHT * 2) / 3;
 export const BOTTOM_PART_HEIGHT = HEADER_HEIGHT - TOP_PART_HEIGHT;
-export const COLLAPSED_PART_HEIGHT = BOTTOM_PART_HEIGHT / 2;
+export const COLLAPSED_BOTTOM_PART_HEIGHT = BOTTOM_PART_HEIGHT / 2;
+export const COLLAPSED_PART_HEIGHT = TOP_PART_HEIGHT;
 
 // const TAB_ITEMS = ['left', 'center', 'right'];
 // const TABS_STATE = {left: true, center: false, right: false};
@@ -43,8 +44,8 @@ export const COLLAPSED_PART_HEIGHT = BOTTOM_PART_HEIGHT / 2;
 //   };
 
 //   const translateY = scrollY.interpolate({
-//     inputRange: [0, COLLAPSED_PART_HEIGHT],
-//     outputRange: [0, -COLLAPSED_PART_HEIGHT],
+//     inputRange: [0, COLLAPSED_BOTTOM_PART_HEIGHT],
+//     outputRange: [0, -COLLAPSED_BOTTOM_PART_HEIGHT],
 //     extrapolate: 'clamp',
 //   });
 
@@ -78,17 +79,17 @@ export const AnimatedHeader = () => {
   );
 
   const handleScrollEnd = ({nativeEvent}) => {
-    if (nativeEvent.contentOffset.y < COLLAPSED_PART_HEIGHT / 2) {
+    if (nativeEvent.contentOffset.y < COLLAPSED_BOTTOM_PART_HEIGHT / 2) {
       scrollViewRef?.current.scrollTo({x: 0, y: 0, animated: true});
     }
 
     if (
-      nativeEvent.contentOffset.y > COLLAPSED_PART_HEIGHT / 2 &&
-      nativeEvent.contentOffset.y < COLLAPSED_PART_HEIGHT
+      nativeEvent.contentOffset.y > COLLAPSED_BOTTOM_PART_HEIGHT / 2 &&
+      nativeEvent.contentOffset.y < COLLAPSED_BOTTOM_PART_HEIGHT
     ) {
       scrollViewRef?.current.scrollTo({
         x: 0,
-        y: COLLAPSED_PART_HEIGHT,
+        y: COLLAPSED_BOTTOM_PART_HEIGHT,
         animated: true,
       });
     }
