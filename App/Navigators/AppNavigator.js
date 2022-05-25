@@ -5,7 +5,7 @@ import {
   DarkTheme,
 } from '@react-navigation/native';
 import {MainStackNavigator} from './MainStackNavigator';
-import {useColorScheme} from 'react-native';
+import {Linking, useColorScheme} from 'react-native';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {
   COLORS_DARK_THEME,
@@ -100,8 +100,74 @@ export const AppNavigator = () => {
     [isFullScreen],
   );
 
+  const linking = {
+    prefixes: ['https://www.testproject.com', 'rnproject://'],
+
+    config: {
+      screens: {
+        initialRouteName: 'HomeDrawer',
+        HomeDrawer: {
+          screens: {
+            Home: {
+              initialRouteName: 'Movies',
+              screens: {
+                Movies: 'movie_list',
+                Details: 'details/:movieId',
+              },
+            },
+
+            Saved: 'saved',
+
+            Forums: {
+              initialRouteName: 'ForumList',
+              screens: {
+                ForumList: 'forum_list',
+                Forum: 'forum/:forumId/:title?',
+              },
+            },
+          },
+        },
+
+        Auth: {
+          screens: {
+            SignIn: 'sign_in',
+            SignUp: 'sign_up',
+          },
+        },
+        NotFound: '*',
+      },
+    },
+
+    async getInitialURL() {
+      const url = await Linking.getInitialURL();
+      console.log({url});
+
+      if (url != null) {
+        // const currentUser = await auth().currentUser;
+        // console.log({currentUser});
+        // store.dispatch(actionsAuth.setUserData(currentUser));
+        // store.dispatch(actionsAuth.setIsAuth(true));
+        return url;
+      }
+    },
+
+    // subscribe(listener) {
+    //   const onReceiveURL = ({url}) => {
+    //     console.log({listener: url});
+    //     return listener(url);
+    //   };
+
+    //   Linking.addEventListener('url', onReceiveURL);
+
+    //   return () => {
+    //     Linking.removeEventListener('url', onReceiveURL);
+    //   };
+    // },
+  };
+
   return (
     <NavigationContainer
+      linking={linking}
       theme={theme === 'dark' ? CustomDarkTheme : CustomLightTheme}>
       <MainStackNavigator />
     </NavigationContainer>

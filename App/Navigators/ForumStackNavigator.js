@@ -32,7 +32,7 @@ export const ForumStackNavigator = () => {
           name="Forum"
           component={ForumScreen}
           options={({route}) => ({
-            headerTitle: route.params.forum.title,
+            headerTitle: route.params.title,
             headerStyle: styles(colors.background).forumHeader,
             headerBackImage: () => (
               <Icon type="ionicon" name="chevron-back" color={COLOR_PURPLE} />

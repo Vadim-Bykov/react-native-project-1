@@ -78,26 +78,24 @@ export const ForumListScreen = ({navigation}) => {
     [],
   );
 
-  const forumIdFromNotification = useSelector(
-    selectors.getForumIdFromNotification,
-  );
+  // const forumIdFromNotification = useSelector(
+  //   selectors.getForumIdFromNotification,
+  // );
 
-  const forumFromNotification = useMemo(
-    () => forums.find(forum => forum.documentId === forumIdFromNotification),
-    [forumIdFromNotification, forums.length],
-  );
+  // const forumFromNotification = useMemo(
+  //   () => forums.find(forum => forum.documentId === forumIdFromNotification),
+  //   [forumIdFromNotification, forums.length],
+  // );
 
-  useEffect(() => {
-    forumIdFromNotification &&
-      forumFromNotification &&
-      navigation.navigate('Forum', {
-        forum: {
-          forumId: forumFromNotification.documentId,
-          title: forumFromNotification.title,
-        },
-      });
-    dispatch(actions.setForumIdFromNotification(null));
-  }, [forumIdFromNotification]);
+  // useEffect(() => {
+  //   forumIdFromNotification &&
+  //     forumFromNotification &&
+  //     navigation.navigate('Forum', {
+  //       forumId: forumFromNotification.documentId,
+  //       title: forumFromNotification.title,
+  //     });
+  //   dispatch(actions.setForumIdFromNotification(null));
+  // }, [forumIdFromNotification]);
 
   return (
     <>
@@ -114,9 +112,9 @@ export const ForumListScreen = ({navigation}) => {
         data={forums}
         renderItem={renderItem}
         keyExtractor={item => item.creationTime}
-        ListEmptyComponent={
-          <EmptyList text="No forums. Please add the first one." />
-        }
+        // ListEmptyComponent={
+        //   <EmptyList text="No forums. Please add the first one." />
+        // }
         contentContainerStyle={styles.flatListContainer}
       />
     </>

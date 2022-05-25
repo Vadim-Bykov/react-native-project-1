@@ -13,10 +13,8 @@ export const ForumNativeElement = React.memo(({forum}) => {
   const goToForum = useCallback(
     () =>
       navigation.navigate('Forum', {
-        forum: {
-          forumId: forum.documentId,
-          title: forum.title,
-        },
+        forumId: forum.documentId,
+        title: forum.title,
       }),
     [forum],
   );

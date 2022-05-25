@@ -1,3 +1,4 @@
+import {Linking} from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import * as firebaseService from '../api/firebaseService';
 import * as actions from '../store/auth/actions';
@@ -19,9 +20,25 @@ export const configurePushNotification = (userId, dispatch) => {
       firebaseService.addUserToken(token.token, userId, dispatch);
     },
 
-    onNotification: notification => {
-      notification.data.forumId &&
-        dispatch(actions.setForumIdFromNotification(notification.data.forumId));
+    onNotification(notification) {
+      console.log({notification: notification.foreground});
+      // notification.data.forumId &&
+      //   dispatch(actions.setForumIdFromNotification(notification.data.forumId));
+      if (notification.data.forumId) {
+        console.log({notification, title: notification.title});
+        // Linking.openURL(
+        //   `rnproject://forum/${notification.data.forumId}/${notification.title}`,
+        // );
+        // Linking.openURL(`rnproject://details/634649`);
+        Linking.openURL(`rnproject://saved`);
+      }
+    },
+
+    onAction(notification) {
+      console.log('ACTION:', notification.action);
+      console.log('NOTIFICATION:', notification);
+
+      // process the action
     },
 
     onRegistrationError: err => {

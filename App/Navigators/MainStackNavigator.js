@@ -10,6 +10,7 @@ import {DrawerNavigator} from './DrawerNavigator/DrawerNavigator';
 import {STACK_SCREEN_OPTIONS} from '../consts/consts';
 import {ErrorBoundary} from '../common/ErrorBoundary';
 import {useTheme} from '@react-navigation/native';
+import {NotFoundScreen} from '../Screens/NotFoundScreen/NotFoundScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,7 +42,7 @@ export const MainStackNavigator = () => {
           />
         ) : isAuth ? (
           <Stack.Screen
-            name="Home"
+            name="HomeDrawer"
             component={DrawerNavigator}
             options={{
               headerShown: false,
@@ -56,6 +57,8 @@ export const MainStackNavigator = () => {
             }}
           />
         )}
+
+        <Stack.Screen name="NotFound" component={NotFoundScreen} />
       </Stack.Navigator>
     </ErrorBoundary>
   );

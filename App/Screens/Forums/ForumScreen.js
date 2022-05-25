@@ -19,7 +19,7 @@ import {EmptyList} from '../../common/EmptyList';
 import {useTheme} from '@react-navigation/native';
 
 export const ForumScreen = ({navigation, route}) => {
-  const {description, forumId} = route.params.forum;
+  const {title, forumId} = route.params;
 
   const isFetching = useSelector(selectors.getIsFetching);
   const user = useSelector(selectors.getUser);
@@ -110,7 +110,7 @@ export const ForumScreen = ({navigation, route}) => {
         <Loader />
       ) : (
         <View style={styles.container}>
-          <Text style={styles.description}>{description}</Text>
+          {/* <Text style={styles.description}>{description}</Text> */}
 
           <FlatList
             data={messages}
