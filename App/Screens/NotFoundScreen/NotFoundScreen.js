@@ -6,6 +6,7 @@ export const NotFoundScreen = ({route}) => {
   //   if (route.path) {
   //     Linking.openURL('https://www.google.com');
   //   }
+
   return (
     <View style={styles.container}>
       <Text>Path "{route.path}" does not exist</Text>
